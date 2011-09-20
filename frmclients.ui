@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>frmClients</class>
+ <widget class="QFrame" name="frmClients">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>577</width>
+    <height>598</height>
+   </rect>
+  </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::NoFrame</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <widget class="QTableView" name="tableView">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>32</y>
+     <width>559</width>
+     <height>190</height>
+    </rect>
+   </property>
+   <property name="selectionBehavior">
+    <enum>QAbstractItemView::SelectRows</enum>
+   </property>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>3</y>
+     <width>85</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetMinimumSize</enum>
+    </property>
+    <item>
+     <widget class="QToolButton" name="toolButton_4">
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/res/icons/7.ico</normaloff>:/res/icons/7.ico</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QToolButton" name="edit_button">
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/res/icons/11.ico</normaloff>:/res/icons/11.ico</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QToolButton" name="del_button">
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/res/icons/5.ico</normaloff>:/res/icons/5.ico</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QTabWidget" name="ClientTabs">
+   <property name="geometry">
+    <rect>
+     <x>6</x>
+     <y>234</y>
+     <width>558</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Общая информация</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>12</y>
+       <width>439</width>
+       <height>199</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Информация о клиенте:</string>
+     </property>
+     <widget class="QLineEdit" name="OtkudaEdit">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>108</x>
+        <y>68</y>
+        <width>325</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="FIOEdit">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>108</x>
+        <y>18</y>
+        <width>199</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>6</x>
+        <y>20</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <italic>false</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="text">
+       <string>ФИО клиента:</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::AutoText</enum>
+      </property>
+      <property name="textInteractionFlags">
+       <set>Qt::LinksAccessibleByMouse</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="Nom_Edit">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>108</x>
+        <y>42</y>
+        <width>97</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="inputMask">
+       <string>8-999-999-99-99; </string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>6</x>
+        <y>44</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Номер тел:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>207</x>
+        <y>44</y>
+        <width>103</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Дата рождения:</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="InfoEdit">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>108</x>
+        <y>96</y>
+        <width>325</width>
+        <height>64</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>6</x>
+        <y>71</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Откуда узнал:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>6</x>
+        <y>98</y>
+        <width>97</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Дополнительно:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ApplyBut">
+      <property name="geometry">
+       <rect>
+        <x>306</x>
+        <y>168</y>
+        <width>103</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Применить...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/res/icons/6.ico</normaloff>:/res/icons/6.ico</iconset>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>true</bool>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QDateEdit" name="dateEdit">
+      <property name="geometry">
+       <rect>
+        <x>306</x>
+        <y>42</y>
+        <width>127</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhDigitsOnly|Qt::ImhFormattedNumbersOnly|Qt::ImhPreferNumbers</set>
+      </property>
+      <property name="wrapping">
+       <bool>false</bool>
+      </property>
+      <property name="frame">
+       <bool>true</bool>
+      </property>
+      <property name="buttonSymbols">
+       <enum>QAbstractSpinBox::UpDownArrows</enum>
+      </property>
+      <property name="accelerated">
+       <bool>false</bool>
+      </property>
+      <property name="correctionMode">
+       <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+      </property>
+      <property name="keyboardTracking">
+       <bool>false</bool>
+      </property>
+      <property name="currentSection">
+       <enum>QDateTimeEdit::DaySection</enum>
+      </property>
+      <property name="calendarPopup">
+       <bool>true</bool>
+      </property>
+      <property name="timeSpec">
+       <enum>Qt::LocalTime</enum>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="Pol">
+      <property name="geometry">
+       <rect>
+        <x>354</x>
+        <y>18</y>
+        <width>79</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Муж</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Жен</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>324</x>
+        <y>20</y>
+        <width>25</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Пол:</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Услуги клиента</string>
+    </attribute>
+    <widget class="QTableView" name="tClient_history">
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>18</y>
+       <width>541</width>
+       <height>223</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>0</y>
+       <width>187</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>История посещения солона:</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QToolButton" name="closeFrame">
+   <property name="geometry">
+    <rect>
+     <x>552</x>
+     <y>0</y>
+     <width>25</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Х</string>
+   </property>
+   <property name="autoRaise">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="9"/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>6</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>6</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
+</ui>

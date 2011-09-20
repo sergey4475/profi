@@ -1,0 +1,246 @@
+#include "mainform.h"
+#include "sqlmodules.h"
+#include <QDebug>
+#include "frmclients.h"
+#include "frmuslugi.h"
+#include "frm_okazanie_uslug.h"
+#include "frmsotr.h"
+#include "frmspr.h"
+#include "frmschetclienta.h"
+#include "frmo_sklad.h"
+#include "frmraspred.h"
+#include "ui_mainform.h"
+
+MainForm::MainForm(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainForm)
+{
+    ui->setupUi(this);
+
+    //db = ConnectDB("localhost",QDir::currentPath()+"\\profi.fdb","SYSDBA","masterkey","QIBASE");
+    db = ConnectDB("localhost",QDir::currentPath()+"\\profi.db","","","QSQLITE");
+//    CreateDb(db);
+
+    USL_MAN = 1;
+    USL_KOS = 2;
+    USL_UHOD= 3;
+    USL_STIL= 4;
+
+}
+
+MainForm::~MainForm()
+{
+    delete ui;
+}
+
+void MainForm::on_butClients_clicked()
+{
+    frmClients *frame = new frmClients;
+    frame->initForm(w_ID);
+    frame->setParent(ui->frame);
+    frame->frm = this;
+    frame->show();
+    w_ID = frame->winId();
+    ui->butClients->setEnabled(false);
+    ui->butMonMaster->setEnabled(true);
+    ui->butKosmitolog->setEnabled(true);
+    ui->butUhodzaTelom->setEnabled(true);
+    ui->butStilist->setEnabled(true);
+}
+
+void MainForm::on_m_sprsotr_triggered()
+{
+    frmSotr *fSotr = new frmSotr;
+    fSotr->InitForm();
+    fSotr->show();
+}
+
+void MainForm::on_m_spruslugi_triggered()
+{
+    frmUslugi *frmUsl = new frmUslugi;
+    frmUsl->init();
+    frmUsl->show();
+}
+
+void MainForm::SetSumma(double summa){
+    ui->summa_uslug->setText(QVariant(summa).toString());
+}
+
+void MainForm::EnableButton(int numButton){
+    switch(numButton) {
+    case 0:
+        ui->butClients->setEnabled(true);
+        break;
+    case 1:
+        ui->butMonMaster->setEnabled(true);
+        break;
+    case 2:
+        ui->butKosmitolog->setEnabled(true);
+        break;
+    case 3:
+        ui->butUhodzaTelom->setEnabled(true);
+        break;
+    case 4:
+        ui->butStilist->setEnabled(true);
+        break;
+    case 5:
+        ui->butMagazin->setEnabled(true);
+        break;
+    };
+}
+
+//*************** Услуги Маникюрного мастера
+void MainForm::on_butMonMaster_clicked()
+{
+    UpdateClients(0);
+    frm_okazanie_uslug *frm_uslugi = new frm_okazanie_uslug;
+    frm_uslugi->InitForm(USL_MAN,w_ID);
+    frm_uslugi->setParent(ui->frame);
+    frm_uslugi->frm = this;
+    frm_uslugi->show();
+    w_ID = frm_uslugi->winId();
+    ui->butClients->setEnabled(true);
+    ui->butMonMaster->setEnabled(false);
+    ui->butKosmitolog->setEnabled(true);
+    ui->butUhodzaTelom->setEnabled(true);
+    ui->butStilist->setEnabled(true);
+}
+//*************** Услуги Космитолога
+void MainForm::on_butKosmitolog_clicked()
+{
+    UpdateClients(0);
+    frm_okazanie_uslug *frm_uslugi = new frm_okazanie_uslug;
+    frm_uslugi->InitForm(USL_KOS,w_ID);
+    frm_uslugi->setParent(ui->frame);
+    frm_uslugi->frm = this;
+    frm_uslugi->show();
+    w_ID = frm_uslugi->winId();
+    ui->butClients->setEnabled(true);
+    ui->butMonMaster->setEnabled(true);
+    ui->butKosmitolog->setEnabled(false);
+    ui->butUhodzaTelom->setEnabled(true);
+    ui->butStilist->setEnabled(true);
+}
+//*************** Услуги По уходу за телом
+void MainForm::on_butUhodzaTelom_clicked()
+{
+    UpdateClients(0);
+    frm_okazanie_uslug *frm_uslugi = new frm_okazanie_uslug;
+    frm_uslugi->InitForm(USL_UHOD,w_ID);
+    frm_uslugi->setParent(ui->frame);
+    frm_uslugi->frm = this;
+    frm_uslugi->show();
+    w_ID = frm_uslugi->winId();
+    ui->butClients->setEnabled(true);
+    ui->butMonMaster->setEnabled(true);
+    ui->butKosmitolog->setEnabled(true);
+    ui->butUhodzaTelom->setEnabled(false);
+    ui->butStilist->setEnabled(true);
+}
+//*************** Услуги Стилиста
+void MainForm::on_butStilist_clicked()
+{
+    UpdateClients(0);
+    frm_okazanie_uslug *frm_uslugi = new frm_okazanie_uslug;
+    frm_uslugi->InitForm(USL_STIL,w_ID);
+    frm_uslugi->setParent(ui->frame);
+    frm_uslugi->frm = this;
+    frm_uslugi->show();
+    w_ID = frm_uslugi->winId();
+    ui->butClients->setEnabled(true);
+    ui->butMonMaster->setEnabled(true);
+    ui->butKosmitolog->setEnabled(true);
+    ui->butUhodzaTelom->setEnabled(true);
+    ui->butStilist->setEnabled(false);
+}
+//*************** Обновление информации по клиенту
+void MainForm::UpdateClients(int IDClient){
+    ID_Client = IDClient;
+    if (IDClient == 0)
+        ui->but_schet->setDisabled(true);
+    else
+        ui->but_schet->setEnabled(true);
+
+    ui->na_schetu->setText("0");
+    QSqlQuery sql;
+    sql.prepare("SELECT SUM(scheta_clients.summa) AS Summa "
+                "FROM scheta_clients "
+                "WHERE scheta_clients.ID_Client = :ID_Client");
+
+    sql.bindValue(":ID_Client",IDClient);
+    sql.exec();
+    while (sql.next()){
+        ui->na_schetu->setText(sql.value(0).toString());
+    }
+}
+
+//****************** Обработка формы счета клиента
+void MainForm::on_but_schet_clicked()
+{
+    frmSchetClienta *frmSchet = new frmSchetClienta;
+    frmSchet->initForm(ID_Client);
+    frmSchet->show();
+}
+
+// - Справочник Материалов
+void MainForm::on_m_spr_triggered()
+{
+    uslSqlTableModel *table = new uslSqlTableModel;
+    table->setTable("MATERIALS");
+    table->select();
+    frmSpr *fSpr = new frmSpr;
+    fSpr->init(table);
+    fSpr->setWindowTitle("Справочник Материалов");
+    fSpr->show();
+}
+
+// - Добавление материала на склад
+void MainForm::on_add_sklad_triggered()
+{
+    frmO_SKLAD *frm = new frmO_SKLAD;
+
+    uslStandardItemModel *model = new uslStandardItemModel;
+    model->insertColumns(0,6);
+    model->setHeaderData(0,Qt::Horizontal,"ID");
+    model->setHeaderData(1,Qt::Horizontal,"Дата");
+    model->setHeaderData(2,Qt::Horizontal,"Материал");
+    model->setHeaderData(3,Qt::Horizontal,"Количество");
+    model->setHeaderData(4,Qt::Horizontal,"type_operacii");
+    model->setHeaderData(5,Qt::Horizontal,"NUMBER");
+
+    frm->initForm(model,0);
+    frm->show();
+}
+
+// - Форма получения остатков на складе
+void MainForm::on_oststok_na_sklade_triggered()
+{
+    frmO_SKLAD *frm = new frmO_SKLAD;
+    uslStandardItemModel *model = new uslStandardItemModel;
+    model->insertColumns(0,2);
+    model->setHeaderData(0,Qt::Horizontal,"Материал");
+    model->setHeaderData(1,Qt::Horizontal,"Количество");
+
+    frm->initForm(model,1);
+    frm->show();
+
+}
+
+// - Форма распределение материала на складе
+void MainForm::on_raspredel_triggered()
+{
+    frmRaspred *frm = new frmRaspred;
+
+    uslStandardItemModel *model = new uslStandardItemModel;
+    model->insertColumns(0,6);
+    model->setHeaderData(0,Qt::Horizontal,"ID");
+    model->setHeaderData(1,Qt::Horizontal,"Дата");
+    model->setHeaderData(2,Qt::Horizontal,"Материал");
+    model->setHeaderData(3,Qt::Horizontal,"Количество");
+    model->setHeaderData(4,Qt::Horizontal,"type_operacii");
+    model->setHeaderData(5,Qt::Horizontal,"vid_zatrat");
+
+    frm->initForm(model,0);
+    frm->show();
+
+}

@@ -1,0 +1,36 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>icons/26.bmp</file>
+        <file>icons/1.ico</file>
+        <file>icons/2.ico</file>
+        <file>icons/3.ico</file>
+        <file>icons/4.ico</file>
+        <file>icons/5.ico</file>
+        <file>icons/6.ico</file>
+        <file>icons/7.ico</file>
+        <file>icons/8.ico</file>
+        <file>icons/9.ico</file>
+        <file>icons/10.ico</file>
+        <file>icons/11.ico</file>
+        <file>icons/12.ico</file>
+        <file>icons/13.ico</file>
+        <file>icons/14a.bmp</file>
+        <file>icons/14b.bmp</file>
+        <file>icons/15.ico</file>
+        <file>icons/16.bmp</file>
+        <file>icons/17.bmp</file>
+        <file>icons/18.ico</file>
+        <file>icons/19.ico</file>
+        <file>icons/20.bmp</file>
+        <file>icons/20.ico</file>
+        <file>icons/21.gif</file>
+        <file>icons/21.ico</file>
+        <file>icons/22.bmp</file>
+        <file>icons/23.bmp</file>
+        <file>icons/24.bmp</file>
+        <file>icons/25.bmp</file>
+        <file>icons/27.ico</file>
+        <file>icons/28.bmp</file>
+        <file>icons/calendar.png</file>
+    </qresource>
+</RCC>

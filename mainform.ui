@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainForm</class>
+ <widget class="QMainWindow" name="MainForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>877</width>
+    <height>638</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>877</width>
+    <height>638</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>877</width>
+    <height>638</height>
+   </size>
+  </property>
+  <property name="sizeIncrement">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainForm</string>
+  </property>
+  <property name="documentMode">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>252</x>
+      <y>0</y>
+      <width>619</width>
+      <height>586</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>50</horstretch>
+      <verstretch>50</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="inputMethodHints">
+     <set>Qt::ImhNone</set>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>12</y>
+      <width>224</width>
+      <height>262</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QCommandLinkButton" name="butClients">
+       <property name="text">
+        <string>Клиенты</string>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCommandLinkButton" name="butMonMaster">
+       <property name="text">
+        <string>Услуги маникюрного мастера</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCommandLinkButton" name="butKosmitolog">
+       <property name="text">
+        <string>Услуги косметолога</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCommandLinkButton" name="butUhodzaTelom">
+       <property name="text">
+        <string>Услуги по уходу за телом</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCommandLinkButton" name="butStilist">
+       <property name="text">
+        <string>Услуги стилиста и визажиста</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCommandLinkButton" name="butMagazin">
+       <property name="text">
+        <string>Магазин</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>2</x>
+      <y>342</y>
+      <width>249</width>
+      <height>243</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>12</y>
+       <width>57</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>К оплате:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="summa_uslug">
+     <property name="geometry">
+      <rect>
+       <x>73</x>
+       <y>8</y>
+       <width>89</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>41</y>
+       <width>57</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>На счете:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="na_schetu">
+     <property name="geometry">
+      <rect>
+       <x>73</x>
+       <y>37</y>
+       <width>89</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QToolButton" name="but_schet">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>70</y>
+       <width>151</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Счет клиента</string>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonIconOnly</enum>
+     </property>
+     <property name="autoRaise">
+      <bool>true</bool>
+     </property>
+     <property name="arrowType">
+      <enum>Qt::NoArrow</enum>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>877</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="defaultUp">
+    <bool>false</bool>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="acceptDrops">
+     <bool>true</bool>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="tearOffEnabled">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string>Справочники</string>
+    </property>
+    <property name="separatorsCollapsible">
+     <bool>false</bool>
+    </property>
+    <addaction name="m_sprsotr"/>
+    <addaction name="m_sprclients"/>
+    <addaction name="m_spruslugi"/>
+    <addaction name="m_spr"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>Операции</string>
+    </property>
+    <widget class="QMenu" name="menu_4">
+     <property name="title">
+      <string>Склад</string>
+     </property>
+     <addaction name="add_sklad"/>
+     <addaction name="oststok_na_sklade"/>
+     <addaction name="raspredel"/>
+    </widget>
+    <addaction name="menu_4"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="m_sprsotr">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/res/icons/4.ico</normaloff>:/res/icons/4.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Сотрудники</string>
+   </property>
+  </action>
+  <action name="m_sprclients">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/res/icons/4.ico</normaloff>:/res/icons/4.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Клиенты</string>
+   </property>
+  </action>
+  <action name="m_spruslugi">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/res/icons/4.ico</normaloff>:/res/icons/4.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Услуги</string>
+   </property>
+  </action>
+  <action name="m_spr">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/res/icons/4.ico</normaloff>:/res/icons/4.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Материалы</string>
+   </property>
+  </action>
+  <action name="add_sklad">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/res/icons/28.bmp</normaloff>:/res/icons/28.bmp</iconset>
+   </property>
+   <property name="text">
+    <string>Поступление на склад</string>
+   </property>
+  </action>
+  <action name="oststok_na_sklade">
+   <property name="text">
+    <string>Остатки на складе</string>
+   </property>
+  </action>
+  <action name="raspredel">
+   <property name="text">
+    <string>Распределение материала</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
