@@ -94,7 +94,7 @@ void frmRaspred::on_ApplyBut_clicked()
         sql.exec();
         qDebug() << sql.lastError();
 
-        // Добавляем расход с общего склада
+        //Добавляем расход с общего склада
         sql.prepare("INSERT INTO O_SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,NUMBER) "
                     "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:NUMBER) ");
         sql.bindValue(":DATE",DATE);
