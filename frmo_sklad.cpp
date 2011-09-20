@@ -46,6 +46,7 @@ void frmO_SKLAD::initForm(uslStandardItemModel *model,int vid_form){
     if (vid_form == 1){
         ui->Number->setDisabled(true);
         ui->groupBox->setDisabled(true);
+        ui->ApplyBut->setDisabled(true);
         GetOstaok();
     }
 
