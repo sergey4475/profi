@@ -94,10 +94,11 @@ void frm_okazanie_uslug::on_toolButton_clicked()
     this->~frm_okazanie_uslug();
 }
 
+// Добавление услуги
 void frm_okazanie_uslug::on_add_usluga_clicked()
 {
     NotEditableDelegate *DelegatNotEditCol = new NotEditableDelegate;
-    if (ui->Client->text() != "" && ui->Sotrudnik->text() != ""){
+    if ((ui->Client->text() != "" && ui->Sotrudnik->text() != "")||(ID_client != 0 && ID_sotr != 0) ){
             QString str = QString("%1").arg(NumberUslugi);
             frmSelect *fSelect = new frmSelect();
             tempModel = new uslStandardItemModel;
@@ -119,6 +120,42 @@ void frm_okazanie_uslug::on_add_usluga_clicked()
     }
 }
 
+// Добавление материала
+void frm_okazanie_uslug::on_add_material_clicked()
+{
+    NotEditableDelegate *DelegatNotEditCol = new NotEditableDelegate;
+    if ((ui->Client->text() != "" && ui->Sotrudnik->text() != "")||(ID_client != 0 && ID_sotr != 0) ){
+            frmSelect *fSelect = new frmSelect();
+            tempModel = new uslStandardItemModel;
+            tempModel->frm = frm;
+            ui->Materials->setModel(tempModel);
+            ui->Materials->setItemDelegateForColumn(1,DelegatNotEditCol);
+            ui->Materials->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+            connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),tempModel,SLOT(editFinish(QModelIndex)));
+            fSelect->frm = frm;
+            fSelect->init(3,NumberUslugi,tempModel,ID_client,QDate::currentDate());
+            fSelect->show();
+            ui->Materials->setColumnHidden(0,true);
+    }else{
+            QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Yes);
+    }
+
+}
+
+// Удаление материала из списка
+void frm_okazanie_uslug::on_del_material_clicked()
+{
+    ui->Materials->model()->removeRow(ui->Materials->currentIndex().row());
+
+}
+
+// Удаление услуги из списка
+void frm_okazanie_uslug::on_del_usluga_clicked()
+{
+    ui->Uslugi->model()->removeRow(ui->Uslugi->currentIndex().row());
+}
+
+// Окончание выбора или ввода клиента
 void frm_okazanie_uslug::on_Client_editingFinished()
 {
     ID_client = 0;
@@ -137,6 +174,7 @@ void frm_okazanie_uslug::on_Client_editingFinished()
         frm->UpdateClients(ID_client);
 }
 
+// Окончание выбора или ввода сотрудника
 void frm_okazanie_uslug::on_Sotrudnik_editingFinished()
 {
     QSqlQuery query;
@@ -217,42 +255,10 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
     }
 
 }
-// Удаление услуги из списка
-void frm_okazanie_uslug::on_del_usluga_clicked()
-{
-    ui->Uslugi->model()->removeRow(ui->Uslugi->currentIndex().row());
-}
-// Удаление материала из списка
-void frm_okazanie_uslug::on_del_prodaja_2_clicked()
-{
-    ui->Materials->model()->removeRow(ui->Materials->currentIndex().row());
-}
-
 
 void frm_okazanie_uslug::on_Client_buttonClicked()
 {
     frmClients *frm_client = new frmClients;
     frm_client->initForm(0);
     frm_client->show();
-}
-
-void frm_okazanie_uslug::on_add_prodaja_2_clicked()
-{
-    NotEditableDelegate *DelegatNotEditCol = new NotEditableDelegate;
-    if (ui->Client->text() != "" && ui->Sotrudnik->text() != ""){
-            frmSelect *fSelect = new frmSelect();
-            tempModel = new uslStandardItemModel;
-            tempModel->frm = frm;
-            ui->Materials->setModel(tempModel);
-            ui->Materials->setItemDelegateForColumn(1,DelegatNotEditCol);
-            ui->Materials->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-            connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),tempModel,SLOT(editFinish(QModelIndex)));
-            fSelect->frm = frm;
-            fSelect->init(3,NumberUslugi,tempModel,ID_client,QDate::currentDate());
-            fSelect->show();
-            ui->Materials->setColumnHidden(0,true);
-    }else{
-            QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Yes);
-    }
-
 }

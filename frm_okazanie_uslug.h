@@ -39,9 +39,9 @@ private slots:
 
     void on_Client_buttonClicked();
 
-    void on_add_prodaja_2_clicked();
+    void on_add_material_clicked();
 
-    void on_del_prodaja_2_clicked();
+    void on_del_material_clicked();
 
 private:
     Ui::frm_okazanie_uslug *ui;
