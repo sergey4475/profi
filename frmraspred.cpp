@@ -1,3 +1,5 @@
+#define  PRIHOD 1
+#define  RASHOD 2
 #include "frmraspred.h"
 #include "sqlmodules.h"
 #include "frmselect.h"
@@ -75,7 +77,6 @@ void frmRaspred::on_ApplyBut_clicked()
         QString DATE        = tempModel->itemData(tempModel->index(ind,1)).value(0).toString();
         int ID_MATERIAL     = tempModel->itemData(tempModel->index(ind,0)).value(0).toInt();
         int COUNT           = tempModel->itemData(tempModel->index(ind,3)).value(0).toDouble();
-        int type_operacii   = tempModel->itemData(tempModel->index(ind,4)).value(0).toInt();
         int vid_zatrat      = ui->comboVidUslugi->itemData(ui->comboVidUslugi->currentIndex()).toInt();
         int NUMBER          = Number;
 
@@ -87,7 +88,7 @@ void frmRaspred::on_ApplyBut_clicked()
         sql.bindValue(":DATE",DATE);
         sql.bindValue(":ID_MATERIAL",ID_MATERIAL);
         sql.bindValue(":COUNT",COUNT);
-        sql.bindValue(":type_operacii",type_operacii);
+        sql.bindValue(":type_operacii",PRIHOD);
         sql.bindValue(":vid_zatrat",vid_zatrat);
         sql.bindValue(":NUMBER",NUMBER);
 
@@ -100,7 +101,7 @@ void frmRaspred::on_ApplyBut_clicked()
         sql.bindValue(":DATE",DATE);
         sql.bindValue(":ID_MATERIAL",ID_MATERIAL);
         sql.bindValue(":COUNT",COUNT * (-1));
-        sql.bindValue(":type_operacii",2);
+        sql.bindValue(":type_operacii",RASHOD);
         sql.bindValue(":NUMBER",NUMBER);
 
         sql.exec();

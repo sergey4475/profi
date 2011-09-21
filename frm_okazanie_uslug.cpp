@@ -1,3 +1,6 @@
+#define  PRIHOD 1
+#define  RASHOD 2
+
 #include "frm_okazanie_uslug.h"
 #include "ui_frm_okazanie_uslug.h"
 #include "frmselect.h"
@@ -198,7 +201,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
 
     // Оплата услуг
     int countRow = ui->Uslugi->model()->rowCount();
-    if (ID_sotr != 0 && ID_client != 0 && countRow !=0){
+    if (ID_sotr != 0 && ID_client != 0 && countRow !=0 ){
 
         // Если способ оплаты, счет клиента, то списываем со счета сумму платежа
         if (VidPlateja == 5){
@@ -247,7 +250,32 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
                 ui->but_oplatit->setDisabled(true);
   //          }
         }
-    // Списание материалов
+        // Списание материалов
+        countRow = ui->Materials->model()->rowCount();
+        for (int ind = 0; ind < countRow; ind++){
+            int ID_MATERIAL   = ui->Materials->model()->itemData(ui->Materials->model()->index(ind,0)).value(0).toInt();
+            int COUNT   = ui->Materials->model()->itemData(ui->Materials->model()->index(ind,2)).value(0).toInt();
+//            double summa= ui->Materials->model()->itemData(ui->Uslugi->model()->index(ind,5)).value(0).toDouble();
+//            double cena = ui->Materials->model()->itemData(ui->Uslugi->model()->index(ind,2)).value(0).toDouble();
+
+            QSqlQuery sql;
+            sql.prepare("INSERT INTO SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,id_VID_ZATRAT,NUMBER) "
+                        "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:vid_zatrat,:NUMBER) ");
+
+            sql.bindValue(":DATE",date_usl.toString("dd.MM.yyyy"));
+            sql.bindValue(":ID_MATERIAL",ID_MATERIAL);
+            sql.bindValue(":COUNT",COUNT * (-1));
+            sql.bindValue(":type_operacii",PRIHOD);
+            sql.bindValue(":vid_zatrat",NumberUslugi);
+            sql.bindValue(":NUMBER",Number);
+            sql.exec();
+            qDebug() << sql.lastError();
+
+        }
+
+
+
+
 
     }
     else{

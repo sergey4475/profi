@@ -104,7 +104,7 @@ void frmSelect::init(int type_sel, int type_uslugi, uslStandardItemModel *table,
         tempModel->setHeaderData(2,Qt::Horizontal,tr("Кол-во"));        //2
     }
     QSqlQuery sql;
-    if (type_select == OSTATKI_SKALD)
+    if (type_select == OSTATKI_SKALD){
         sql.prepare("SELECT "
                     "   materials.ID, "
                     "   materials.NAME, "
@@ -114,6 +114,8 @@ void frmSelect::init(int type_sel, int type_uslugi, uslStandardItemModel *table,
                     "WHERE SKLAD.DATE <= :DATE "
                     "   AND SKLAD.id_Vid_Zatrat = :VidZatrat "
                     "GROUP BY materials.NAME");
+        sql.bindValue(":VidZatrat",type_uslugi_);
+    }
     else
         sql.prepare("SELECT "
                     "   materials.ID, "
@@ -126,6 +128,7 @@ void frmSelect::init(int type_sel, int type_uslugi, uslStandardItemModel *table,
 
     sql.bindValue(":DATE",date);
     sql.exec();
+    qDebug() << sql.lastError();
     tabl_ = new Ost_model;
     tabl_->setQuery(sql);
     tabl_->setHeaderData(1,Qt::Horizontal,QObject::tr("Наименование"));
@@ -143,7 +146,7 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
     int countRow = tempModel->rowCount();
     bool flag = true;
     ///////////
-    if (type_select == 1){
+    if (type_select == USLUGI){
         QSqlRecord record = tabl->record(index.row());
         double summ  = 0.00;
 
@@ -177,7 +180,7 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
     }
     }
     /////////////
-    if (type_select == 2){
+    if (type_select == MATERIAL){
         QSqlRecord record = tabl->record(index.row());
         if (record.value("DEL").toInt()==1){
             flag = false;
@@ -206,26 +209,44 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
         tempModel->setData(tempModel->index(row,4),1,Qt::EditRole);
     }
     ///////////////////
-    if (type_select == 3 || type_select == 4){
+    if (type_select == OSTATKI_SKALD || type_select == SKALD){
         QSqlRecord record = tabl_->record(index.row());
 
         QList<QStandardItem*> lst = tempModel->findItems(record.value(0).toString(),Qt::MatchContains,0);
-        if (flag == true){
-            if (lst.count()==0){
-                tempModel->insertRow(countRow);
-                row = countRow;
-                count = 1;
-            }else{
-                row = lst[0]->index().row();
-                count = tempModel->itemData(tempModel->index(lst[0]->index().row(),3)).value(0).toInt();
-                count++;
+        if (type_select == OSTATKI_SKALD){
+            if (flag == true){
+                if (lst.count()==0){
+                    tempModel->insertRow(countRow);
+                    row = countRow;
+                    count = 1;
+                }else{
+                    row = lst[0]->index().row();
+                    count = tempModel->itemData(tempModel->index(lst[0]->index().row(),2)).value(0).toInt();
+                    count++;
+                }
             }
+
+            tempModel->setData(tempModel->index(row,0),record.value(0).toString(),Qt::EditRole);
+            tempModel->setData(tempModel->index(row,1),record.value(1).toString(),Qt::EditRole);
+            tempModel->setData(tempModel->index(row,2),count,Qt::EditRole);
+        }else{
+            if (flag == true){
+                if (lst.count()==0){
+                    tempModel->insertRow(countRow);
+                    row = countRow;
+                    count = 1;
+                }else{
+                    row = lst[0]->index().row();
+                    count = tempModel->itemData(tempModel->index(lst[0]->index().row(),3)).value(0).toInt();
+                    count++;
+                }
+            }
+            tempModel->setData(tempModel->index(row,0),record.value(0).toString(),Qt::EditRole);
+            tempModel->setData(tempModel->index(row,1),DateDoc.toString("dd.MM.yyyy"),Qt::EditRole);
+            tempModel->setData(tempModel->index(row,2),record.value(1).toString(),Qt::EditRole);
+            tempModel->setData(tempModel->index(row,3),count,Qt::EditRole);
+            tempModel->setData(tempModel->index(row,4),1,Qt::EditRole);
+            tempModel->setData(tempModel->index(row,5),type_uslugi_,Qt::EditRole);
         }
-        tempModel->setData(tempModel->index(row,0),record.value(0).toString(),Qt::EditRole);
-        tempModel->setData(tempModel->index(row,1),DateDoc.toString("dd.MM.yyyy"),Qt::EditRole);
-        tempModel->setData(tempModel->index(row,2),record.value(1).toString(),Qt::EditRole);
-        tempModel->setData(tempModel->index(row,3),count,Qt::EditRole);
-        tempModel->setData(tempModel->index(row,4),1,Qt::EditRole);
-        tempModel->setData(tempModel->index(row,5),type_uslugi_,Qt::EditRole);
     }
 }
