@@ -185,11 +185,33 @@ void MainForm::on_but_schet_clicked()
 // - Справочник Материалов
 void MainForm::on_m_spr_triggered()
 {
+    QList<QAbstractItemDelegate*> lst;
+
     uslSqlTableModel *table = new uslSqlTableModel;
     table->setTable("MATERIALS");
+    table->setRelation(3,QSqlRelation("ed_izm","id","name"));
     table->select();
+    table->setHeaderData(0,Qt::Horizontal,QObject::tr("Код"));
+    table->setHeaderData(1,Qt::Horizontal,QObject::tr("Наименование"));
+    table->setHeaderData(2,Qt::Horizontal,QObject::tr("DEL"));
+    table->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед. Изм"));
+
+    lst.insert(0,new NotEditableDelegate);
+    lst.insert(1,0);
+    lst.insert(2,0);
+
+    QSqlQuery sql;
+    sql.exec("SELECT ed_izm.ID, ed_izm.name FROM ed_izm");
+    QList< QPair<QString,QString> > aValues;
+    while (sql.next()){
+        aValues.append(qMakePair(sql.record().value(1).toString(),sql.record().value(0).toString()));
+    }
+
+    BoxDelegate *box = new BoxDelegate(aValues);
+    lst.insert(3,box);
+
     frmSpr *fSpr = new frmSpr;
-    fSpr->init(table);
+    fSpr->init(table,lst);
     fSpr->setWindowTitle("Справочник Материалов");
     fSpr->show();
 }

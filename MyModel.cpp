@@ -187,3 +187,40 @@ QWidget *NotEditableDelegate::createEditor(QWidget *parent, const QStyleOptionVi
     return 0;
 }
 
+BoxDelegate::BoxDelegate(QList< QPair<QString,QString> > &aValues, QObject *parent)
+    :QItemDelegate(parent){
+    Value = aValues;
+}
+
+BoxDelegate::~BoxDelegate(){
+}
+
+QWidget *BoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &) const{
+
+    QComboBox *editor = new QComboBox(parent);
+
+    QList< QPair<QString,QString> >::const_iterator it=Value.begin();
+    while (it != Value.end())
+    {
+        const QPair <QString,QString> aPair = *it;
+        editor->addItem(aPair.first,aPair.second);
+        ++it;
+    }
+    return editor;
+}
+void BoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const{
+    QComboBox *ComboBox = static_cast<QComboBox*>(editor);
+    int value = index.model()->data(index, Qt::DisplayRole).toInt();
+    ComboBox->setCurrentIndex(ComboBox->findData(value));
+    }
+
+void BoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const{
+    QComboBox *ComboBox = static_cast<QComboBox*>(editor);
+    int value = ComboBox->itemData(ComboBox->currentIndex()).toInt();
+    model->setData(index, value, Qt::EditRole);
+
+}
+
+void BoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const{
+    editor->setGeometry(option.rect);
+}

@@ -14,7 +14,7 @@ class sotSqlQueryModel : public QSqlQueryModel {
   QVariant data(const QModelIndex &index, int role) const;
 };
 
-class uslSqlTableModel : public QSqlTableModel {
+class uslSqlTableModel : public QSqlRelationalTableModel {
     QVariant data(const QModelIndex &index, int role) const;
     //bool setData(const QModelIndex &index,const QVariant &value, int role);
 };
