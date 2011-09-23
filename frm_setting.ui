@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>frm_setting</class>
+ <widget class="QWidget" name="frm_setting">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>363</width>
+    <height>256</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>8</x>
+     <y>8</y>
+     <width>341</width>
+     <height>165</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>База данных</string>
+   </property>
+   <widget class="QSelLineEdit" name="NameDataBase">
+    <property name="geometry">
+     <rect>
+      <x>88</x>
+      <y>16</y>
+      <width>89</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>188</x>
+      <y>17</y>
+      <width>41</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="lineWidth">
+     <number>0</number>
+    </property>
+    <property name="text">
+     <string>СУБД:</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::AutoText</enum>
+    </property>
+    <property name="buddy">
+     <cstring>DriversDB</cstring>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="DriversDB">
+    <property name="geometry">
+     <rect>
+      <x>232</x>
+      <y>16</y>
+      <width>89</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>17</y>
+      <width>85</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="lineWidth">
+     <number>0</number>
+    </property>
+    <property name="text">
+     <string>База данных:</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::AutoText</enum>
+    </property>
+    <property name="buddy">
+     <cstring>NameDataBase</cstring>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="loginDB">
+    <property name="geometry">
+     <rect>
+      <x>88</x>
+      <y>76</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="passwordDB">
+    <property name="geometry">
+     <rect>
+      <x>88</x>
+      <y>100</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>80</y>
+      <width>77</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Логин:</string>
+    </property>
+    <property name="buddy">
+     <cstring>loginDB</cstring>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>104</y>
+      <width>77</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Пароль:</string>
+    </property>
+    <property name="buddy">
+     <cstring>passwordDB</cstring>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="testBUt">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>132</y>
+      <width>109</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Проверка...</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>54</y>
+      <width>85</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Имя сервера:</string>
+    </property>
+    <property name="buddy">
+     <cstring>hostname</cstring>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="hostname">
+    <property name="geometry">
+     <rect>
+      <x>88</x>
+      <y>52</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>272</x>
+     <y>192</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Применить..</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QSelLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>qsellineedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>NameDataBase</tabstop>
+  <tabstop>DriversDB</tabstop>
+  <tabstop>hostname</tabstop>
+  <tabstop>loginDB</tabstop>
+  <tabstop>passwordDB</tabstop>
+  <tabstop>testBUt</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

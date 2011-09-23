@@ -48,6 +48,8 @@ private slots:
 
     void on_raspredel_triggered();
 
+    void on_settings_triggered();
+
 private:
     Ui::MainForm *ui;
     double summa_uslug;

@@ -9,6 +9,7 @@
 #include "frmschetclienta.h"
 #include "frmo_sklad.h"
 #include "frmraspred.h"
+#include "frm_setting.h"
 #include "ui_mainform.h"
 
 MainForm::MainForm(QWidget *parent) :
@@ -18,7 +19,8 @@ MainForm::MainForm(QWidget *parent) :
     ui->setupUi(this);
 
     //db = ConnectDB("localhost",QDir::currentPath()+"\\profi.fdb","SYSDBA","masterkey","QIBASE");
-    db = ConnectDB("localhost",QDir::currentPath()+"\\profi.db","","","QSQLITE");
+    //db = ConnectDB("localhost",QDir::currentPath()+"\\profi.db","","","QSQLITE");
+    db = ConnectDB("localhost","profi","postgres","postgres","QPSQL");
 //    CreateDb(db);
 
     USL_MAN = 1;
@@ -265,4 +267,13 @@ void MainForm::on_raspredel_triggered()
     frm->initForm(model,0);
     frm->show();
 
+}
+
+void MainForm::on_settings_triggered()
+{
+    frm_setting *frm = new frm_setting;
+    frm->InitForm();
+    frm->setWindowFlags(Qt::Tool);
+    frm->setWindowModality(Qt::WindowModal);
+    frm->show();
 }
