@@ -16,7 +16,8 @@ SOURCES += main.cpp mainform.cpp frmclients.cpp sqlmodules.cpp frmsotr.cpp frmus
     include/qdatelineedit.cpp \
     include/qsellineedit.cpp \
     include/procedures.cpp \
-    frmraspred.cpp
+    frmraspred.cpp \
+    frm_setting.cpp
 
 
 HEADERS  += mainform.h sqlmodules.h frmclients.h frmsotr.h MyModel.h frmuslugi.h \
@@ -29,7 +30,8 @@ HEADERS  += mainform.h sqlmodules.h frmclients.h frmsotr.h MyModel.h frmuslugi.h
     include/qdatelineedit.h \
     include/qsellineedit.h \
     include/procedures.h \
-    frmraspred.h
+    frmraspred.h \
+    frm_setting.h
 
 FORMS    += mainform.ui \
     frmclients.ui \
@@ -40,10 +42,14 @@ FORMS    += mainform.ui \
     frmschetclienta.ui \
     frmspr.ui \
     frmo_sklad.ui \
-    frmraspred.ui
+    frmraspred.ui \
+    frm_setting.ui
 
 RESOURCES += \
     icons.qrc
+
+
+
 
 
 

@@ -136,7 +136,7 @@ void frm_okazanie_uslug::on_add_material_clicked()
             ui->Materials->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
             connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),tempModel,SLOT(editFinish(QModelIndex)));
             fSelect->frm = frm;
-            fSelect->init(3,NumberUslugi,tempModel,ID_client,QDate::currentDate());
+            fSelect->init(OSTATKI_SKALD,NumberUslugi,tempModel,ID_client,QDate::currentDate());
             fSelect->show();
             ui->Materials->setColumnHidden(0,true);
     }else{

@@ -1,9 +1,3 @@
-#define USLUGI 1
-#define MATERIAL 2
-#define OSTATKI_SKALD 3
-#define SKALD 4
-
-
 #include "frmselect.h"
 #include "ui_frmselect.h"
 #include <QList>
@@ -35,7 +29,7 @@ void frmSelect::init(int type_sel, int type_uslugi, uslStandardItemModel *table,
                       "FROM CLIENTS_HISTORY "
                       "WHERE CLIENTS_HISTORY.ID_CLIENT = :ID_CLIENT AND CLIENTS_HISTORY.DATE_USLUGI = :DATE_USLUGI");
         query.bindValue(":ID_CLIENT",ID_client);
-        query.bindValue(":DATE_USLUGI",date.toString("dd.MM.yyyy"));
+        query.bindValue(":DATE_USLUGI",DateDoc.toString("dd.MM.yyyy"));
         query.exec();
 
         while (query.next()) {
@@ -113,7 +107,9 @@ void frmSelect::init(int type_sel, int type_uslugi, uslStandardItemModel *table,
                     "   materials ON materials.ID = SKLAD.ID_MATERIAL "
                     "WHERE SKLAD.DATE <= :DATE "
                     "   AND SKLAD.id_Vid_Zatrat = :VidZatrat "
-                    "GROUP BY materials.NAME");
+                    "GROUP BY "
+                    "   materials.NAME, "
+                    "   materials.ID");
         sql.bindValue(":VidZatrat",type_uslugi_);
     }
     else
@@ -124,9 +120,12 @@ void frmSelect::init(int type_sel, int type_uslugi, uslStandardItemModel *table,
                     "FROM O_SKLAD INNER JOIN "
                     "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
                     "WHERE O_SKLAD.DATE <= :DATE "
-                    "GROUP BY materials.NAME");
+                    "GROUP BY "
+                    "   materials.NAME, "
+                    "   materials.ID");
 
-    sql.bindValue(":DATE",date);
+    qDebug() << "Дата Документа: " + DateDoc.toString("dd.MM.yyyy");
+    sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
     sql.exec();
     qDebug() << sql.lastError();
     tabl_ = new Ost_model;

@@ -18,9 +18,16 @@ MainForm::MainForm(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QSettings settings("conf.ini",QSettings::IniFormat);
+    QString hostname = settings.value("HostName").toString();
+    QString DataBase = settings.value("DataBase").toString();
+    QString login = settings.value("Login").toString();
+    QString Password = settings.value("Password").toString();
+    QString DriverName = settings.value("DriverName").toString();
+
     //db = ConnectDB("localhost",QDir::currentPath()+"\\profi.fdb","SYSDBA","masterkey","QIBASE");
     //db = ConnectDB("localhost",QDir::currentPath()+"\\profi.db","","","QSQLITE");
-    db = ConnectDB("localhost","profi","postgres","postgres","QPSQL");
+    db = ConnectDB(hostname,DataBase,login,Password,DriverName);
 //    CreateDb(db);
 
     USL_MAN = 1;

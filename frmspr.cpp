@@ -19,7 +19,7 @@ void frmSpr::init(uslSqlTableModel *Model,QList<QAbstractItemDelegate*> lst){
     ui->sprTable->setModel(Model);
     ui->sprTable->setColumnHidden(2,true);
     ui->sprTable->setColumnWidth(0,40);
-    ui->sprTable->setColumnWidth(1,350);
+    ui->sprTable->setColumnWidth(1,300);
 
     for (int ind=0; ind < lst.count();ind++)
         ui->sprTable->setItemDelegateForColumn(ind,lst[ind]);
@@ -30,7 +30,6 @@ void frmSpr::on_add_usluga_clicked()
     int row = sprModel->rowCount();
     sprModel->insertRow(row);
     sprModel->submitAll();
-
 }
 
 void frmSpr::on_del_usluga_clicked()

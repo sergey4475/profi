@@ -65,6 +65,7 @@ void frmRaspred::on_add_button_clicked()
         return;
     }
     frmSelect *fSelect = new frmSelect();
+    qDebug() << QDate::currentDate().toString("dd.MM.yyyy");
     fSelect->init(4,ui->comboVidUslugi->itemData(ui->comboVidUslugi->currentIndex()).toInt(),tempModel,0,QDate::currentDate());
     fSelect->setWindowModality(Qt::ApplicationModal);
     fSelect->show();

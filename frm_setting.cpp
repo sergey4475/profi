@@ -17,12 +17,6 @@ frm_setting::~frm_setting()
 }
 
 void frm_setting::InitForm(){
-    QSettings settings("conf.ini",QSettings::IniFormat);
-    ui->hostname->setText(settings.value("HostName").toString());
-    ui->NameDataBase->setText(settings.value("DataBase").toString());
-    ui->loginDB->setText(settings.value("Login").toString());
-    ui->passwordDB->setText(settings.value("Password").toString());
-
     QSqlDatabase db;
     int count = db.drivers().count();
 
@@ -30,6 +24,13 @@ void frm_setting::InitForm(){
         ui->DriversDB->addItem(db.drivers().value(i));
     }
     db.~QSqlDatabase();
+
+    QSettings settings("conf.ini",QSettings::IniFormat);
+    ui->hostname->setText(settings.value("HostName").toString());
+    ui->NameDataBase->setText(settings.value("DataBase").toString());
+    ui->loginDB->setText(settings.value("Login").toString());
+    ui->passwordDB->setText(settings.value("Password").toString());
+    ui->DriversDB->setCurrentIndex(ui->DriversDB->findText(settings.value("DriverName").toString()));
 
 }
 
@@ -58,5 +59,5 @@ void frm_setting::on_pushButton_clicked()
     settings.setValue("DataBase",ui->NameDataBase->text());
     settings.setValue("Login",ui->loginDB->text());
     settings.setValue("Password",ui->passwordDB->text());
-
+    settings.setValue("DriverName",ui->DriversDB->currentText());
 }

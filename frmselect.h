@@ -1,6 +1,11 @@
 #ifndef FRMSELECT_H
 #define FRMSELECT_H
 
+#define USLUGI 1
+#define MATERIAL 2
+#define OSTATKI_SKALD 3
+#define SKALD 4
+
 #include <QtGui/QWidget>
 #include "sqlmodules.h"
 #include "MyModel.h"

@@ -216,9 +216,8 @@ void BoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 
 void BoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const{
     QComboBox *ComboBox = static_cast<QComboBox*>(editor);
-    int value = ComboBox->itemData(ComboBox->currentIndex()).toInt();
+    QVariant value = ComboBox->itemData(ComboBox->currentIndex()).toInt();
     model->setData(index, value, Qt::EditRole);
-
 }
 
 void BoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const{
