@@ -17,7 +17,7 @@ public:
     explicit frmUslugi(QWidget *parent = 0);
     ~frmUslugi();
     void init();
-    uslSqlTableModel *tabl;
+    PSqlTableModel *tabl;
     QString idVID, idGR;
 private slots:
 

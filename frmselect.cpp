@@ -14,7 +14,7 @@ frmSelect::~frmSelect()
     delete ui;
 }
 
-void frmSelect::init(int type_sel, int type_uslugi, uslStandardItemModel *table,int ID_client, QDate date){
+void frmSelect::init(int type_sel, int type_uslugi, PStandardItemModel *table,int ID_client, QDate date){
     this->setWindowFlags(Qt::Tool);
     this->setWindowModality(Qt::WindowModal);
     QString mass ="0";
@@ -54,7 +54,7 @@ void frmSelect::init(int type_sel, int type_uslugi, uslStandardItemModel *table,
             tempModel->setHeaderData(5,Qt::Horizontal,tr("Ñóììà"));         //5
         }
 
-        tabl = new uslSqlTableModel;
+        tabl = new PSqlTableModel;
         tabl->setTable("USLUGI");
         tabl->setFilter("VID_USLUGI="+ QString("%1").arg(type_uslugi));
         tabl->setFilter("ID NOT IN ("+mass+")");
@@ -74,7 +74,7 @@ void frmSelect::init(int type_sel, int type_uslugi, uslStandardItemModel *table,
     else if (type_select == MATERIAL) {
         tempModel = table;
 
-        tabl = new uslSqlTableModel;
+        tabl = new PSqlTableModel;
         tabl->setTable("MATERIALS");
 
         tabl->select();

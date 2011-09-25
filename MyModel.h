@@ -14,17 +14,16 @@ class sotSqlQueryModel : public QSqlQueryModel {
   QVariant data(const QModelIndex &index, int role) const;
 };
 
-class uslSqlTableModel : public QSqlRelationalTableModel {
+class PSqlTableModel : public QSqlRelationalTableModel {
     QVariant data(const QModelIndex &index, int role) const;
-    //bool setData(const QModelIndex &index,const QVariant &value, int role);
 };
 
-class uslStandardItemModel : public QStandardItemModel{
+class PStandardItemModel : public QStandardItemModel{
     Q_OBJECT
 
 public:
-    uslStandardItemModel(QObject *parent = 0);
-    virtual ~uslStandardItemModel();
+    PStandardItemModel(QObject *parent = 0);
+    virtual ~PStandardItemModel();
     QVariant data(const QModelIndex &index, int role) const;
     double sum_uslugi;
     MainForm *frm;

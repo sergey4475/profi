@@ -16,8 +16,8 @@ class frmO_SKLAD : public QWidget
 
 public:
     explicit frmO_SKLAD(QWidget *parent = 0);
-    void initForm(uslStandardItemModel *model,int vid_form);
-    uslStandardItemModel *tempModel;
+    void initForm(PStandardItemModel *model,int vid_form);
+    PStandardItemModel *tempModel;
     int Number;
     ~frmO_SKLAD();
 

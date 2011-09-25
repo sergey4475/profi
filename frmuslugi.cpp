@@ -47,7 +47,7 @@ void frmUslugi::init()
 
 void frmUslugi::on_treeWidget_itemActivated(QTreeWidgetItem *item, int column)
 {
-    tabl = new uslSqlTableModel;
+    tabl = new PSqlTableModel;
     if (item->parent() == 0x0) {
         QSqlQuery sql;
         sql.prepare("SELECT VID_USLUG.ID FROM VID_USLUG "

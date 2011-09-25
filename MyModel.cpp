@@ -65,7 +65,7 @@ QVariant sotSqlQueryModel::data(const QModelIndex &index, int role) const {
   return QSqlQueryModel::data(index, role);
 }
 
-QVariant uslSqlTableModel::data(const QModelIndex &index, int role) const {
+QVariant PSqlTableModel::data(const QModelIndex &index, int role) const {
     if(role == Qt::DecorationRole){
         int Del = record(index.row()).value("DEL").toInt();
       QImage image;
@@ -86,10 +86,11 @@ QVariant uslSqlTableModel::data(const QModelIndex &index, int role) const {
             return QVariant(QColor(255,255,255));
         }
     }
+
     return QSqlTableModel::data(index, role);
 }
 
-void uslStandardItemModel::editFinish(QModelIndex index){
+void PStandardItemModel::editFinish(QModelIndex index){
 
     double cena = itemData(this->index(index.row(),2)).value(0).toDouble();
     int count   = itemData(this->index(index.row(),4)).value(0).toInt();
@@ -104,17 +105,17 @@ void uslStandardItemModel::editFinish(QModelIndex index){
     }
 }
 
-uslStandardItemModel::uslStandardItemModel(QObject *parent)
+PStandardItemModel::PStandardItemModel(QObject *parent)
     : QStandardItemModel(parent)
 {
 sum_uslugi = 0;
 }
 
-uslStandardItemModel::~uslStandardItemModel(){
+PStandardItemModel::~PStandardItemModel(){
 
 }
 
-QVariant uslStandardItemModel::data(const QModelIndex &index, int role) const{
+QVariant PStandardItemModel::data(const QModelIndex &index, int role) const{
     if(role == Qt::BackgroundColorRole) {
         if(index.row() %2){
             return QVariant(QColor(200,220,255));

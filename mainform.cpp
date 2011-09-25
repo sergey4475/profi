@@ -8,6 +8,7 @@
 #include "frmspr.h"
 #include "frmschetclienta.h"
 #include "frmo_sklad.h"
+#include "frmdocument.h"
 #include "frmraspred.h"
 #include "frm_setting.h"
 #include "ui_mainform.h"
@@ -196,7 +197,7 @@ void MainForm::on_m_spr_triggered()
 {
     QList<QAbstractItemDelegate*> lst;
 
-    uslSqlTableModel *table = new uslSqlTableModel;
+    PSqlTableModel *table = new PSqlTableModel;
     table->setTable("MATERIALS");
     table->setRelation(3,QSqlRelation("ed_izm","id","name"));
     table->select();
@@ -228,9 +229,21 @@ void MainForm::on_m_spr_triggered()
 // - Добавление материала на склад
 void MainForm::on_add_sklad_triggered()
 {
-    frmO_SKLAD *frm = new frmO_SKLAD;
+//    frmO_SKLAD *frm = new frmO_SKLAD;
 
-    uslStandardItemModel *model = new uslStandardItemModel;
+//    PStandardItemModel *model = new PStandardItemModel;
+//    model->insertColumns(0,6);
+//    model->setHeaderData(0,Qt::Horizontal,"ID");
+//    model->setHeaderData(1,Qt::Horizontal,"Дата");
+//    model->setHeaderData(2,Qt::Horizontal,"Материал");
+//    model->setHeaderData(3,Qt::Horizontal,"Количество");
+//    model->setHeaderData(4,Qt::Horizontal,"type_operacii");
+//    model->setHeaderData(5,Qt::Horizontal,"NUMBER");
+
+//    frm->initForm(model,0);
+//    frm->show();
+    frmDocument *frm = new frmDocument;
+    PStandardItemModel *model = new PStandardItemModel;
     model->insertColumns(0,6);
     model->setHeaderData(0,Qt::Horizontal,"ID");
     model->setHeaderData(1,Qt::Horizontal,"Дата");
@@ -239,15 +252,13 @@ void MainForm::on_add_sklad_triggered()
     model->setHeaderData(4,Qt::Horizontal,"type_operacii");
     model->setHeaderData(5,Qt::Horizontal,"NUMBER");
 
-    frm->initForm(model,0);
-    frm->show();
 }
 
 // - Форма получения остатков на складе
 void MainForm::on_oststok_na_sklade_triggered()
 {
     frmO_SKLAD *frm = new frmO_SKLAD;
-    uslStandardItemModel *model = new uslStandardItemModel;
+    PStandardItemModel *model = new PStandardItemModel;
     model->insertColumns(0,2);
     model->setHeaderData(0,Qt::Horizontal,"Материал");
     model->setHeaderData(1,Qt::Horizontal,"Количество");
@@ -262,7 +273,7 @@ void MainForm::on_raspredel_triggered()
 {
     frmRaspred *frm = new frmRaspred;
 
-    uslStandardItemModel *model = new uslStandardItemModel;
+    PStandardItemModel *model = new PStandardItemModel;
     model->insertColumns(0,6);
     model->setHeaderData(0,Qt::Horizontal,"ID");
     model->setHeaderData(1,Qt::Horizontal,"Дата");

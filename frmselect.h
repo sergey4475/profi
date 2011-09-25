@@ -22,14 +22,14 @@ class frmSelect : public QWidget
 
 public:
     explicit frmSelect(QWidget *parent = 0);
-    uslSqlTableModel *tabl;
+    PSqlTableModel *tabl;
     Ost_model *tabl_;
-    uslStandardItemModel *tempModel;
+    PStandardItemModel *tempModel;
     MainForm *frm;
     QDate DateDoc;
     int type_select, type_uslugi_;
     QTableView *tableParent;
-    void init(int type_sel,int type_uslugi, uslStandardItemModel *table,int ID_client, QDate date);
+    void init(int type_sel,int type_uslugi, PStandardItemModel *table,int ID_client, QDate date);
     ~frmSelect();
 
 private slots:

@@ -13,7 +13,7 @@ frmSpr::~frmSpr()
     delete ui;
 }
 
-void frmSpr::init(uslSqlTableModel *Model,QList<QAbstractItemDelegate*> lst){
+void frmSpr::init(PSqlTableModel *Model,QList<QAbstractItemDelegate*> lst){
     this->setWindowFlags(Qt::Tool);
     sprModel = Model;
     ui->sprTable->setModel(Model);

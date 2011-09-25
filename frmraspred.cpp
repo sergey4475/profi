@@ -18,7 +18,7 @@ frmRaspred::~frmRaspred()
     delete ui;
 }
 
-void frmRaspred::initForm(uslStandardItemModel *model, int vid_form){
+void frmRaspred::initForm(PStandardItemModel *model, int vid_form){
 
     QSqlQuery sql;
     this->setWindowFlags(Qt::Tool);

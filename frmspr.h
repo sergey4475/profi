@@ -15,8 +15,8 @@ class frmSpr : public QWidget
 
 public:
     explicit frmSpr(QWidget *parent = 0);
-    void init(uslSqlTableModel *Model,QList<QAbstractItemDelegate*> lst);
-    uslSqlTableModel *sprModel;
+    void init(PSqlTableModel *Model,QList<QAbstractItemDelegate*> lst);
+    PSqlTableModel *sprModel;
     ~frmSpr();
 
 private slots:

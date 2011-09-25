@@ -104,7 +104,7 @@ void frm_okazanie_uslug::on_add_usluga_clicked()
     if ((ui->Client->text() != "" && ui->Sotrudnik->text() != "")||(ID_client != 0 && ID_sotr != 0) ){
             QString str = QString("%1").arg(NumberUslugi);
             frmSelect *fSelect = new frmSelect();
-            tempModel = new uslStandardItemModel;
+            tempModel = new PStandardItemModel;
             tempModel->frm = frm;
             ui->Uslugi->setModel(tempModel);
             ui->Uslugi->setColumnHidden(0,true);
@@ -129,7 +129,7 @@ void frm_okazanie_uslug::on_add_material_clicked()
     NotEditableDelegate *DelegatNotEditCol = new NotEditableDelegate;
     if ((ui->Client->text() != "" && ui->Sotrudnik->text() != "")||(ID_client != 0 && ID_sotr != 0) ){
             frmSelect *fSelect = new frmSelect();
-            tempModel = new uslStandardItemModel;
+            tempModel = new PStandardItemModel;
             tempModel->frm = frm;
             ui->Materials->setModel(tempModel);
             ui->Materials->setItemDelegateForColumn(1,DelegatNotEditCol);

@@ -13,7 +13,7 @@ frmO_SKLAD::~frmO_SKLAD()
     delete ui;
 }
 
-void frmO_SKLAD::initForm(uslStandardItemModel *model,int vid_form){
+void frmO_SKLAD::initForm(PStandardItemModel *model,int vid_form){
 
     QSqlQuery sql;
     this->setWindowFlags(Qt::Tool);

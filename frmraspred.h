@@ -14,8 +14,8 @@ class frmRaspred : public QWidget
 
 public:
     explicit frmRaspred(QWidget *parent = 0);
-    void initForm(uslStandardItemModel *model,int vid_form);
-    uslStandardItemModel *tempModel;
+    void initForm(PStandardItemModel *model,int vid_form);
+    PStandardItemModel *tempModel;
     int Number;
 
     ~frmRaspred();
