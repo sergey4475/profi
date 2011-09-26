@@ -38,8 +38,9 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
     this->setWindowModality(Qt::ApplicationModal);
     NotEditableDelegate *del = new NotEditableDelegate;
     ui->DateDoc->setDateCalendar(QDate::currentDate());
+    QSqlRecord record;
 
-    type_doc_ - type_doc;
+    type_doc_ = type_doc;
     // --- Документ по складу ---
     if (type_doc_ == d_oskald){
         if (vid_form == f_document){ // -- Тип формы документ
@@ -47,12 +48,22 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
             sql.prepare("SELECT MAX(number) AS number "
                         "FROM O_SKLAD");
             sql.exec();
-            QSqlRecord record = sql.record();
+            record = sql.record();
             sql.next();
 
             Number = sql.value(record.indexOf("number")).toInt();
 
             Number++;
+
+            sql.prepare("SELECT group_o_sklad.ID, group_o_sklad.Name "
+                        "FROM group_o_sklad");
+            sql.exec();
+            qDebug() << sql.lastError();
+            record = sql.record();
+            while (sql.next()){
+                ui->Group->addItem(sql.value(1).toString(),sql.value(0).toInt());
+            }
+
 
             ui->Number->setText(QString::number(Number));
 
@@ -78,12 +89,21 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
             sql.prepare("SELECT MAX(number) AS number "
                      "FROM SKLAD");
             sql.exec();
-            QSqlRecord record = sql.record();
+            record = sql.record();
             sql.next();
 
             Number = sql.value(record.indexOf("number")).toInt();
 
             Number++;
+
+            sql.prepare("SELECT vidi_zatrat.ID, vidi_zatrat.Name "
+                        "FROM vidi_zatrat");
+            sql.exec();
+            record = sql.record();
+            while (sql.next()){
+                ui->Group->addItem(sql.value(1).toString(),sql.value(0).toInt());
+            }
+
 
             ui->Number->setText(QString::number(Number));
 
