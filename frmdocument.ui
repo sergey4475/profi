@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Приход на склад</string>
   </property>
   <widget class="QTableView" name="tableView">
    <property name="geometry">

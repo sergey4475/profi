@@ -7,9 +7,7 @@
 #include "frmsotr.h"
 #include "frmspr.h"
 #include "frmschetclienta.h"
-#include "frmo_sklad.h"
 #include "frmdocument.h"
-#include "frmraspred.h"
 #include "frm_setting.h"
 #include "ui_mainform.h"
 
@@ -229,19 +227,6 @@ void MainForm::on_m_spr_triggered()
 // - Добавление материала на склад
 void MainForm::on_add_sklad_triggered()
 {
-//    frmO_SKLAD *frm = new frmO_SKLAD;
-
-//    PStandardItemModel *model = new PStandardItemModel;
-//    model->insertColumns(0,6);
-//    model->setHeaderData(0,Qt::Horizontal,"ID");
-//    model->setHeaderData(1,Qt::Horizontal,"Дата");
-//    model->setHeaderData(2,Qt::Horizontal,"Материал");
-//    model->setHeaderData(3,Qt::Horizontal,"Количество");
-//    model->setHeaderData(4,Qt::Horizontal,"type_operacii");
-//    model->setHeaderData(5,Qt::Horizontal,"NUMBER");
-
-//    frm->initForm(model,0);
-//    frm->show();
     frmDocument *frm = new frmDocument;
     PStandardItemModel *model = new PStandardItemModel;
     model->insertColumns(0,6);
@@ -252,18 +237,20 @@ void MainForm::on_add_sklad_triggered()
     model->setHeaderData(4,Qt::Horizontal,"type_operacii");
     model->setHeaderData(5,Qt::Horizontal,"NUMBER");
 
+    frm->initForm(model,f_document,d_oskald);
+    frm->show();
 }
 
 // - Форма получения остатков на складе
 void MainForm::on_oststok_na_sklade_triggered()
 {
-    frmO_SKLAD *frm = new frmO_SKLAD;
+    frmDocument *frm = new frmDocument;
     PStandardItemModel *model = new PStandardItemModel;
     model->insertColumns(0,2);
     model->setHeaderData(0,Qt::Horizontal,"Материал");
     model->setHeaderData(1,Qt::Horizontal,"Количество");
 
-    frm->initForm(model,1);
+    frm->initForm(model,f_ostatki,d_oskald);
     frm->show();
 
 }
@@ -271,7 +258,7 @@ void MainForm::on_oststok_na_sklade_triggered()
 // - Форма распределение материала на складе
 void MainForm::on_raspredel_triggered()
 {
-    frmRaspred *frm = new frmRaspred;
+    frmDocument *frm = new frmDocument;
 
     PStandardItemModel *model = new PStandardItemModel;
     model->insertColumns(0,6);
@@ -282,9 +269,8 @@ void MainForm::on_raspredel_triggered()
     model->setHeaderData(4,Qt::Horizontal,"type_operacii");
     model->setHeaderData(5,Qt::Horizontal,"vid_zatrat");
 
-    frm->initForm(model,0);
+    frm->initForm(model,f_document,d_raspred);
     frm->show();
-
 }
 
 void MainForm::on_settings_triggered()
