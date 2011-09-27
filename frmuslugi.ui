@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>frmUslugi</class>
  <widget class="QWidget" name="frmUslugi">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +14,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Прейскурант</string>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
   </property>
   <widget class="QTableView" name="tableUslugi">
    <property name="geometry">
@@ -35,6 +41,11 @@
    <property name="rootIsDecorated">
     <bool>false</bool>
    </property>
+   <column>
+    <property name="text">
+     <string>Категории услуг</string>
+    </property>
+   </column>
   </widget>
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">

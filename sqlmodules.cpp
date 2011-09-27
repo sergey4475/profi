@@ -1,4 +1,5 @@
 #include "sqlmodules.h"
+
 QSqlDatabase db;
 QSqlDatabase ConnectDB(QString HostName, QString DatabaseName, QString UserName, QString Password, QString DriverBD){
    db = QSqlDatabase::addDatabase(DriverBD);
@@ -34,18 +35,15 @@ if (db.driverName()== "QSQLITE"){
             "[INFO] VARCHAR(500)  NULL,"
             "[POL] INTEGER DEFAULT '1' NOT NULL)");
 }
-if (db.driverName()== "QIBASE"){
+if (db.driverName()== "QPSQL" || db.driverName()== "QPSQL7"){
     // +++++++ Создание таблицы Clients +++++++
-    db.exec("CREATE TABLE CLIENTS ("
-            "ID       INTEGER NOT NULL,"
-            "FIO      VARCHAR(50) NOT NULL,"
-            "NOM_TEL  VARCHAR(15),"
-            "DATE_R   DATE NOT NULL,"
-            "INFO     VARCHAR(500),"
-            "POL      SMALLINT DEFAULT 1 NOT NULL)");
-    db.exec("ALTER TABLE CLIENTS ADD CONSTRAINT PK_CLIENTS PRIMARY KEY (ID)");
-    db.exec("CREATE SEQUENCE GEN_CLIENTS_ID");
-    db.exec("ALTER SEQUENCE GEN_CLIENTS_ID RESTART WITH 4");
+//    QFile file(QDir::currentPath()+"/scripts/t_create_PQSQL.sql");
+//    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+//        return;
+
+//    QTextStream in(&file);
+
+//    db.exec(&in.string());
 }
 
 }

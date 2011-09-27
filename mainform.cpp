@@ -24,8 +24,6 @@ MainForm::MainForm(QWidget *parent) :
     QString Password = settings.value("Password").toString();
     QString DriverName = settings.value("DriverName").toString();
 
-    //db = ConnectDB("localhost",QDir::currentPath()+"\\profi.fdb","SYSDBA","masterkey","QIBASE");
-    //db = ConnectDB("localhost",QDir::currentPath()+"\\profi.db","","","QSQLITE");
     db = ConnectDB(hostname,DataBase,login,Password,DriverName);
 //    CreateDb(db);
 

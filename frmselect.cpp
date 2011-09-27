@@ -155,28 +155,27 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
                 flag = true;
             }
         };
+        QList<QStandardItem*> lst = tempModel->findItems(record.value("ID").toString(),Qt::MatchContains,0);
 
-    QList<QStandardItem*> lst = tempModel->findItems(record.value("ID").toString(),Qt::MatchContains,0);
+        if (flag == true){
+            if (lst.count()==0){
+                tempModel->insertRow(countRow);
+                row = countRow;
+                count = 1;
+            }else{
+                row = lst[0]->index().row();
+                count = tempModel->itemData(tempModel->index(lst[0]->index().row(),4)).value(0).toInt();
+                count++;
+            }
 
-    if (flag == true){
-        if (lst.count()==0){
-            tempModel->insertRow(countRow);
-            row = countRow;
-            count = 1;
-        }else{
-            row = lst[0]->index().row();
-            count = tempModel->itemData(tempModel->index(lst[0]->index().row(),4)).value(0).toInt();
-            count++;
+            tempModel->setData(tempModel->index(row,0),record.value("ID").toInt(),Qt::EditRole);
+            tempModel->setData(tempModel->index(row,1),record.value("Name").toString(),Qt::EditRole);
+            tempModel->setData(tempModel->index(row,2),record.value("Cena").toFloat(),Qt::EditRole);
+            tempModel->setData(tempModel->index(row,3),record.value("DEL").toInt(),Qt::EditRole);
+            tempModel->setData(tempModel->index(row,4),count,Qt::EditRole);
+            summ = record.value("Cena").toFloat() * record.value(4).toInt();
+            tempModel->setData(tempModel->index(row,5),summ,Qt::EditRole);
         }
-
-        tempModel->setData(tempModel->index(row,0),record.value("ID").toInt(),Qt::EditRole);
-        tempModel->setData(tempModel->index(row,1),record.value("Name").toString(),Qt::EditRole);
-        tempModel->setData(tempModel->index(row,2),record.value("Cena").toFloat(),Qt::EditRole);
-        tempModel->setData(tempModel->index(row,3),record.value("DEL").toInt(),Qt::EditRole);
-        tempModel->setData(tempModel->index(row,4),count,Qt::EditRole);
-        summ = record.value("Cena").toFloat() * record.value(4).toInt();
-        tempModel->setData(tempModel->index(row,5),summ,Qt::EditRole);
-    }
     }
     /////////////
     if (type_select == MATERIAL){
@@ -187,7 +186,6 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
                 flag = true;
             }
         };
-
 
         QList<QStandardItem*> lst = tempModel->findItems(record.value("ID").toString(),Qt::MatchContains,0);
         if (flag == true){
@@ -210,9 +208,16 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
     ///////////////////
     if (type_select == OSTATKI_SKALD || type_select == SKALD){
         QSqlRecord record = tabl_->record(index.row());
-
+        int countRec = record.value("COUNT").toInt();
         QList<QStandardItem*> lst = tempModel->findItems(record.value(0).toString(),Qt::MatchContains,0);
         if (type_select == OSTATKI_SKALD){
+
+            flag = true;
+            if(countRec <= 0){
+
+                flag = false;
+                QMessageBox::question(0,"Внимание","Данного материала нет на складе!",QMessageBox::Yes,QMessageBox::No);
+            }
             if (flag == true){
                 if (lst.count()==0){
                     tempModel->insertRow(countRow);
@@ -223,12 +228,21 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
                     count = tempModel->itemData(tempModel->index(lst[0]->index().row(),2)).value(0).toInt();
                     count++;
                 }
+                countRec = countRec - 1;
+
+                tabl_->setData(tabl_->index(index.row(),2),countRec);
+                ui->tableView->setModel(tabl_);
             }
 
             tempModel->setData(tempModel->index(row,0),record.value(0).toString(),Qt::EditRole);
             tempModel->setData(tempModel->index(row,1),record.value(1).toString(),Qt::EditRole);
             tempModel->setData(tempModel->index(row,2),count,Qt::EditRole);
         }else{
+            flag = true;
+            if(record.value("COUNT").toInt()<=0){
+                flag = false;
+                QMessageBox::question(0,"Внимание","Данного материала нет на складе!",QMessageBox::Yes,QMessageBox::No);
+            }
             if (flag == true){
                 if (lst.count()==0){
                     tempModel->insertRow(countRow);
@@ -239,6 +253,9 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
                     count = tempModel->itemData(tempModel->index(lst[0]->index().row(),3)).value(0).toInt();
                     count++;
                 }
+                countRec = countRec - 1;
+                tabl_->setData(tabl_->index(index.row(),2),countRec);
+                ui->tableView->setModel(tabl_);
             }
             tempModel->setData(tempModel->index(row,0),record.value(0).toString(),Qt::EditRole);
             tempModel->setData(tempModel->index(row,1),DateDoc.toString("dd.MM.yyyy"),Qt::EditRole);

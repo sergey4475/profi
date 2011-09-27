@@ -55,8 +55,8 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
 
             Number++;
 
-            sql.prepare("SELECT group_o_sklad.ID, group_o_sklad.Name "
-                        "FROM group_o_sklad");
+            sql.prepare("SELECT ID, Name "
+                        "FROM group_o_sklad ");
             sql.exec();
             qDebug() << sql.lastError();
             record = sql.record();
@@ -173,13 +173,14 @@ void frmDocument::on_ApplyBut_clicked()
         // --- Операции по документу склад ---
         if (type_doc_ == d_oskald){
 
-            sql.prepare("INSERT INTO O_SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,NUMBER) "
-                        "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:NUMBER) ");
+            sql.prepare("INSERT INTO O_SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,NUMBER,id_group_o_sklad) "
+                        "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:NUMBER,:id_group_o_sklad) ");
             sql.bindValue(":DATE",DATE);
             sql.bindValue(":ID_MATERIAL",ID_MATERIAL);
             sql.bindValue(":COUNT",COUNT);
             sql.bindValue(":type_operacii",type_operacii);
             sql.bindValue(":NUMBER",NUMBER);
+            sql.bindValue(":vid_zatrat",vid_zatrat);
             sql.exec();
 
         }
@@ -194,7 +195,6 @@ void frmDocument::on_ApplyBut_clicked()
             sql.bindValue(":type_operacii",PRIHOD);
             sql.bindValue(":vid_zatrat",vid_zatrat);
             sql.bindValue(":NUMBER",NUMBER);
-
             sql.exec();
 
             //Добавляем расход с общего склада
@@ -205,6 +205,7 @@ void frmDocument::on_ApplyBut_clicked()
             sql.bindValue(":COUNT",COUNT * (-1));
             sql.bindValue(":type_operacii",RASHOD);
             sql.bindValue(":NUMBER",NUMBER);
+            sql.exec();
         }
     }
     if (countRow > 0)
