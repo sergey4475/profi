@@ -114,18 +114,22 @@ void frmSelect::init(int type_sel, int type_uslugi, PStandardItemModel *table,in
     }
     else
         sql.prepare("SELECT "
-                    "   materials.ID, "
-                    "   materials.NAME, "
-                    "   SUM(O_SKLAD.COUNT) AS COUNT "
+                        "materials.ID, "
+                        "materials.NAME, "
+                        "SUM(O_SKLAD.COUNT) AS COUNT "
                     "FROM O_SKLAD INNER JOIN "
                     "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
+                    "   INNER JOIN "
+                    "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad "
                     "WHERE O_SKLAD.DATE <= :DATE "
+                    "AND vidi_zatrat.ID = :VidZatrat "
                     "GROUP BY "
                     "   materials.NAME, "
                     "   materials.ID");
 
     qDebug() << "Дата Документа: " + DateDoc.toString("dd.MM.yyyy");
     sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
+    sql.bindValue(":VidZatrat",type_uslugi_);
     sql.exec();
     qDebug() << sql.lastError();
     tabl_ = new Ost_model;

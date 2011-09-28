@@ -113,7 +113,6 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
             //ui->tableView->setColumnHidden(2,true);
             ui->tableView->setColumnHidden(4,true);
             ui->tableView->setColumnHidden(5,true);
-
         }
     }
 
@@ -127,9 +126,10 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
 
 void frmDocument::on_add_button_clicked()
 {
+    // --- Документ по складу ---
     if (type_doc_ == d_oskald) {
         if (ui->Group->currentIndex() == 0){
-            QMessageBox::question(0,"Внимание!!!","Выбеите отдел склада!",QMessageBox::Ok);
+            QMessageBox::question(0,"Внимание!!!","Выберите отдел склада!",QMessageBox::Ok);
             return;
         }
 
@@ -139,10 +139,10 @@ void frmDocument::on_add_button_clicked()
         fSelect->show();
     }
 
-
+    // --- Документ по распределению материала ---
     if (type_doc_ == d_raspred){
         if (ui->Group->currentIndex() == 0){
-            QMessageBox::question(0,"Внимание!!!","Выбеите кабинет!",QMessageBox::Ok);
+            QMessageBox::question(0,"Внимание!!!","Выберите кабинет!",QMessageBox::Ok);
             return;
         }
         frmSelect *fSelect = new frmSelect();
@@ -184,7 +184,7 @@ void frmDocument::on_ApplyBut_clicked()
             sql.exec();
 
         }
-
+        // --- Операции по документу распределение материалов ---
         if (type_doc_ == d_raspred){
             sql.prepare("INSERT INTO SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,id_VID_ZATRAT,NUMBER) "
                         "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:vid_zatrat,:NUMBER) ");
@@ -197,14 +197,23 @@ void frmDocument::on_ApplyBut_clicked()
             sql.bindValue(":NUMBER",NUMBER);
             sql.exec();
 
+            sql.prepare("SELECT vidi_zatrat.id_group_o_sklad "
+                        "FROM vidi_zatrat "
+                        "WHERE vidi_zatrat.id_vid_uslug = :vid_zatrat");
+            sql.bindValue(":vid_zatrat",vid_zatrat);
+            sql.exec();
+            sql.next();
+            int id_group_o_sklad = sql.record().value("id_group_o_sklad").toInt();
+
             //Добавляем расход с общего склада
-            sql.prepare("INSERT INTO O_SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,NUMBER) "
-                        "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:NUMBER) ");
+            sql.prepare("INSERT INTO O_SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,NUMBER,id_group_o_sklad) "
+                        "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:NUMBER,:id_group_o_sklad)");
             sql.bindValue(":DATE",DATE);
             sql.bindValue(":ID_MATERIAL",ID_MATERIAL);
             sql.bindValue(":COUNT",COUNT * (-1));
             sql.bindValue(":type_operacii",RASHOD);
             sql.bindValue(":NUMBER",NUMBER);
+            sql.bindValue(":id_group_o_sklad",id_group_o_sklad);
             sql.exec();
         }
     }
