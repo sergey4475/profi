@@ -43,6 +43,7 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
     type_doc_ = type_doc;
     // --- Документ по складу ---
     if (type_doc_ == d_oskald){
+        ui->l_group->setText("Раздел склада:");
         if (vid_form == f_document){ // -- Тип формы документ
             tempModel = model;
             sql.prepare("SELECT MAX(number) AS number "
@@ -58,7 +59,6 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
             sql.prepare("SELECT ID, Name "
                         "FROM group_o_sklad ");
             sql.exec();
-            qDebug() << sql.lastError();
             record = sql.record();
             while (sql.next()){
                 ui->Group->addItem(sql.value(1).toString(),sql.value(0).toInt());
@@ -67,7 +67,6 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
 
             ui->Number->setText(QString::number(Number));
 
-            //connect(model,SIGNAL(dataChanged(QModelIndex,QModelIndex)),model,SLOT(editFinish(QModelIndex)));
             ui->tableView->setModel(tempModel);
             ui->tableView->setColumnHidden(0,true);
             ui->tableView->setColumnHidden(1,true);
@@ -84,6 +83,7 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
     }
     // --- Документ по распределению материала ---
     if (type_doc_ == d_raspred){
+        ui->l_group->setText("Кабинет:");
         if (vid_form == 0){
             tempModel = model;
             sql.prepare("SELECT MAX(number) AS number "
