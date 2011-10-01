@@ -109,7 +109,7 @@ void frmUslugi::on_add_gr_clicked()
 void frmUslugi::on_treeWidget_itemPressed(QTreeWidgetItem *item, int column)
 {
     idVID = "0";
-    idGR  = "0";`
+    idGR  = "0";
 
     if (item->parent() == 0x0) {
         idVID = item->data(1,Qt::EditRole).toString();
@@ -121,5 +121,4 @@ void frmUslugi::on_treeWidget_itemPressed(QTreeWidgetItem *item, int column)
     }
     if (ui->treeWidget->currentItem()->flags()){
     }
-    item->flags().
 }
