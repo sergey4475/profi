@@ -121,4 +121,5 @@ void frmUslugi::on_treeWidget_itemPressed(QTreeWidgetItem *item, int column)
     }
     if (ui->treeWidget->currentItem()->flags()){
     }
+    item->flags().
 }

@@ -10,11 +10,11 @@ INPUT(
 ./release/frmselect.o
 ./release/frmschetclienta.o
 ./release/frmspr.o
-./release/frmo_sklad.o
 ./release/qdatelineedit.o
 ./release/qsellineedit.o
 ./release/procedures.o
-./release/frmraspred.o
+./release/frm_setting.o
+./release/frmdocument.o
 ./release/moc_mainform.o
 ./release/moc_frmclients.o
 ./release/moc_frmsotr.o
@@ -25,9 +25,9 @@ INPUT(
 ./release/moc_delegats.o
 ./release/moc_frmschetclienta.o
 ./release/moc_frmspr.o
-./release/moc_frmo_sklad.o
 ./release/moc_qdatelineedit.o
 ./release/moc_qsellineedit.o
-./release/moc_frmraspred.o
+./release/moc_frm_setting.o
+./release/moc_frmdocument.o
 ./release/qrc_icons.o
 );
