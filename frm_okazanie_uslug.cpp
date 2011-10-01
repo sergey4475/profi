@@ -1,10 +1,11 @@
-#define  PRIHOD 1
-#define  RASHOD 2
+#define  n_PRIHOD 1
+#define  n_RASHOD 2
 
 #include "frm_okazanie_uslug.h"
 #include "ui_frm_okazanie_uslug.h"
 #include "frmselect.h"
 #include "frmclients.h"
+#include "params.h"
 #include "delegats.h"
 #include "procedures.h"
 #include "mainform.h"
@@ -106,17 +107,21 @@ void frm_okazanie_uslug::on_add_usluga_clicked()
             frmSelect *fSelect = new frmSelect();
             tempModel = new PStandardItemModel;
             tempModel->frm = frm;
-            ui->Uslugi->setModel(tempModel);
-            ui->Uslugi->setColumnHidden(0,true);
-            ui->Uslugi->setColumnHidden(3,true);
-            ui->Uslugi->setItemDelegateForColumn(1,DelegatNotEditCol);
-            ui->Uslugi->setItemDelegateForColumn(5,DelegatNotEditCol);
-            ui->Uslugi->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+            ui->USLUGI->setModel(tempModel);
+            ui->USLUGI->setColumnHidden(0,true);
+            ui->USLUGI->setColumnHidden(3,true);
+            ui->USLUGI->setItemDelegateForColumn(1,DelegatNotEditCol);
+            ui->USLUGI->setItemDelegateForColumn(5,DelegatNotEditCol);
+            ui->USLUGI->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
             connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),tempModel,SLOT(editFinish(QModelIndex)));
             fSelect->frm = frm;
-            fSelect->init(1,NumberUslugi,tempModel,ID_client,QDate::currentDate());
-            ui->Uslugi->setColumnHidden(0,true);
-            ui->Uslugi->setColumnHidden(3,true);
+            fSelect->type_select = n_USLUGI;
+            fSelect->type_uslugi_= NumberUslugi;
+            fSelect->tempModel   = tempModel;
+            fSelect->Id_Client   = ID_client;
+            fSelect->init(QDate::currentDate());
+            ui->USLUGI->setColumnHidden(0,true);
+            ui->USLUGI->setColumnHidden(3,true);
             fSelect->show();
     }else{
             QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Yes);
@@ -136,7 +141,11 @@ void frm_okazanie_uslug::on_add_material_clicked()
             ui->Materials->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
             connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),tempModel,SLOT(editFinish(QModelIndex)));
             fSelect->frm = frm;
-            fSelect->init(OSTATKI_SKALD,NumberUslugi,tempModel,ID_client,QDate::currentDate());
+            fSelect->type_select = n_OSTATKI_SKALD;
+            fSelect->type_uslugi_= NumberUslugi;
+            fSelect->tempModel   = tempModel;
+            fSelect->Id_Client   = ID_client;
+            fSelect->init(QDate::currentDate());
             fSelect->show();
             ui->Materials->setColumnHidden(0,true);
     }else{
@@ -155,7 +164,7 @@ void frm_okazanie_uslug::on_del_material_clicked()
 // Удаление услуги из списка
 void frm_okazanie_uslug::on_del_usluga_clicked()
 {
-    ui->Uslugi->model()->removeRow(ui->Uslugi->currentIndex().row());
+    ui->USLUGI->model()->removeRow(ui->USLUGI->currentIndex().row());
 }
 
 // Окончание выбора или ввода клиента
@@ -200,7 +209,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
     int VidPlateja = ui->sposobOplati->itemData(ui->sposobOplati->currentIndex()).toInt();
 
     // Оплата услуг
-    int countRow = ui->Uslugi->model()->rowCount();
+    int countRow = ui->USLUGI->model()->rowCount();
     if (ID_sotr != 0 && ID_client != 0 && countRow !=0 ){
 
         // Если способ оплаты, счет клиента, то списываем со счета сумму платежа
@@ -208,7 +217,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
 
             double sum_uslugi = 0;
             for (int ind = 0;ind < countRow; ind++){
-                sum_uslugi += ui->Uslugi->model()->itemData(ui->Uslugi->model()->index(ind,5)).value(0).toDouble();
+                sum_uslugi += ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
             }
 
             if (GetOstatokNaSchete(ID_client,date_usl.toString("dd.MM.yyyy")) < sum_uslugi){
@@ -220,10 +229,10 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
         }
 
         for (int ind = 0; ind < countRow; ind++){
-            int IDUsl   = ui->Uslugi->model()->itemData(ui->Uslugi->model()->index(ind,0)).value(0).toInt();
-            int count   = ui->Uslugi->model()->itemData(ui->Uslugi->model()->index(ind,4)).value(0).toInt();
-            double summa= ui->Uslugi->model()->itemData(ui->Uslugi->model()->index(ind,5)).value(0).toDouble();
-            double cena = ui->Uslugi->model()->itemData(ui->Uslugi->model()->index(ind,2)).value(0).toDouble();
+            int IDUsl   = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,0)).value(0).toInt();
+            int count   = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,4)).value(0).toInt();
+            double summa= ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
+            double cena = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,2)).value(0).toDouble();
 
 //            QList<QStandardItem*> lst = mUslugi->findItems(QString(IDUsl),Qt::MatchContains,0);
 
@@ -240,12 +249,13 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
                 sql.bindValue(":count",count);
                 sql.bindValue(":cena",cena);
                 sql.bindValue(":SUMMA",summa);
-                sql.bindValue(":oplacheno",1);
+                sql.bindValue(":oplacheno",true);
                 sql.bindValue(":vid_oplati",VidPlateja);
 
                 sql.exec();
+                qDebug() << sql.lastError();
 
-                ui->Uslugi->setDisabled(true);
+                ui->USLUGI->setDisabled(true);
                 ui->prodaja->setDisabled(true);
                 ui->but_oplatit->setDisabled(true);
   //          }
@@ -255,8 +265,8 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
         for (int ind = 0; ind < countRow; ind++){
             int ID_MATERIAL   = ui->Materials->model()->itemData(ui->Materials->model()->index(ind,0)).value(0).toInt();
             int COUNT   = ui->Materials->model()->itemData(ui->Materials->model()->index(ind,2)).value(0).toInt();
-//            double summa= ui->Materials->model()->itemData(ui->Uslugi->model()->index(ind,5)).value(0).toDouble();
-//            double cena = ui->Materials->model()->itemData(ui->Uslugi->model()->index(ind,2)).value(0).toDouble();
+//            double summa= ui->Materials->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
+//            double cena = ui->Materials->model()->itemData(ui->USLUGI->model()->index(ind,2)).value(0).toDouble();
 
             QSqlQuery sql;
             sql.prepare("INSERT INTO SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,id_VID_ZATRAT,NUMBER) "
@@ -265,18 +275,13 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             sql.bindValue(":DATE",date_usl.toString("dd.MM.yyyy"));
             sql.bindValue(":ID_MATERIAL",ID_MATERIAL);
             sql.bindValue(":COUNT",COUNT * (-1));
-            sql.bindValue(":type_operacii",PRIHOD);
+            sql.bindValue(":type_operacii",n_PRIHOD);
             sql.bindValue(":vid_zatrat",NumberUslugi);
             sql.bindValue(":NUMBER",Number);
             sql.exec();
             qDebug() << sql.lastError();
 
         }
-
-
-
-
-
     }
     else{
         QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Ok);

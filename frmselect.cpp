@@ -1,4 +1,5 @@
 #include "frmselect.h"
+#include "params.h"
 #include "ui_frmselect.h"
 #include <QList>
 
@@ -14,21 +15,18 @@ frmSelect::~frmSelect()
     delete ui;
 }
 
-void frmSelect::init(int type_sel, int type_uslugi, PStandardItemModel *table,int ID_client, QDate date){
+void frmSelect::init(QDate date){
     this->setWindowFlags(Qt::Tool);
     this->setWindowModality(Qt::WindowModal);
     QString mass ="0";
     DateDoc = date;
-    type_select = type_sel;
-    type_uslugi_= type_uslugi;
-
     /////
-    if (type_select == USLUGI) {
+    if (type_select == n_USLUGI) {
         QSqlQuery query;
         query.prepare("SELECT CLIENTS_HISTORY.ID_USLUGA "
                       "FROM CLIENTS_HISTORY "
                       "WHERE CLIENTS_HISTORY.ID_CLIENT = :ID_CLIENT AND CLIENTS_HISTORY.DATE_USLUGI = :DATE_USLUGI");
-        query.bindValue(":ID_CLIENT",ID_client);
+        query.bindValue(":ID_CLIENT",Id_Client);
         query.bindValue(":DATE_USLUGI",DateDoc.toString("dd.MM.yyyy"));
         query.exec();
 
@@ -36,8 +34,6 @@ void frmSelect::init(int type_sel, int type_uslugi, PStandardItemModel *table,in
             mass = mass + ",";
             mass = mass + query.value(0).toString();
         }
-
-        tempModel = table;
 
         if (tempModel->columnCount() == 0) {
             tempModel->insertColumn(0);
@@ -55,8 +51,8 @@ void frmSelect::init(int type_sel, int type_uslugi, PStandardItemModel *table,in
         }
 
         tabl = new PSqlTableModel;
-        tabl->setTable("USLUGI");
-        tabl->setFilter("VID_USLUGI="+ QString("%1").arg(type_uslugi));
+        tabl->setTable("n_USLUGI");
+        tabl->setFilter("VID_USLUGI="+ QString("%1").arg(type_uslugi_));
         tabl->setFilter("ID NOT IN ("+mass+")");
         tabl->select();
         tabl->setHeaderData(0,Qt::Horizontal,tr("ID"));
@@ -71,9 +67,7 @@ void frmSelect::init(int type_sel, int type_uslugi, PStandardItemModel *table,in
         ui->tableView->setColumnHidden(5,true);
     }
     //////////////////
-    else if (type_select == MATERIAL) {
-        tempModel = table;
-
+    else if (type_select == n_MATERIAL) {
         tabl = new PSqlTableModel;
         tabl->setTable("MATERIALS");
 
@@ -86,8 +80,7 @@ void frmSelect::init(int type_sel, int type_uslugi, PStandardItemModel *table,in
         ui->tableView->setColumnHidden(2,true);
     }
     //**************************** Добавление материала со склада //***********************
-    else if (type_select == OSTATKI_SKALD || type_select == SKALD) {
-    tempModel = table;
+    else if (type_select == n_OSTATKI_SKALD || type_select == n_SKALD) {
 
     if (tempModel->columnCount() == 0) {
         tempModel->insertColumn(0);
@@ -98,7 +91,7 @@ void frmSelect::init(int type_sel, int type_uslugi, PStandardItemModel *table,in
         tempModel->setHeaderData(2,Qt::Horizontal,tr("Кол-во"));        //2
     }
     QSqlQuery sql;
-    if (type_select == OSTATKI_SKALD){
+    if (type_select == n_OSTATKI_SKALD){
         sql.prepare("SELECT "
                     "   materials.ID, "
                     "   materials.NAME, "
@@ -149,7 +142,7 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
     int countRow = tempModel->rowCount();
     bool flag = true;
     ///////////
-    if (type_select == USLUGI){
+    if (type_select == n_USLUGI){
         QSqlRecord record = tabl->record(index.row());
         double summ  = 0.00;
 
@@ -182,7 +175,7 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
         }
     }
     /////////////
-    if (type_select == MATERIAL){
+    if (type_select == n_MATERIAL){
         QSqlRecord record = tabl->record(index.row());
         if (record.value("DEL").toInt()==1){
             flag = false;
@@ -210,11 +203,11 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
         tempModel->setData(tempModel->index(row,4),1,Qt::EditRole);
     }
     ///////////////////
-    if (type_select == OSTATKI_SKALD || type_select == SKALD){
+    if (type_select == n_OSTATKI_SKALD || type_select == n_SKALD){
         QSqlRecord record = tabl_->record(index.row());
         int countRec = record.value("COUNT").toInt();
         QList<QStandardItem*> lst = tempModel->findItems(record.value(0).toString(),Qt::MatchContains,0);
-        if (type_select == OSTATKI_SKALD){
+        if (type_select == n_OSTATKI_SKALD){
 
             flag = true;
             if(countRec <= 0){

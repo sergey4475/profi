@@ -1,4 +1,5 @@
 #include "frmclients.h"
+#include "params.h"
 #include "ui_frmclients.h"
 #include <QMessageBox>
 #include "MyModel.h"
@@ -62,9 +63,9 @@ void frmClients::on_tableView_clicked(const QModelIndex &index)
         ui->Pol->setCurrentIndex(query.value(4).toInt());
    }
     query.prepare("SELECT Clients_history.DATE_USLUGI, "
-                  "USLUGI.NAME, "
+                  "n_USLUGI.NAME, "
                   "Clients_history.SUMMA "
-                  "FROM CLIENTS_HISTORY INNER JOIN USLUGI ON CLIENTS_HISTORY.ID_USLUGA = USLUGI.ID "
+                  "FROM CLIENTS_HISTORY INNER JOIN n_USLUGI ON CLIENTS_HISTORY.ID_USLUGA = n_USLUGI.ID "
                   "WHERE Clients_history.ID_CLIENT = :ID ");
     query.bindValue(":ID",IDClients);
     query.exec();

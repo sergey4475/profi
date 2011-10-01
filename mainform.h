@@ -53,10 +53,6 @@ private slots:
 private:
     Ui::MainForm *ui;
     double summa_uslug;
-    int USL_MAN;
-    int USL_KOS;
-    int USL_UHOD;
-    int USL_STIL;
 };
 
 #endif // MAINFORM_H

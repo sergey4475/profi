@@ -1,4 +1,5 @@
 #include "frmdocument.h"
+#include "params.h"
 #include "ui_frmdocument.h"
 
 frmDocument::frmDocument(QWidget *parent) :
@@ -134,7 +135,11 @@ void frmDocument::on_add_button_clicked()
         }
 
         frmSelect *fSelect = new frmSelect();
-        fSelect->init(2,0,tempModel,0,QDate::currentDate());
+        fSelect->type_select = n_MATERIAL;
+        fSelect->type_uslugi_= 0;
+        fSelect->tempModel   = tempModel;
+        fSelect->Id_Client   = 0;
+        fSelect->init(QDate::currentDate());
         fSelect->setWindowModality(Qt::ApplicationModal);
         fSelect->show();
     }
@@ -146,7 +151,12 @@ void frmDocument::on_add_button_clicked()
             return;
         }
         frmSelect *fSelect = new frmSelect();
-        fSelect->init(4,ui->Group->itemData(ui->Group->currentIndex()).toInt(),tempModel,0,QDate::currentDate());
+        fSelect->type_select = n_SKALD;
+        fSelect->type_uslugi_= ui->Group->itemData(ui->Group->currentIndex()).toInt();
+        fSelect->tempModel   = tempModel;
+        fSelect->Id_Client   = 0;
+        fSelect->init(QDate::currentDate());
+
         fSelect->setWindowModality(Qt::ApplicationModal);
         fSelect->show();
     }
@@ -192,7 +202,7 @@ void frmDocument::on_ApplyBut_clicked()
             sql.bindValue(":DATE",DATE);
             sql.bindValue(":ID_MATERIAL",ID_MATERIAL);
             sql.bindValue(":COUNT",COUNT);
-            sql.bindValue(":type_operacii",PRIHOD);
+            sql.bindValue(":type_operacii",n_PRIHOD);
             sql.bindValue(":vid_zatrat",vid_zatrat);
             sql.bindValue(":NUMBER",NUMBER);
             sql.exec();
@@ -211,7 +221,7 @@ void frmDocument::on_ApplyBut_clicked()
             sql.bindValue(":DATE",DATE);
             sql.bindValue(":ID_MATERIAL",ID_MATERIAL);
             sql.bindValue(":COUNT",COUNT * (-1));
-            sql.bindValue(":type_operacii",RASHOD);
+            sql.bindValue(":type_operacii",n_RASHOD);
             sql.bindValue(":NUMBER",NUMBER);
             sql.bindValue(":id_group_o_sklad",id_group_o_sklad);
             sql.exec();

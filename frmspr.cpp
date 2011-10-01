@@ -1,4 +1,5 @@
 #include "frmspr.h"
+#include "params.h"
 #include "ui_frmspr.h"
 
 frmSpr::frmSpr(QWidget *parent) :

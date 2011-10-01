@@ -128,7 +128,7 @@
     <string>Мастер:</string>
    </property>
   </widget>
-  <widget class="QTableView" name="Uslugi">
+  <widget class="QTableView" name="USLUGI">
    <property name="geometry">
     <rect>
      <x>64</x>
