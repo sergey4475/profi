@@ -31,10 +31,13 @@ private slots:
 
     void on_treeWidget_itemPressed(QTreeWidgetItem *item, int column);
 
+    void updater(QTreeWidgetItem *item, int column);
+
 private:
     Ui::frmUslugi *ui;
     QString idVID, idGR;
     QTreeWidgetItem *root, *folder, *currentItem;
+    bool eventFilter(QObject * obj, QEvent * event);
 };
 
 #endif // FRMUSLUGI_H

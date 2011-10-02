@@ -52,6 +52,7 @@ void frmUslugi::init()
 
         id_vid_uslugi = model->value(record.indexOf("ID_VID")).toInt();
     }
+    ui->treeWidget->installEventFilter(this);
 }
 
 void frmUslugi::on_treeWidget_itemActivated(QTreeWidgetItem *item, int column)
@@ -112,13 +113,48 @@ void frmUslugi::on_treeWidget_itemPressed(QTreeWidgetItem *item, int column)
     idGR  = "0";
 
     if (item->parent() == 0x0) {
-        idVID = item->data(1,Qt::EditRole).toString();
-        currentItem = item;
+        if (! item->flags().operator &(Qt::ItemIsEditable)){
+            idVID = item->data(1,Qt::EditRole).toString();
+            currentItem = item;
+        }
     }else{
-        idVID = item->parent()->data(1,Qt::EditRole).toString();
-        idGR  = item->data(1,Qt::EditRole).toString();
-        currentItem = item->parent();
+        if (! item->flags().operator &(Qt::ItemIsEditable)){
+            idVID = item->parent()->data(1,Qt::EditRole).toString();
+            idGR  = item->data(1,Qt::EditRole).toString();
+            currentItem = item->parent();
+        }
     }
-    if (ui->treeWidget->currentItem()->flags()){
+}
+
+
+void frmUslugi::updater(QTreeWidgetItem *item, int column)
+{
+    qDebug() << idVID.toInt();
+    if (item->flags().operator &(Qt::ItemIsEditable)){
+
+        if (QMessageBox::question(0,"Внимание!!!","Сохранить изменения?",QMessageBox::Yes,QMessageBox::No)==QMessageBox::Yes){
+            QSqlQuery sql;
+            sql.prepare("INSERT INTO GROUP_USLUGI(name,vid_uslugi) VALUES(:Name,:vid_uslugi)");
+            sql.bindValue(":Name",item->text(0));
+            sql.bindValue(":vid_uslugi",idVID.toInt());
+            if (sql.exec())
+                item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+        }else
+            return;
     }
+
+}
+
+bool frmUslugi::eventFilter(QObject *obj, QEvent *event){
+    if (event->type() == QEvent::KeyPress){
+        //16777220
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        qDebug() << keyEvent->key();
+        qDebug() << Qt::Key_Return;
+        if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return)
+            updater(ui->treeWidget->currentItem(),ui->treeWidget->currentColumn());
+    }
+
+   return QWidget::eventFilter(obj , event);
+
 }
