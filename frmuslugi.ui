@@ -44,6 +44,9 @@
    <property name="animated">
     <bool>true</bool>
    </property>
+   <attribute name="headerShowSortIndicator" stdset="0">
+    <bool>false</bool>
+   </attribute>
    <column>
     <property name="text">
      <string>Категории услуг</string>

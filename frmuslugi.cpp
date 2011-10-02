@@ -14,9 +14,8 @@ frmUslugi::~frmUslugi()
     delete ui;
 }
 
-void frmUslugi::init()
-{
-    this->setWindowFlags(Qt::Tool);
+void frmUslugi::update_tree(){
+    ui->treeWidget->clear();
     QSqlQuery *model = new QSqlQuery;
     model->exec("SELECT VID_USLUG.NAME AS VID, "
                 "       VID_USLUG.ID AS ID_VID, "
@@ -48,10 +47,15 @@ void frmUslugi::init()
             folder->setData(1,Qt::EditRole,id_group);
             folder->setIcon(0,QIcon(":/res/icons/24.bmp"));
         }
-
-
         id_vid_uslugi = model->value(record.indexOf("ID_VID")).toInt();
     }
+}
+
+void frmUslugi::init()
+{
+    this->setWindowFlags(Qt::Tool);
+    this->setWindowModality(Qt::ApplicationModal);
+    update_tree();
     ui->treeWidget->installEventFilter(this);
 }
 
@@ -103,10 +107,20 @@ void frmUslugi::on_add_gr_clicked()
     folder = new QTreeWidgetItem(currentItem);
     ui->treeWidget->currentItem()->setExpanded(true);
     folder->setText(0,"group");
+    folder->setData(1,Qt::EditRole,0);
     folder->setSelected(true);
     folder->setFlags(folder->flags() | Qt::ItemIsEditable);
     folder->setIcon(0,QIcon(":/res/icons/24.bmp"));
 }
+
+void frmUslugi::on_edit_gr_clicked()
+{
+    ui->treeWidget->currentItem()->setFlags(ui->treeWidget->currentItem()->flags() | Qt::ItemIsEditable);
+    ui->treeWidget->currentItem()->setSelected(true);
+    ui->treeWidget->editItem(ui->treeWidget->currentItem(),0);
+}
+
+
 void frmUslugi::on_treeWidget_itemPressed(QTreeWidgetItem *item, int column)
 {
     idVID = "0";
@@ -129,16 +143,30 @@ void frmUslugi::on_treeWidget_itemPressed(QTreeWidgetItem *item, int column)
 
 void frmUslugi::updater(QTreeWidgetItem *item, int column)
 {
-    qDebug() << idVID.toInt();
     if (item->flags().operator &(Qt::ItemIsEditable)){
 
         if (QMessageBox::question(0,"Внимание!!!","Сохранить изменения?",QMessageBox::Yes,QMessageBox::No)==QMessageBox::Yes){
             QSqlQuery sql;
-            sql.prepare("INSERT INTO GROUP_USLUGI(name,vid_uslugi) VALUES(:Name,:vid_uslugi)");
+            int id_vid = item->parent()->data(1,Qt::EditRole).toInt();
+            int id_gr = item->data(1,Qt::EditRole).toInt();
+
+            if (item->data(1,Qt::EditRole)==0){
+                sql.prepare("INSERT INTO GROUP_USLUGI(name,vid_uslugi) VALUES(:Name,:vid_uslugi)");
+            }
+
+            if (item->data(1,Qt::EditRole)!=0){
+                sql.prepare("UPDATE GROUP_USLUGI SET name=:Name "
+                            "WHERE GROUP_USLUGI.vid_uslugi = :vid_uslugi AND GROUP_USLUGI.ID = :ID ");
+                sql.bindValue(":ID",id_gr);
+            }
+
             sql.bindValue(":Name",item->text(0));
-            sql.bindValue(":vid_uslugi",idVID.toInt());
-            if (sql.exec())
+            sql.bindValue(":vid_uslugi",id_vid);
+
+            if (sql.exec()){
                 item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+                update_tree();
+            }
         }else
             return;
     }
@@ -149,8 +177,6 @@ bool frmUslugi::eventFilter(QObject *obj, QEvent *event){
     if (event->type() == QEvent::KeyPress){
         //16777220
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        qDebug() << keyEvent->key();
-        qDebug() << Qt::Key_Return;
         if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return)
             updater(ui->treeWidget->currentItem(),ui->treeWidget->currentColumn());
     }
