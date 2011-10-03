@@ -1,4 +1,5 @@
 #include "frmsotr.h"
+#include "params.h"
 #include "sqlmodules.h"
 #include "ui_frmsotr.h"
 #include "MyModel.h"

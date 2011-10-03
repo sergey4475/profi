@@ -1,4 +1,5 @@
 #include "frmschetclienta.h"
+#include "params.h"
 #include "ui_frmschetclienta.h"
 
 frmSchetClienta::frmSchetClienta(QWidget *parent) :

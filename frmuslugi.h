@@ -1,3 +1,4 @@
+
 #ifndef FRMUSLUGI_H
 #define FRMUSLUGI_H
 
@@ -18,7 +19,6 @@ public:
     ~frmUslugi();
     void init();
     PSqlTableModel *tabl;
-    QString idVID, idGR;
 private slots:
 
     void on_treeWidget_itemActivated(QTreeWidgetItem *item, int column);
@@ -27,8 +27,19 @@ private slots:
 
     void on_del_usluga_clicked();
 
+    void on_add_gr_clicked();
+
+    void on_treeWidget_itemPressed(QTreeWidgetItem *item, int column);
+
+    void on_edit_gr_clicked();
+
 private:
     Ui::frmUslugi *ui;
+    QString idVID, idGR;
+    QTreeWidgetItem *root, *folder, *currentItem;
+    bool eventFilter(QObject * obj, QEvent * event);
+    void updater(QTreeWidgetItem *item, int column);
+    void update_tree();
 };
 
 #endif // FRMUSLUGI_H

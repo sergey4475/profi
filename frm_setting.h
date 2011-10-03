@@ -2,6 +2,7 @@
 #define FRM_SETTING_H
 
 #include <QWidget>
+#include "params.h"
 
 namespace Ui {
     class frm_setting;

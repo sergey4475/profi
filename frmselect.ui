@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>477</width>
-    <height>357</height>
+    <height>345</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <property name="geometry">
     <rect>
      <x>8</x>
-     <y>20</y>
+     <y>36</y>
      <width>461</width>
-     <height>277</height>
+     <height>261</height>
     </rect>
    </property>
    <property name="editTriggers">
@@ -40,6 +40,19 @@
    </property>
    <property name="text">
     <string>Выбрать...</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="all_ostatki">
+   <property name="geometry">
+    <rect>
+     <x>8</x>
+     <y>8</y>
+     <width>153</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Показывать все остатки</string>
    </property>
   </widget>
  </widget>

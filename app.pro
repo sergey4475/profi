@@ -29,7 +29,8 @@ HEADERS  += mainform.h sqlmodules.h frmclients.h frmsotr.h MyModel.h frmuslugi.h
     include/qsellineedit.h \
     include/procedures.h \
     frm_setting.h \
-    frmdocument.h
+    frmdocument.h \
+    params.h
 
 FORMS    += mainform.ui \
     frmclients.ui \
@@ -44,6 +45,7 @@ FORMS    += mainform.ui \
 
 RESOURCES += \
     icons.qrc
+
 
 
 

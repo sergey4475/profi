@@ -2,6 +2,7 @@
 #include "sqlmodules.h"
 #include <QDebug>
 #include "frmclients.h"
+#include "params.h"
 #include "frmuslugi.h"
 #include "frm_okazanie_uslug.h"
 #include "frmsotr.h"
@@ -18,19 +19,14 @@ MainForm::MainForm(QWidget *parent) :
     ui->setupUi(this);
 
     QSettings settings("conf.ini",QSettings::IniFormat);
-    QString hostname = settings.value("HostName").toString();
-    QString DataBase = settings.value("DataBase").toString();
-    QString login = settings.value("Login").toString();
-    QString Password = settings.value("Password").toString();
-    QString DriverName = settings.value("DriverName").toString();
+    hostname = settings.value("HostName").toString();
+    DataBase = settings.value("DataBase").toString();
+    login = settings.value("Login").toString();
+    Password = settings.value("Password").toString();
+    DriverName = settings.value("DriverName").toString();
 
     db = ConnectDB(hostname,DataBase,login,Password,DriverName);
 //    CreateDb(db);
-
-    USL_MAN = 1;
-    USL_KOS = 2;
-    USL_UHOD= 3;
-    USL_STIL= 4;
 
 }
 
@@ -100,7 +96,7 @@ void MainForm::on_butMonMaster_clicked()
 {
     UpdateClients(0);
     frm_okazanie_uslug *frm_uslugi = new frm_okazanie_uslug;
-    frm_uslugi->InitForm(USL_MAN,w_ID);
+    frm_uslugi->InitForm(n_USL_MAN,w_ID);
     frm_uslugi->setParent(ui->frame);
     frm_uslugi->frm = this;
     frm_uslugi->show();
@@ -116,7 +112,7 @@ void MainForm::on_butKosmitolog_clicked()
 {
     UpdateClients(0);
     frm_okazanie_uslug *frm_uslugi = new frm_okazanie_uslug;
-    frm_uslugi->InitForm(USL_KOS,w_ID);
+    frm_uslugi->InitForm(n_USL_KOS,w_ID);
     frm_uslugi->setParent(ui->frame);
     frm_uslugi->frm = this;
     frm_uslugi->show();
@@ -132,7 +128,7 @@ void MainForm::on_butUhodzaTelom_clicked()
 {
     UpdateClients(0);
     frm_okazanie_uslug *frm_uslugi = new frm_okazanie_uslug;
-    frm_uslugi->InitForm(USL_UHOD,w_ID);
+    frm_uslugi->InitForm(n_USL_UHOD,w_ID);
     frm_uslugi->setParent(ui->frame);
     frm_uslugi->frm = this;
     frm_uslugi->show();
@@ -148,7 +144,7 @@ void MainForm::on_butStilist_clicked()
 {
     UpdateClients(0);
     frm_okazanie_uslug *frm_uslugi = new frm_okazanie_uslug;
-    frm_uslugi->InitForm(USL_STIL,w_ID);
+    frm_uslugi->InitForm(n_USL_STIL,w_ID);
     frm_uslugi->setParent(ui->frame);
     frm_uslugi->frm = this;
     frm_uslugi->show();

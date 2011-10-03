@@ -5,8 +5,6 @@
 #define f_ostatki   1
 #define d_oskald    1
 #define d_raspred   2
-#define  PRIHOD 1
-#define  RASHOD 2
 
 #include <QWidget>
 #include "MyModel.h"

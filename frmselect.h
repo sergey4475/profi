@@ -1,10 +1,10 @@
 #ifndef FRMSELECT_H
 #define FRMSELECT_H
 
-#define USLUGI 1
-#define MATERIAL 2
-#define OSTATKI_SKALD 3
-#define SKALD 4
+#define n_USLUGI 1
+#define n_MATERIAL 2
+#define n_OSTATKI_SKALD 3
+#define n_SKALD 4
 
 #include <QtGui/QWidget>
 #include "sqlmodules.h"
@@ -27,9 +27,9 @@ public:
     PStandardItemModel *tempModel;
     MainForm *frm;
     QDate DateDoc;
-    int type_select, type_uslugi_;
+    int type_select, type_uslugi_,Id_Client;
     QTableView *tableParent;
-    void init(int type_sel,int type_uslugi, PStandardItemModel *table,int ID_client, QDate date);
+    void init(QDate date);
     ~frmSelect();
 
 private slots:
