@@ -38,8 +38,8 @@ private:
     QString idVID, idGR;
     QTreeWidgetItem *root, *folder, *currentItem;
     bool eventFilter(QObject * obj, QEvent * event);
-    void updater(QTreeWidgetItem *item, int column,QObject *obj);
-    void updater(QModelIndex item, int column,QObject *obj);
+    void updater(QTreeWidgetItem *item, int count_row,QObject *obj);
+    void updater(QModelIndex item, int count_row,QObject *obj);
     void update_tree();
 };
 

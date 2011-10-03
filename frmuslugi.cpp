@@ -58,6 +58,7 @@ void frmUslugi::init()
     update_tree();
     ui->treeWidget->installEventFilter(this);
     ui->tableUslugi->installEventFilter(this);
+    ui->tableUslugi->setSortingEnabled(true);
 }
 
 void frmUslugi::on_treeWidget_itemActivated(QTreeWidgetItem *item, int column)
@@ -94,7 +95,7 @@ void frmUslugi::on_add_usluga_clicked()
     tabl->setData(tabl->index(row,5),idGR.toInt(),Qt::EditRole);
     tabl->submitAll();
     ui->tableUslugi->edit(tabl->index(row,1));
-
+    ui->tableUslugi->scrollToBottom();
 }
 
 void frmUslugi::on_del_usluga_clicked()
@@ -146,13 +147,28 @@ void frmUslugi::on_treeWidget_itemPressed(QTreeWidgetItem *item, int column)
     }
 }
 
-void frmUslugi::updater(QModelIndex item, int column, QObject *obj){
+void frmUslugi::updater(QModelIndex item, int count_row, QObject *obj){
     if (obj->objectName() == "tableUslugi"){
-//        ui->tableUslugi->edit(item);
+        int col = item.column();
+        int row = item.row();
+
+        if (col == 1){
+            col++;
+        }else if (col == 2){
+            col--;
+            row++;
+        }else
+            col = 1;
+
+        if (row >= count_row || row < 0)
+            row = 0;
+        qDebug() << row;
+        item = item.model()->index(row,col);
+        ui->tableUslugi->setCurrentIndex(item);
     }
 }
 
-void frmUslugi::updater(QTreeWidgetItem *item,int column,QObject *obj)
+void frmUslugi::updater(QTreeWidgetItem *item, int count_row,QObject *obj)
 {
     if (obj->objectName() == "treeWidget") {
         if (item->flags().operator &(Qt::ItemIsEditable)){
@@ -199,13 +215,13 @@ bool frmUslugi::eventFilter(QObject *obj, QEvent *event){
         }
         if (obj->objectName() == "tableUslugi") {
             if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return){
-                updater(ui->tableUslugi->currentIndex(),ui->tableUslugi->currentIndex().column(),obj);
-                ui->tableUslugi->setFocus();
+                if(ui->tableUslugi->model() != 0)
+                    updater(ui->tableUslugi->currentIndex(),ui->tableUslugi->model()->rowCount(),obj);
             }
 
-
             if (keyEvent->key() == Qt::Key_Insert)
-                on_add_usluga_clicked();
+                if(ui->tableUslugi->model() != 0)
+                    on_add_usluga_clicked();
         }
     }
 
