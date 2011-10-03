@@ -19,13 +19,14 @@ MainForm::MainForm(QWidget *parent) :
     ui->setupUi(this);
 
     QSettings settings("conf.ini",QSettings::IniFormat);
-    hostname = settings.value("HostName").toString();
-    DataBase = settings.value("DataBase").toString();
-    login = settings.value("Login").toString();
-    Password = settings.value("Password").toString();
-    DriverName = settings.value("DriverName").toString();
+    hostname    = settings.value("HostName").toString();
+    DataBase    = settings.value("DataBase").toString();
+    login       = settings.value("Login").toString();
+    Password    = settings.value("Password").toString();
+    DriverName  = settings.value("DriverName").toString();
+    Port        = settings.value("Port",5432).toInt();
 
-    db = ConnectDB(hostname,DataBase,login,Password,DriverName);
+    db = ConnectDB(hostname,DataBase,login,Password,DriverName,Port);
 //    CreateDb(db);
 
 }

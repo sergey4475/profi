@@ -30,6 +30,7 @@ void frm_setting::InitForm(){
     ui->NameDataBase->setText(settings.value("DataBase").toString());
     ui->loginDB->setText(settings.value("Login").toString());
     ui->passwordDB->setText(settings.value("Password").toString());
+    ui->port->setText(settings.value("Port").toString());
     ui->DriversDB->setCurrentIndex(ui->DriversDB->findText(settings.value("DriverName").toString()));
 
 }
@@ -59,5 +60,6 @@ void frm_setting::on_pushButton_clicked()
     settings.setValue("DataBase",ui->NameDataBase->text());
     settings.setValue("Login",ui->loginDB->text());
     settings.setValue("Password",ui->passwordDB->text());
+    settings.setValue("Port",ui->port->text().toInt());
     settings.setValue("DriverName",ui->DriversDB->currentText());
 }

@@ -1,13 +1,14 @@
 #include "sqlmodules.h"
 
 QSqlDatabase db;
-QSqlDatabase ConnectDB(QString HostName, QString DatabaseName, QString UserName, QString Password, QString DriverBD){
+QSqlDatabase ConnectDB(QString HostName, QString DatabaseName, QString UserName, QString Password, QString DriverBD, int Port){
    db = QSqlDatabase::addDatabase(DriverBD);
    db.close();
    db.setHostName(HostName);
    db.setDatabaseName(DatabaseName);
    db.setUserName(UserName);
    db.setPassword(Password);
+   db.setPort(Port);
    if (! db.open()){
         QMessageBox::critical(0,"Ошибка подключения",db.lastError().text(),QMessageBox::Ok);
         db.close();

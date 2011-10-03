@@ -21,6 +21,7 @@ static QString DataBase;
 static QString login;
 static QString Password;
 static QString DriverName;
+static int     Port;
 
 static int spisanie_so_scheta;
 

@@ -5,7 +5,7 @@
 #include <qmessagebox.h>
 
 
-QSqlDatabase ConnectDB(QString HostName, QString DatabaseName, QString UserName, QString Password, QString DriverBD);
+QSqlDatabase ConnectDB(QString HostName, QString DatabaseName, QString UserName, QString Password, QString DriverBD,int Port);
 int GetID(QString Gen_Mame);
 void CreateDb(QSqlDatabase db);
 QString GetNameDriver();

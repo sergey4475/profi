@@ -57,21 +57,25 @@ void frmUslugi::init()
     this->setWindowModality(Qt::ApplicationModal);
     update_tree();
     ui->treeWidget->installEventFilter(this);
+    ui->tableUslugi->installEventFilter(this);
 }
 
 void frmUslugi::on_treeWidget_itemActivated(QTreeWidgetItem *item, int column)
 {
     tabl = new PSqlTableModel;
     if (idGR == "0"){
+        qDebug() << "1";
         tabl->setTable("USLUGI");
         tabl->setFilter("VID_USLUGI="+idVID);
         tabl->select();
     }else{
+        qDebug() << "2";
         tabl->setTable("USLUGI");
         tabl->setFilter("VID_USLUGI="+idVID);
         tabl->setFilter("PARENT="+idGR);
         tabl->select();
     }
+    qDebug() << tabl->lastError();
     ui->tableUslugi->setModel(tabl);
     ui->tableUslugi->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     tabl->setHeaderData(1,Qt::Horizontal,tr("Наименование"));
@@ -89,6 +93,7 @@ void frmUslugi::on_add_usluga_clicked()
     tabl->setData(tabl->index(row,3),idVID.toInt(),Qt::EditRole);
     tabl->setData(tabl->index(row,5),idGR.toInt(),Qt::EditRole);
     tabl->submitAll();
+    ui->tableUslugi->edit(tabl->index(row,1));
 
 }
 
@@ -111,6 +116,7 @@ void frmUslugi::on_add_gr_clicked()
     folder->setSelected(true);
     folder->setFlags(folder->flags() | Qt::ItemIsEditable);
     folder->setIcon(0,QIcon(":/res/icons/24.bmp"));
+    ui->treeWidget->editItem(folder,0);
 }
 
 void frmUslugi::on_edit_gr_clicked()
@@ -140,45 +146,67 @@ void frmUslugi::on_treeWidget_itemPressed(QTreeWidgetItem *item, int column)
     }
 }
 
-
-void frmUslugi::updater(QTreeWidgetItem *item, int column)
-{
-    if (item->flags().operator &(Qt::ItemIsEditable)){
-
-        if (QMessageBox::question(0,"Внимание!!!","Сохранить изменения?",QMessageBox::Yes,QMessageBox::No)==QMessageBox::Yes){
-            QSqlQuery sql;
-            int id_vid = item->parent()->data(1,Qt::EditRole).toInt();
-            int id_gr = item->data(1,Qt::EditRole).toInt();
-
-            if (item->data(1,Qt::EditRole)==0){
-                sql.prepare("INSERT INTO GROUP_USLUGI(name,vid_uslugi) VALUES(:Name,:vid_uslugi)");
-            }
-
-            if (item->data(1,Qt::EditRole)!=0){
-                sql.prepare("UPDATE GROUP_USLUGI SET name=:Name "
-                            "WHERE GROUP_USLUGI.vid_uslugi = :vid_uslugi AND GROUP_USLUGI.ID = :ID ");
-                sql.bindValue(":ID",id_gr);
-            }
-
-            sql.bindValue(":Name",item->text(0));
-            sql.bindValue(":vid_uslugi",id_vid);
-
-            if (sql.exec()){
-                item->setFlags(item->flags() ^ Qt::ItemIsEditable);
-                update_tree();
-            }
-        }else
-            return;
+void frmUslugi::updater(QModelIndex item, int column, QObject *obj){
+    if (obj->objectName() == "tableUslugi"){
+//        ui->tableUslugi->edit(item);
     }
+}
 
+void frmUslugi::updater(QTreeWidgetItem *item,int column,QObject *obj)
+{
+    if (obj->objectName() == "treeWidget") {
+        if (item->flags().operator &(Qt::ItemIsEditable)){
+
+            if (QMessageBox::question(0,"Внимание!!!","Сохранить изменения?",QMessageBox::Yes,QMessageBox::No)==QMessageBox::Yes){
+                QSqlQuery sql;
+                int id_vid = item->parent()->data(1,Qt::EditRole).toInt();
+                int id_gr = item->data(1,Qt::EditRole).toInt();
+
+                if (item->data(1,Qt::EditRole)==0){
+                    sql.prepare("INSERT INTO GROUP_USLUGI(name,vid_uslugi) VALUES(:Name,:vid_uslugi)");
+                }
+
+                if (item->data(1,Qt::EditRole)!=0){
+                    sql.prepare("UPDATE GROUP_USLUGI SET name=:Name "
+                                "WHERE GROUP_USLUGI.vid_uslugi = :vid_uslugi AND GROUP_USLUGI.ID = :ID ");
+                    sql.bindValue(":ID",id_gr);
+                }
+
+                sql.bindValue(":Name",item->text(0));
+                sql.bindValue(":vid_uslugi",id_vid);
+
+                if (sql.exec()){
+                    item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+                    update_tree();
+                }
+            }else
+                return;
+        }
+    }
 }
 
 bool frmUslugi::eventFilter(QObject *obj, QEvent *event){
+
     if (event->type() == QEvent::KeyPress){
-        //16777220
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return)
-            updater(ui->treeWidget->currentItem(),ui->treeWidget->currentColumn());
+        // Обработка нажатия enter или return
+        if (obj->objectName() == "treeWidget") {
+            if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return)
+                updater(ui->treeWidget->currentItem(),ui->treeWidget->currentColumn(),obj);
+
+            if (keyEvent->key() == Qt::Key_Insert)
+                on_add_gr_clicked();
+        }
+        if (obj->objectName() == "tableUslugi") {
+            if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return){
+                updater(ui->tableUslugi->currentIndex(),ui->tableUslugi->currentIndex().column(),obj);
+                ui->tableUslugi->setFocus();
+            }
+
+
+            if (keyEvent->key() == Qt::Key_Insert)
+                on_add_usluga_clicked();
+        }
     }
 
    return QWidget::eventFilter(obj , event);
