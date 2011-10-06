@@ -26,6 +26,12 @@ void frm_setting::InitForm(){
     db.~QSqlDatabase();
 
     ui->hostname->setText(g_hostname);
+    ui->NameDataBase->setText(g_dataBase);
+    ui->loginDB->setText(g_login);
+    ui->passwordDB->setText(g_password);
+    ui->Port->setText(QString("%1").arg(g_connect_port));
+    ui->DriversDB->setCurrentIndex(ui->DriversDB->findText(g_driverName));
+    ui->spisanie_so_cheta->setChecked(g_spisanie_so_scheta);
 }
 
 void frm_setting::on_testBUt_clicked()
@@ -49,11 +55,11 @@ void frm_setting::on_testBUt_clicked()
 void frm_setting::on_pushButton_clicked()
 {
     QSettings settings("conf.ini",QSettings::IniFormat);
-    settings.setValue("g_hostname",ui->hostname->text());
-    settings.setValue("g_dataBase",ui->NameDataBase->text());
-    settings.setValue("g_login",ui->loginDB->text());
-    settings.setValue("g_password",ui->passwordDB->text());
-    settings.setValue("g_connect_port",ui->Port->text().toInt());
-    settings.setValue("g_driverName",ui->DriversDB->currentText());
+    settings.setValue("HostName",ui->hostname->text());
+    settings.setValue("DataBase",ui->NameDataBase->text());
+    settings.setValue("Login",ui->loginDB->text());
+    settings.setValue("Password",ui->passwordDB->text());
+    settings.setValue("Port",ui->Port->text().toInt());
+    settings.setValue("DriverName",ui->DriversDB->currentText());
     settings.setValue("spisanie_so_cheta",ui->spisanie_so_cheta->checkState());
 }

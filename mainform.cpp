@@ -167,6 +167,7 @@ void MainForm::UpdateClients(int IDClient){
     while (sql.next()){
         ui->na_schetu->setText(sql.value(0).toString());
     }
+    ui->summa_uslug->setText("");
 }
 
 //****************** Обработка формы счета клиента

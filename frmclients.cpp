@@ -63,12 +63,13 @@ void frmClients::on_tableView_clicked(const QModelIndex &index)
         ui->Pol->setCurrentIndex(query.value(4).toInt());
    }
     query.prepare("SELECT Clients_history.DATE_USLUGI, "
-                  "n_USLUGI.NAME, "
+                  "USLUGI.NAME, "
                   "Clients_history.SUMMA "
-                  "FROM CLIENTS_HISTORY INNER JOIN n_USLUGI ON CLIENTS_HISTORY.ID_USLUGA = n_USLUGI.ID "
+                  "FROM CLIENTS_HISTORY INNER JOIN USLUGI ON CLIENTS_HISTORY.ID_USLUGA = USLUGI.ID "
                   "WHERE Clients_history.ID_CLIENT = :ID ");
     query.bindValue(":ID",IDClients);
     query.exec();
+    qDebug() << query.lastError();
     QSqlQueryModel *model = new QSqlQueryModel;
     model->setQuery(query);
     model->setHeaderData(0,Qt::Horizontal,QObject::tr("Дата"));

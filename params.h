@@ -18,12 +18,12 @@
 #include <QSettings>
 
     static QSettings set("conf.ini",QSettings::IniFormat);
-    static QString g_hostname       = set.value("g_hostname").toString();
-    static QString g_dataBase       = set.value("g_dataBase").toString();
-    static QString g_login          = set.value("g_login").toString();
-    static QString g_password       = set.value("g_password").toString();
-    static QString g_driverName     = set.value("g_driverName").toString();
-    static int g_connect_port       = set.value("g_connect_port",5432).toInt();
-    static bool g_spisanie_so_scheta= set.value("g_spisanie_so_scheta",true).toBool();
+    static QString g_hostname       = set.value("HostName").toString();
+    static QString g_dataBase       = set.value("DataBase").toString();
+    static QString g_login          = set.value("Login").toString();
+    static QString g_password       = set.value("Password").toString();
+    static QString g_driverName     = set.value("DriverName").toString();
+    static int g_connect_port       = set.value("Port",5432).toInt();
+    static bool g_spisanie_so_scheta= set.value("spisanie_so_scheta",true).toBool();
 
 #endif // PARAMS_H

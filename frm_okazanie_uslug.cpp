@@ -299,7 +299,8 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             sql.bindValue(":NUMBER",Number);
             sql.exec();
             qDebug() << sql.lastError();
-
+            if (ID_client != 0)
+                frm->UpdateClients(ID_client);
         }
     }
     else{
