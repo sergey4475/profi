@@ -1,14 +1,14 @@
 #include "sqlmodules.h"
 
-QSqlDatabase db;
-QSqlDatabase ConnectDB(QString HostName, QString DatabaseName, QString UserName, QString Password, QString DriverBD, int Port){
-   db = QSqlDatabase::addDatabase(DriverBD);
+QSqlg_dataBase db;
+QSqlg_dataBase ConnectDB(QString g_hostname, QString g_dataBaseName, QString UserName, QString g_password, QString DriverBD, int g_connect_port){
+   db = QSqlg_dataBase::addg_dataBase(DriverBD);
    db.close();
-   db.setHostName(HostName);
-   db.setDatabaseName(DatabaseName);
+   db.setg_hostname(g_hostname);
+   db.setg_dataBaseName(g_dataBaseName);
    db.setUserName(UserName);
-   db.setPassword(Password);
-   db.setPort(Port);
+   db.setg_password(g_password);
+   db.setg_connect_port(g_connect_port);
    if (! db.open()){
         QMessageBox::critical(0,"Ошибка подключения",db.lastError().text(),QMessageBox::Ok);
         db.close();
@@ -18,16 +18,16 @@ QSqlDatabase ConnectDB(QString HostName, QString DatabaseName, QString UserName,
 int GetID(QString Gen_Mame){
     QSqlQuery query;
     query.driver();
-    query.exec("select gen_id("+Gen_Mame+", 1) as ID FROM rdb$database");
+    query.exec("select gen_id("+Gen_Mame+", 1) as ID FROM rdb$g_dataBase");
     query.next();
     return query.value(0).toInt();
 }
 
 // Создание таблиц в базе Данных
-void CreateDb(QSqlDatabase db)
+void CreateDb(QSqlg_dataBase db)
 {
 QSqlQuery query;
-if (db.driverName()== "QSQLITE"){
+if (db.g_driverName()== "QSQLITE"){
     db.exec("CREATE TABLE [CLIENTS] ("
             "[ID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,"
             "[FIO] VARCHAR(50)  NOT NULL,"
@@ -36,7 +36,7 @@ if (db.driverName()== "QSQLITE"){
             "[INFO] VARCHAR(500)  NULL,"
             "[POL] INTEGER DEFAULT '1' NOT NULL)");
 }
-if (db.driverName()== "QPSQL" || db.driverName()== "QPSQL7"){
+if (db.g_driverName()== "QPSQL" || db.g_driverName()== "QPSQL7"){
     // +++++++ Создание таблицы Clients +++++++
 //    QFile file(QDir::currentPath()+"/scripts/t_create_PQSQL.sql");
 //    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -50,6 +50,6 @@ if (db.driverName()== "QPSQL" || db.driverName()== "QPSQL7"){
 }
 
 QString GetNameDriver(){
-    return db.driverName();
+    return db.g_driverName();
 }
 

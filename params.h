@@ -15,14 +15,23 @@
 
 
 #include <QtCore>
+#include <QSettings>
 
-static QString hostname;
-static QString DataBase;
-static QString login;
-static QString Password;
-static QString DriverName;
-static int     Port;
+//    static QString g_hostname;
+//    static QString g_dataBase;
+//    static QString g_login;
+//    static QString g_password;
+//    static QString g_driverName;
+//    static int     g_connect_port;
+//    static bool g_spisanie_so_scheta;
 
-static int spisanie_so_scheta;
+    static QSettings set("conf.ini",QSettings::IniFormat);
+    static QString g_hostname       = set.value("g_hostname").toString();
+    static QString g_dataBase       = set.value("g_dataBase").toString();
+    static QString g_login          = set.value("g_login").toString();
+    static QString g_password       = set.value("g_password").toString();
+    static QString g_driverName     = set.value("g_driverName").toString();
+    static int g_connect_port       = set.value("g_connect_port",5432).toInt();
+    static bool g_spisanie_so_scheta= set.value("g_spisanie_so_scheta",true).toBool();
 
 #endif // PARAMS_H

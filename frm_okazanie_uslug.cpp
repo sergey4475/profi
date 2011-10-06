@@ -227,6 +227,20 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             }
             bool result = EditChetClienta(ID_client,2,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
         }
+        // Если способ оплаты, НЕ счет клиента и установлен параметр списывать со счета при оплате
+        if (VidPlateja != 5 && g_spisanie_so_scheta){
+            double sum_uslugi = 0;
+            double ostatok = 0;
+            for (int ind = 0;ind < countRow; ind++){
+                sum_uslugi += ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
+            }
+            ostatok = GetOstatokNaSchete(ID_client,date_usl.toString("dd.MM.yyyy"));
+
+            if (ostatok < sum_uslugi){
+                sum_uslugi = ostatok;
+            }
+            bool result = EditChetClienta(ID_client,2,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
+        }
 
         for (int ind = 0; ind < countRow; ind++){
             int IDUsl   = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,0)).value(0).toInt();
@@ -261,7 +275,10 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
   //          }
         }
         // Списание материалов
-        countRow = ui->Materials->model()->rowCount();
+        countRow = 0;
+        if (ui->Materials->model() != NULL)
+            countRow = ui->Materials->model()->rowCount();
+
         for (int ind = 0; ind < countRow; ind++){
             int ID_MATERIAL   = ui->Materials->model()->itemData(ui->Materials->model()->index(ind,0)).value(0).toInt();
             int COUNT   = ui->Materials->model()->itemData(ui->Materials->model()->index(ind,2)).value(0).toInt();

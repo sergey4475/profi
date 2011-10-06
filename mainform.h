@@ -17,7 +17,7 @@ public:
     ~MainForm();
     WId w_ID;
     int ID_Client;
-    QSqlDatabase db;
+    QSqlg_dataBase db;
     void EnableButton(int numButton);
     void SetSumma(double summa);
     void UpdateClients(int IDClient);

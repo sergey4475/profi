@@ -113,16 +113,16 @@ void frmClients::on_ApplyBut_clicked()
 {
     if (ui->FIOEdit->text() != "" && ui->Nom_Edit->text() != "" && ui->dateEdit->text() != "")
     {
-        QString DriverName;
+        QString g_driverName;
         QSqlQuery query;
-        DriverName = GetNameDriver();
+        g_driverName = GetNameDriver();
         if (flag_record == add_rec){
-            if (DriverName != "QSQLITE")
+            if (g_driverName != "QSQLITE")
             {
                 IDClients = GetID("GEN_CLIENTS_ID");
                 query.prepare("INSERT INTO Clients(ID,FIO,Nom_tel,date_R,info, pol) VALUES(:ID,:FIO,:Nom_tel,:Date_R,:info,:pol)");
             }
-            else if (DriverName == "QSQLITE")
+            else if (g_driverName == "QSQLITE")
             {
                 query.prepare("INSERT INTO Clients(FIO,Nom_tel,date_R,info, pol) VALUES(:FIO,:Nom_tel,:Date_R,:info,:pol)");
             }
@@ -138,7 +138,7 @@ void frmClients::on_ApplyBut_clicked()
             query.bindValue(":Date_R",ui->dateEdit->date().toString("yyyy.MM.dd"));
             query.bindValue(":info",ui->InfoEdit->toPlainText());
             query.bindValue(":Pol",ui->Pol->currentIndex());
-            if (DriverName != "QSQLITE")
+            if (g_driverName != "QSQLITE")
                 query.bindValue(":ID",IDClients);
             query.exec();
 

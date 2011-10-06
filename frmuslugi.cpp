@@ -59,6 +59,7 @@ void frmUslugi::init()
     ui->treeWidget->installEventFilter(this);
     ui->tableUslugi->installEventFilter(this);
     ui->tableUslugi->setSortingEnabled(true);
+//    connect(ui->tableUslugi->model(),SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(on_DataChanged()));
 }
 
 void frmUslugi::on_treeWidget_itemActivated(QTreeWidgetItem *item, int column)
@@ -85,6 +86,7 @@ void frmUslugi::on_treeWidget_itemActivated(QTreeWidgetItem *item, int column)
     ui->tableUslugi->setColumnHidden(3,true);
     ui->tableUslugi->setColumnHidden(4,true);
     ui->tableUslugi->setColumnHidden(5,true);
+    //QObject::connect(tabl,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
 }
 
 void frmUslugi::on_add_usluga_clicked()
@@ -162,7 +164,6 @@ void frmUslugi::updater(QModelIndex item, int count_row, QObject *obj){
 
         if (row >= count_row || row < 0)
             row = 0;
-        qDebug() << row;
         item = item.model()->index(row,col);
         ui->tableUslugi->setCurrentIndex(item);
     }
@@ -215,6 +216,7 @@ bool frmUslugi::eventFilter(QObject *obj, QEvent *event){
         }
         if (obj->objectName() == "tableUslugi") {
             if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return){
+
                 if(ui->tableUslugi->model() != 0)
                     updater(ui->tableUslugi->currentIndex(),ui->tableUslugi->model()->rowCount(),obj);
             }

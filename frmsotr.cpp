@@ -223,16 +223,16 @@ void frmSotr::on_edit_sotr_clicked()
 
 void frmSotr::on_ApplyBut_clicked()
 {
-    QString DriverName;
+    QString g_driverName;
     QSqlQuery query;
-    DriverName = GetNameDriver();
+    g_driverName = GetNameDriver();
     if (flag_record == add_rec){
-        if (DriverName != "QSQLITE")
+        if (g_driverName != "QSQLITE")
         {
             IDSotr = GetID("GEN_CLIENTS_ID");
             query.prepare("INSERT INTO PERSONAL(ID,FIO,Nom_tel,DOLJN,info, pol, ADDRES) VALUES(:ID,:FIO,:Nom_tel,:DOLJN,:info,:Pol,:ADDRES)");
         }
-        else if (DriverName == "QSQLITE")
+        else if (g_driverName == "QSQLITE")
         {
             query.prepare("INSERT INTO PERSONAL(FIO,Nom_tel,DOLJN,info, pol, ADDRES) VALUES(:FIO,:Nom_tel,:DOLJN,:info,:Pol,:ADDRES)");
         }
@@ -249,7 +249,7 @@ void frmSotr::on_ApplyBut_clicked()
         query.bindValue(":info",ui->sotrInfo->toPlainText());
         query.bindValue(":Pol",ui->sotrPol->currentIndex());
 
-        if ((flag_record == edit_rec) || (flag_record == add_rec && DriverName != "QSQLITE"))
+        if ((flag_record == edit_rec) || (flag_record == add_rec && g_driverName != "QSQLITE"))
                 query.bindValue(":ID",IDSotr);
 
         query.exec();

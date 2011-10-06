@@ -51,7 +51,7 @@ void frmSelect::init(QDate date){
         }
 
         tabl = new PSqlTableModel;
-        tabl->setTable("n_USLUGI");
+        tabl->setTable("USLUGI");
         tabl->setFilter("VID_USLUGI="+ QString("%1").arg(type_uslugi_));
         tabl->setFilter("ID NOT IN ("+mass+")");
         tabl->select();
