@@ -228,7 +228,9 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             bool result = EditChetClienta(ID_client,2,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
         }
         // Если способ оплаты, НЕ счет клиента и установлен параметр списывать со счета при оплате
+        qDebug() << g_spisanie_so_scheta;
         if (VidPlateja != 5 && g_spisanie_so_scheta){
+            qDebug() << "Вошли в условие!!!!!!!!!!!";
             double sum_uslugi = 0;
             double ostatok = 0;
             for (int ind = 0;ind < countRow; ind++){

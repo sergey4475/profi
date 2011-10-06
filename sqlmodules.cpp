@@ -1,14 +1,14 @@
 #include "sqlmodules.h"
 
-QSqlg_dataBase db;
-QSqlg_dataBase ConnectDB(QString g_hostname, QString g_dataBaseName, QString UserName, QString g_password, QString DriverBD, int g_connect_port){
-   db = QSqlg_dataBase::addg_dataBase(DriverBD);
+QSqlDatabase db;
+QSqlDatabase ConnectDB(QString g_hostname, QString g_dataBaseName, QString UserName, QString g_password, QString DriverBD, int g_connect_port){
+   db = QSqlDatabase::addDatabase(DriverBD);
    db.close();
-   db.setg_hostname(g_hostname);
-   db.setg_dataBaseName(g_dataBaseName);
+   db.setHostName(g_hostname);
+   db.setDatabaseName(g_dataBaseName);
    db.setUserName(UserName);
-   db.setg_password(g_password);
-   db.setg_connect_port(g_connect_port);
+   db.setPassword(g_password);
+   db.setPort(g_connect_port);
    if (! db.open()){
         QMessageBox::critical(0,"Ошибка подключения",db.lastError().text(),QMessageBox::Ok);
         db.close();
@@ -24,10 +24,10 @@ int GetID(QString Gen_Mame){
 }
 
 // Создание таблиц в базе Данных
-void CreateDb(QSqlg_dataBase db)
+void CreateDb(QSqlDatabase db)
 {
 QSqlQuery query;
-if (db.g_driverName()== "QSQLITE"){
+if (db.driverName()== "QSQLITE"){
     db.exec("CREATE TABLE [CLIENTS] ("
             "[ID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,"
             "[FIO] VARCHAR(50)  NOT NULL,"
@@ -36,7 +36,7 @@ if (db.g_driverName()== "QSQLITE"){
             "[INFO] VARCHAR(500)  NULL,"
             "[POL] INTEGER DEFAULT '1' NOT NULL)");
 }
-if (db.g_driverName()== "QPSQL" || db.g_driverName()== "QPSQL7"){
+if (db.driverName()== "QPSQL" || db.driverName()== "QPSQL7"){
     // +++++++ Создание таблицы Clients +++++++
 //    QFile file(QDir::currentPath()+"/scripts/t_create_PQSQL.sql");
 //    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -50,6 +50,6 @@ if (db.g_driverName()== "QPSQL" || db.g_driverName()== "QPSQL7"){
 }
 
 QString GetNameDriver(){
-    return db.g_driverName();
+    return db.driverName();
 }
 

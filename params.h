@@ -17,14 +17,6 @@
 #include <QtCore>
 #include <QSettings>
 
-//    static QString g_hostname;
-//    static QString g_dataBase;
-//    static QString g_login;
-//    static QString g_password;
-//    static QString g_driverName;
-//    static int     g_connect_port;
-//    static bool g_spisanie_so_scheta;
-
     static QSettings set("conf.ini",QSettings::IniFormat);
     static QString g_hostname       = set.value("g_hostname").toString();
     static QString g_dataBase       = set.value("g_dataBase").toString();
