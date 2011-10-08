@@ -86,7 +86,14 @@ void frmUslugi::on_treeWidget_itemActivated(QTreeWidgetItem *item, int column)
     ui->tableUslugi->setColumnHidden(3,true);
     ui->tableUslugi->setColumnHidden(4,true);
     ui->tableUslugi->setColumnHidden(5,true);
-    //QObject::connect(tabl,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
+    QObject::connect(tabl,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
+}
+
+void frmUslugi::editFinish(QModelIndex index){
+    qDebug() << index.row();
+    qDebug() << index.column();
+    ui->tableUslugi->setFocus();
+    ui->tableUslugi->setCurrentIndex(index);
 }
 
 void frmUslugi::on_add_usluga_clicked()

@@ -33,6 +33,8 @@ private slots:
 
     void on_edit_gr_clicked();
 
+    void editFinish(QModelIndex index);
+
 private:
     Ui::frmUslugi *ui;
     QString idVID, idGR;

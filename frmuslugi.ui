@@ -19,19 +19,6 @@
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
   </property>
-  <widget class="QTableView" name="tableUslugi">
-   <property name="geometry">
-    <rect>
-     <x>234</x>
-     <y>30</y>
-     <width>451</width>
-     <height>409</height>
-    </rect>
-   </property>
-   <property name="sortingEnabled">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QTreeWidget" name="treeWidget">
    <property name="geometry">
     <rect>
@@ -261,6 +248,16 @@
      <bool>true</bool>
     </property>
    </widget>
+  </widget>
+  <widget class="QTableView" name="tableUslugi">
+   <property name="geometry">
+    <rect>
+     <x>232</x>
+     <y>30</y>
+     <width>453</width>
+     <height>409</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources>
