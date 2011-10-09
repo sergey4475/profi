@@ -89,7 +89,21 @@ void frm_okazanie_uslug::InitForm(int nUslugi, WId w_ID){
         ui->sposobOplati->addItem(sql.value(1).toString(),sql.value(0).toInt());
     }
     ui->but_oplatit->setEnabled(true);
+    updater();
 
+}
+
+//Обновление элементов формы
+void frm_okazanie_uslug::updater(){
+    int VidPlateja = ui->sposobOplati->itemData(ui->sposobOplati->currentIndex()).toInt();
+    ui->spisanie_so_scheta->setChecked(g_spisanie_so_scheta);
+    if (VidPlateja == 1){
+        ui->spisanie_so_scheta->setVisible(true);
+        ui->spisanie_so_scheta->setChecked(g_spisanie_so_scheta);
+    }else{
+        ui->spisanie_so_scheta->setVisible(false);
+        ui->spisanie_so_scheta->setChecked(false);
+    }
 }
 
 void frm_okazanie_uslug::on_toolButton_clicked()
@@ -229,7 +243,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
         }
         // Если способ оплаты, НЕ счет клиента и установлен параметр списывать со счета при оплате
         qDebug() << g_spisanie_so_scheta;
-        if (VidPlateja != 5 && g_spisanie_so_scheta){
+        if (VidPlateja == 1 && ui->spisanie_so_scheta->checkState()){
             qDebug() << "Вошли в условие!!!!!!!!!!!";
             double sum_uslugi = 0;
             double ostatok = 0;
@@ -314,4 +328,9 @@ void frm_okazanie_uslug::on_Client_buttonClicked()
     frmClients *frm_client = new frmClients;
     frm_client->initForm(0);
     frm_client->show();
+}
+
+void frm_okazanie_uslug::on_sposobOplati_activated(const QString &arg1)
+{
+    updater();
 }

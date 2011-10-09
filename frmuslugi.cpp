@@ -49,6 +49,7 @@ void frmUslugi::update_tree(){
         }
         id_vid_uslugi = model->value(record.indexOf("ID_VID")).toInt();
     }
+    ui->treeWidget->setSortingEnabled(true);
 }
 
 void frmUslugi::init()
@@ -77,7 +78,6 @@ void frmUslugi::on_treeWidget_itemActivated(QTreeWidgetItem *item, int column)
         tabl->setFilter("PARENT="+idGR);
         tabl->select();
     }
-    qDebug() << tabl->lastError();
     ui->tableUslugi->setModel(tabl);
     ui->tableUslugi->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     tabl->setHeaderData(1,Qt::Horizontal,tr("Наименование"));
@@ -86,14 +86,14 @@ void frmUslugi::on_treeWidget_itemActivated(QTreeWidgetItem *item, int column)
     ui->tableUslugi->setColumnHidden(3,true);
     ui->tableUslugi->setColumnHidden(4,true);
     ui->tableUslugi->setColumnHidden(5,true);
+    tabl->setSort(0,Qt::AscendingOrder);
     QObject::connect(tabl,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
 }
 
 void frmUslugi::editFinish(QModelIndex index){
-    qDebug() << index.row();
-    qDebug() << index.column();
     ui->tableUslugi->setFocus();
     ui->tableUslugi->setCurrentIndex(index);
+    tabl->submitAll();
 }
 
 void frmUslugi::on_add_usluga_clicked()

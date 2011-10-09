@@ -400,6 +400,19 @@
     </rect>
    </property>
   </widget>
+  <widget class="QCheckBox" name="spisanie_so_scheta">
+   <property name="geometry">
+    <rect>
+     <x>64</x>
+     <y>536</y>
+     <width>157</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Списать остатки со счета</string>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>

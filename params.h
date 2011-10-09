@@ -24,6 +24,6 @@
     static QString g_password       = set.value("Password").toString();
     static QString g_driverName     = set.value("DriverName").toString();
     static int g_connect_port       = set.value("Port",5432).toInt();
-    static bool g_spisanie_so_scheta= set.value("spisanie_so_scheta",true).toBool();
+    static bool g_spisanie_so_scheta= set.value("spisanie_so_scheta",false).toBool();
 
 #endif // PARAMS_H

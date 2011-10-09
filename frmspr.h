@@ -24,8 +24,13 @@ private slots:
 
     void on_del_usluga_clicked();
 
+    void editFinish(QModelIndex index);
+
 private:
     Ui::frmSpr *ui;
+    bool eventFilter(QObject * obj, QEvent * event);
+    void updater(QModelIndex item, int count_row,QObject *obj);
+
 };
 
 #endif // FRMSPR_H

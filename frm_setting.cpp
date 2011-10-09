@@ -61,5 +61,15 @@ void frm_setting::on_pushButton_clicked()
     settings.setValue("Password",ui->passwordDB->text());
     settings.setValue("Port",ui->Port->text().toInt());
     settings.setValue("DriverName",ui->DriversDB->currentText());
-    settings.setValue("spisanie_so_cheta",ui->spisanie_so_cheta->checkState());
+    settings.setValue("spisanie_so_scheta",ui->spisanie_so_cheta->isChecked());
+
+    static QSettings set("conf.ini",QSettings::IniFormat);
+    g_hostname          = set.value("HostName").toString();
+    g_dataBase          = set.value("DataBase").toString();
+    g_login             = set.value("Login").toString();
+    g_password          = set.value("Password").toString();
+    g_driverName        = set.value("DriverName").toString();
+    g_connect_port      = set.value("Port",5432).toInt();
+    g_spisanie_so_scheta= set.value("spisanie_so_scheta",false).toBool();
+
 }

@@ -43,9 +43,12 @@ private slots:
 
     void on_del_material_clicked();
 
+    void on_sposobOplati_activated(const QString &arg1);
+
 private:
     Ui::frm_okazanie_uslug *ui;
     int NumberUslugi;
+    void updater();
 };
 
 #endif // FRM_OKAZANIE_USLUG_H

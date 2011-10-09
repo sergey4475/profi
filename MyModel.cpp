@@ -207,6 +207,7 @@ QWidget *BoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &
         editor->addItem(aPair.first,aPair.second);
         ++it;
     }
+    connect(editor,SIGNAL(currentIndexChanged(int)),SLOT(currentIndexChanged(int)));
     return editor;
 }
 void BoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const{
@@ -223,4 +224,11 @@ void BoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const
 
 void BoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const{
     editor->setGeometry(option.rect);
+}
+
+void BoxDelegate::currentIndexChanged(int index){
+    QWidget *editor = qobject_cast<QWidget*>(sender());
+    QAbstractItemDelegate::EndEditHint hint = NoHint;
+//    emit closeEditor(editor,NoHint);
+    emit commitData(editor);
 }
