@@ -89,6 +89,8 @@ void frm_okazanie_uslug::InitForm(int nUslugi, WId w_ID){
         ui->sposobOplati->addItem(sql.value(1).toString(),sql.value(0).toInt());
     }
     ui->but_oplatit->setEnabled(true);
+    ui->USLUGI->installEventFilter(this);
+    ui->Materials->installEventFilter(this);
     updater();
 
 }
@@ -333,4 +335,20 @@ void frm_okazanie_uslug::on_Client_buttonClicked()
 void frm_okazanie_uslug::on_sposobOplati_activated(const QString &arg1)
 {
     updater();
+}
+
+bool frm_okazanie_uslug::eventFilter(QObject *obj, QEvent *event){
+    if (event->type() == QEvent::KeyPress){
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        // Обработка нажатия enter или return
+        if (obj->objectName() == "USLUGI") {
+            if (keyEvent->key() == Qt::Key_Insert)
+                on_add_usluga_clicked();
+        }
+        if (obj->objectName() == "Materials") {
+            if (keyEvent->key() == Qt::Key_Insert)
+                on_add_material_clicked();
+        }
+
+    }
 }

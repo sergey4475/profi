@@ -45,6 +45,8 @@ private slots:
 
     void on_sposobOplati_activated(const QString &arg1);
 
+    bool eventFilter(QObject *obj, QEvent *event);
+
 private:
     Ui::frm_okazanie_uslug *ui;
     int NumberUslugi;

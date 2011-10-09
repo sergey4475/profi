@@ -17,7 +17,7 @@ frmSelect::~frmSelect()
 
 void frmSelect::init(QDate date){
     this->setWindowFlags(Qt::Tool);
-    this->setWindowModality(Qt::WindowModal);
+    this->setWindowModality(Qt::ApplicationModal);
     QString mass ="0";
     DateDoc = date;
     /////
@@ -52,7 +52,7 @@ void frmSelect::init(QDate date){
 
         tabl = new PSqlTableModel;
         tabl->setTable("USLUGI");
-        tabl->setFilter("VID_USLUGI="+ QString("%1").arg(type_uslugi_));
+        tabl->setFilter("USLUGI.VID_USLUGI="+ QString("%1").arg(type_uslugi_));
         tabl->setFilter("ID NOT IN ("+mass+")");
         tabl->select();
         tabl->setHeaderData(0,Qt::Horizontal,tr("ID"));
@@ -92,39 +92,64 @@ void frmSelect::init(QDate date){
     }
     QSqlQuery sql;
     if (type_select == n_OSTATKI_SKALD){
-        sql.prepare("SELECT "
-                    "   materials.ID, "
-                    "   materials.NAME, "
-                    "   SUM(SKLAD.COUNT) AS COUNT "
-                    "FROM SKLAD INNER JOIN "
-                    "   materials ON materials.ID = SKLAD.ID_MATERIAL "
-                    "WHERE SKLAD.DATE <= :DATE "
-                    "   AND SKLAD.id_Vid_Zatrat = :VidZatrat "
-                    "GROUP BY "
-                    "   materials.NAME, "
-                    "   materials.ID");
-        sql.bindValue(":VidZatrat",type_uslugi_);
-    }
-    else
-        sql.prepare("SELECT "
-                        "materials.ID, "
-                        "materials.NAME, "
-                        "SUM(O_SKLAD.COUNT) AS COUNT "
-                    "FROM O_SKLAD INNER JOIN "
-                    "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
-                    "   INNER JOIN "
-                    "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad "
-                    "WHERE O_SKLAD.DATE <= :DATE "
-                    "AND vidi_zatrat.ID = :VidZatrat "
-                    "GROUP BY "
-                    "   materials.NAME, "
-                    "   materials.ID");
+        if (ui->all_ostatki->isChecked()){
+            sql.prepare("SELECT "
+                        "   materials.ID, "
+                        "   materials.NAME, "
+                        "   SUM(SKLAD.COUNT) AS COUNT "
+                        "FROM SKLAD INNER JOIN "
+                        "   materials ON materials.ID = SKLAD.ID_MATERIAL "
+                        "WHERE SKLAD.DATE <= :DATE "
+                        "GROUP BY "
+                        "   materials.NAME, "
+                        "   materials.ID");
+        }else{
+            sql.prepare("SELECT "
+                        "   materials.ID, "
+                        "   materials.NAME, "
+                        "   SUM(SKLAD.COUNT) AS COUNT "
+                        "FROM SKLAD INNER JOIN "
+                        "   materials ON materials.ID = SKLAD.ID_MATERIAL "
+                        "WHERE SKLAD.DATE <= :DATE "
+                        "   AND SKLAD.id_Vid_Zatrat = :VidZatrat "
+                        "GROUP BY "
+                        "   materials.NAME, "
+                        "   materials.ID");
+            sql.bindValue(":VidZatrat",type_uslugi_);
+        }
+    }else
+        if (ui->all_ostatki->isChecked()){
+            sql.prepare("SELECT "
+                            "materials.ID, "
+                            "materials.NAME, "
+                            "SUM(O_SKLAD.COUNT) AS COUNT "
+                        "FROM O_SKLAD INNER JOIN "
+                        "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
+                        "   INNER JOIN "
+                        "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad "
+                        "WHERE O_SKLAD.DATE <= :DATE "
+                        "AND vidi_zatrat.ID = :VidZatrat "
+                        "GROUP BY "
+                        "   materials.NAME, "
+                        "   materials.ID");
+            sql.bindValue(":VidZatrat",type_uslugi_);
+        }else{
+            sql.prepare("SELECT "
+                            "materials.ID, "
+                            "materials.NAME, "
+                            "SUM(O_SKLAD.COUNT) AS COUNT "
+                        "FROM O_SKLAD INNER JOIN "
+                        "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
+                        "   INNER JOIN "
+                        "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad "
+                        "WHERE O_SKLAD.DATE <= :DATE "
+                        "GROUP BY "
+                        "   materials.NAME, "
+                        "   materials.ID");
+        }
 
-    qDebug() << "Дата Документа: " + DateDoc.toString("dd.MM.yyyy");
     sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
-    sql.bindValue(":VidZatrat",type_uslugi_);
     sql.exec();
-    qDebug() << sql.lastError();
     tabl_ = new Ost_model;
     tabl_->setQuery(sql);
     tabl_->setHeaderData(1,Qt::Horizontal,QObject::tr("Наименование"));
@@ -262,4 +287,9 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
             tempModel->setData(tempModel->index(row,5),type_uslugi_,Qt::EditRole);
         }
     }
+}
+
+void frmSelect::on_all_ostatki_clicked()
+{
+//    init(QDate::currentDate());
 }

@@ -35,6 +35,8 @@ public:
 private slots:
     void on_tableView_doubleClicked(const QModelIndex &index);
 
+    void on_all_ostatki_clicked();
+
 private:
     Ui::frmSelect *ui;
 };
