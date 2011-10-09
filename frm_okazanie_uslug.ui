@@ -137,6 +137,9 @@
      <height>113</height>
     </rect>
    </property>
+   <property name="frameShape">
+    <enum>QFrame::WinPanel</enum>
+   </property>
    <attribute name="verticalHeaderVisible">
     <bool>false</bool>
    </attribute>
@@ -322,6 +325,9 @@
        <height>141</height>
       </rect>
      </property>
+     <property name="frameShape">
+      <enum>QFrame::WinPanel</enum>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab">
@@ -376,6 +382,12 @@
        <width>427</width>
        <height>141</height>
       </rect>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::WinPanel</enum>
      </property>
     </widget>
    </widget>
