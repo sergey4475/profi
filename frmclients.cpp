@@ -17,7 +17,12 @@ frmClients::~frmClients()
     delete ui;
 }
 
-void frmClients::initForm(WId w_ID){
+void frmClients::initForm(WId w_ID,int fl){
+
+    if (fl==1)
+        ui->closeFrame->setHidden(true);
+    else
+        ui->closeFrame->setVisible(true);
 
     if (w_ID != 0x0){
         QWidget *frm = find(w_ID);
@@ -144,7 +149,7 @@ void frmClients::on_ApplyBut_clicked()
             query.exec();
 
             frmClients::on_toolButton_4_clicked();
-            frmClients::initForm(0x0);
+            frmClients::initForm(0x0,0);
         }
     }
     flag_record = 0;
@@ -163,7 +168,7 @@ void frmClients::on_del_button_clicked()
         query.bindValue("ID",IDClients);
         query.exec();
         frmClients::on_toolButton_4_clicked();
-        frmClients::initForm(0x0);
+        frmClients::initForm(0x0,0);
     };
 }
 

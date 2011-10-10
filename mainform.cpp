@@ -31,7 +31,7 @@ MainForm::~MainForm()
 void MainForm::on_butClients_clicked()
 {
     frmClients *frame = new frmClients;
-    frame->initForm(w_ID);
+    frame->initForm(w_ID,0);
     frame->setParent(ui->frame);
     frame->frm = this;
     frame->show();

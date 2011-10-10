@@ -27,7 +27,7 @@ frm_okazanie_uslug::~frm_okazanie_uslug()
 
 void frm_okazanie_uslug::InitForm(int nUslugi, WId w_ID){
 
-    if (w_ID != 0x0){
+   if (w_ID != 0x0){
         QWidget *f = find(w_ID);
         f->deleteLater();
     }
@@ -106,12 +106,6 @@ void frm_okazanie_uslug::updater(){
         ui->spisanie_so_scheta->setVisible(false);
         ui->spisanie_so_scheta->setChecked(false);
     }
-}
-
-void frm_okazanie_uslug::on_toolButton_clicked()
-{
-    frm->EnableButton(NumberUslugi);
-    this->~frm_okazanie_uslug();
 }
 
 // Добавление услуги
@@ -328,7 +322,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
 void frm_okazanie_uslug::on_Client_buttonClicked()
 {
     frmClients *frm_client = new frmClients;
-    frm_client->initForm(0);
+    frm_client->initForm(0,1);
     frm_client->show();
 }
 
@@ -351,4 +345,10 @@ bool frm_okazanie_uslug::eventFilter(QObject *obj, QEvent *event){
         }
 
     }
+}
+
+void frm_okazanie_uslug::on_closeButton_clicked()
+{
+    frm->EnableButton(NumberUslugi);
+    this->~frm_okazanie_uslug();
 }

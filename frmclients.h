@@ -18,7 +18,7 @@ class frmClients : public QFrame
 public:
     explicit frmClients(QWidget *parent = 0);
     ~frmClients();
-    void initForm(WId w_ID);
+    void initForm(WId w_ID,int fl);
 
     int IDClients;
     int flag_record;

@@ -25,8 +25,6 @@ public:
 
 private slots:
 
-    void on_toolButton_clicked();
-
     void on_add_usluga_clicked();
 
     void on_Client_editingFinished();
@@ -46,6 +44,8 @@ private slots:
     void on_sposobOplati_activated(const QString &arg1);
 
     bool eventFilter(QObject *obj, QEvent *event);
+
+    void on_closeButton_clicked();
 
 private:
     Ui::frm_okazanie_uslug *ui;
