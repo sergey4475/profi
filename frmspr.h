@@ -3,6 +3,8 @@
 
 #include <QtGui/QWidget>
 #include "MyModel.h"
+#include "QMenu"
+#include "QAction"
 #include "include/delegats.h"
 
 namespace Ui {
@@ -28,6 +30,7 @@ private slots:
 
 private:
     Ui::frmSpr *ui;
+    QMenu *Menu;
     bool eventFilter(QObject * obj, QEvent * event);
     void updater(QModelIndex item, int count_row,QObject *obj);
 

@@ -28,6 +28,19 @@ void frmSpr::init(PSqlTableModel *Model,QList<QAbstractItemDelegate*> lst){
 
     ui->sprTable->installEventFilter(this);
     QObject::connect(sprModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
+
+    //***** Создаем контекстное меню *****
+
+    Menu = new QMenu(this);
+    QAction *quitAction1 = new QAction("Новая запись...", this);
+    connect(quitAction1, SIGNAL(triggered()), this, SLOT(on_add_usluga_clicked()));
+    QAction *quitAction = new QAction("Удалить текущую запись", this);
+    connect(quitAction, SIGNAL(triggered()), this, SLOT(on_del_usluga_clicked()));
+    Menu->addAction(quitAction1);
+    Menu->addSeparator();
+    Menu->addAction(quitAction);
+    ui->sprTable->setContextMenuPolicy(Qt::DefaultContextMenu);
+
 }
 
 void frmSpr::on_add_usluga_clicked()
