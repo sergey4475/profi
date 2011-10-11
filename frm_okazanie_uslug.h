@@ -47,6 +47,12 @@ private slots:
 
     void on_closeButton_clicked();
 
+    void on_checkSkidka_clicked();
+
+    void on_Skidka_editingFinished();
+
+    void editFinish(QModelIndex index);
+
 private:
     Ui::frm_okazanie_uslug *ui;
     int NumberUslugi;

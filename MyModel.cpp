@@ -90,21 +90,6 @@ QVariant PSqlTableModel::data(const QModelIndex &index, int role) const {
     return QSqlTableModel::data(index, role);
 }
 
-void PStandardItemModel::editFinish(QModelIndex index){
-
-    double cena = itemData(this->index(index.row(),2)).value(0).toDouble();
-    int count   = itemData(this->index(index.row(),4)).value(0).toInt();
-
-    double summa = cena * count;
-    this->setData(this->index(index.row(),5),summa);
-
-    sum_uslugi = 0;
-    for (int ind = 0;ind < this->rowCount(); ind++){
-        sum_uslugi += this->itemData(this->index(ind,5)).value(0).toDouble();
-        frm->SetSumma(sum_uslugi);
-    }
-}
-
 PStandardItemModel::PStandardItemModel(QObject *parent)
     : QStandardItemModel(parent)
 {

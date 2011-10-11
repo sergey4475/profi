@@ -27,16 +27,17 @@ frm_okazanie_uslug::~frm_okazanie_uslug()
 
 void frm_okazanie_uslug::InitForm(int nUslugi, WId w_ID){
 
-   if (w_ID != 0x0){
+    if (w_ID != 0x0){
         QWidget *f = find(w_ID);
         f->deleteLater();
     }
+    ui->Skidka->setVisible(ui->checkSkidka->isChecked());
 
     NumberUslugi = nUslugi;
 
     QSqlQuery sql;
     sql.prepare("SELECT MAX(number) AS number "
-             "FROM CLIENTS_HISTORY");
+                "FROM CLIENTS_HISTORY");
     sql.exec();
     QSqlRecord record = sql.record();
     sql.next();
@@ -63,14 +64,14 @@ void frm_okazanie_uslug::InitForm(int nUslugi, WId w_ID){
 
     sotSqlQueryModel *smodel = new sotSqlQueryModel;
     query.prepare("SELECT Personal.FIO, "
-                    "DOLJNOSTI.NAME, "
-                    "Personal.Nom_Tel, "
-                    "Personal.DEL, "
-                    "Personal.POL, "
-                    "Personal.ID, "
-                    "DOLJNOSTI.ID AS Doljn "
-                "FROM Personal INNER JOIN DOLJNOSTI ON Personal.DOLJN = DOLJNOSTI.ID "
-                "WHERE DOLJNOSTI.VID_USLUGI = :Vid" );
+                  "DOLJNOSTI.NAME, "
+                  "Personal.Nom_Tel, "
+                  "Personal.DEL, "
+                  "Personal.POL, "
+                  "Personal.ID, "
+                  "DOLJNOSTI.ID AS Doljn "
+                  "FROM Personal INNER JOIN DOLJNOSTI ON Personal.DOLJN = DOLJNOSTI.ID "
+                  "WHERE DOLJNOSTI.VID_USLUGI = :Vid" );
     query.bindValue(":VID",NumberUslugi);
     query.exec();
     smodel->setQuery(query);
@@ -108,33 +109,48 @@ void frm_okazanie_uslug::updater(){
     }
 }
 
+//
+void frm_okazanie_uslug::editFinish(QModelIndex index){
+    double cena = tempModel->itemData(tempModel->index(index.row(),2)).value(0).toDouble();
+    int count   = tempModel->itemData(tempModel->index(index.row(),4)).value(0).toInt();
+
+    double summa = cena * count;
+    tempModel->setData(tempModel->index(index.row(),5),summa);
+
+    double sum_uslugi = 0;
+    for (int ind = 0;ind < tempModel->rowCount(); ind++){
+        sum_uslugi += tempModel->itemData(tempModel->index(ind,5)).value(0).toDouble();
+        frm->SetSumma(sum_uslugi);
+    }
+}
+
 // Добавление услуги
 void frm_okazanie_uslug::on_add_usluga_clicked()
 {
     NotEditableDelegate *DelegatNotEditCol = new NotEditableDelegate;
     if ((ui->Client->text() != "" && ui->Sotrudnik->text() != "")||(ID_client != 0 && ID_sotr != 0) ){
-            QString str = QString("%1").arg(NumberUslugi);
-            frmSelect *fSelect = new frmSelect();
-            tempModel = new PStandardItemModel;
-            tempModel->frm = frm;
-            ui->USLUGI->setModel(tempModel);
-            ui->USLUGI->setColumnHidden(0,true);
-            ui->USLUGI->setColumnHidden(3,true);
-            ui->USLUGI->setItemDelegateForColumn(1,DelegatNotEditCol);
-            ui->USLUGI->setItemDelegateForColumn(5,DelegatNotEditCol);
-            ui->USLUGI->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-            connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),tempModel,SLOT(editFinish(QModelIndex)));
-            fSelect->frm = frm;
-            fSelect->type_select = n_USLUGI;
-            fSelect->type_uslugi_= NumberUslugi;
-            fSelect->tempModel   = tempModel;
-            fSelect->Id_Client   = ID_client;
-            fSelect->init(QDate::currentDate());
-            ui->USLUGI->setColumnHidden(0,true);
-            ui->USLUGI->setColumnHidden(3,true);
-            fSelect->show();
+        QString str = QString("%1").arg(NumberUslugi);
+        frmSelect *fSelect = new frmSelect();
+        tempModel = new PStandardItemModel;
+        tempModel->frm = frm;
+        ui->USLUGI->setModel(tempModel);
+        ui->USLUGI->setColumnHidden(0,true);
+        ui->USLUGI->setColumnHidden(3,true);
+        ui->USLUGI->setItemDelegateForColumn(1,DelegatNotEditCol);
+        ui->USLUGI->setItemDelegateForColumn(5,DelegatNotEditCol);
+        ui->USLUGI->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+        connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
+        fSelect->frm = frm;
+        fSelect->type_select = n_USLUGI;
+        fSelect->type_uslugi_= NumberUslugi;
+        fSelect->tempModel   = tempModel;
+        fSelect->Id_Client   = ID_client;
+        fSelect->init(QDate::currentDate());
+        ui->USLUGI->setColumnHidden(0,true);
+        ui->USLUGI->setColumnHidden(3,true);
+        fSelect->show();
     }else{
-            QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Yes);
+        QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Yes);
     }
 }
 
@@ -143,23 +159,24 @@ void frm_okazanie_uslug::on_add_material_clicked()
 {
     NotEditableDelegate *DelegatNotEditCol = new NotEditableDelegate;
     if ((ui->Client->text() != "" && ui->Sotrudnik->text() != "")||(ID_client != 0 && ID_sotr != 0) ){
-            frmSelect *fSelect = new frmSelect();
-            tempModel = new PStandardItemModel;
-            tempModel->frm = frm;
-            ui->Materials->setModel(tempModel);
-            ui->Materials->setItemDelegateForColumn(1,DelegatNotEditCol);
-            ui->Materials->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-            connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),tempModel,SLOT(editFinish(QModelIndex)));
-            fSelect->frm = frm;
-            fSelect->type_select = n_OSTATKI_SKALD;
-            fSelect->type_uslugi_= NumberUslugi;
-            fSelect->tempModel   = tempModel;
-            fSelect->Id_Client   = ID_client;
-            fSelect->init(QDate::currentDate());
-            fSelect->show();
-            ui->Materials->setColumnHidden(0,true);
+        disconnect(tempModel);
+        frmSelect *fSelect = new frmSelect();
+        tempModel = new PStandardItemModel;
+        //tempModel->frm = frm;
+        ui->Materials->setModel(tempModel);
+        ui->Materials->setItemDelegateForColumn(1,DelegatNotEditCol);
+        ui->Materials->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+        //connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),,SLOT(editFinish(QModelIndex)));
+        //fSelect->frm = frm;
+        fSelect->type_select = n_OSTATKI_SKALD;
+        fSelect->type_uslugi_= NumberUslugi;
+        fSelect->tempModel   = tempModel;
+        fSelect->Id_Client   = ID_client;
+        fSelect->init(QDate::currentDate());
+        fSelect->show();
+        ui->Materials->setColumnHidden(0,true);
     }else{
-            QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Yes);
+        QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Yes);
     }
 
 }
@@ -168,13 +185,14 @@ void frm_okazanie_uslug::on_add_material_clicked()
 void frm_okazanie_uslug::on_del_material_clicked()
 {
     ui->Materials->model()->removeRow(ui->Materials->currentIndex().row());
-
+    disconnect(tempModel);
 }
 
 // Удаление услуги из списка
 void frm_okazanie_uslug::on_del_usluga_clicked()
 {
     ui->USLUGI->model()->removeRow(ui->USLUGI->currentIndex().row());
+    connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
 }
 
 // Окончание выбора или ввода клиента
@@ -238,7 +256,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             bool result = EditChetClienta(ID_client,2,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
         }
         // Если способ оплаты, НЕ счет клиента и установлен параметр списывать со счета при оплате
-        qDebug() << g_spisanie_so_scheta;
+
         if (VidPlateja == 1 && ui->spisanie_so_scheta->checkState()){
             qDebug() << "Вошли в условие!!!!!!!!!!!";
             double sum_uslugi = 0;
@@ -260,31 +278,29 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             double summa= ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
             double cena = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,2)).value(0).toDouble();
 
-//            QList<QStandardItem*> lst = mUslugi->findItems(QString(IDUsl),Qt::MatchContains,0);
+            //            QList<QStandardItem*> lst = mUslugi->findItems(QString(IDUsl),Qt::MatchContains,0);
 
-//            if (lst.count()==0){
-                QSqlQuery sql;
-                sql.prepare("INSERT INTO CLIENTS_HISTORY(NUMBER,DATE_USLUGI,ID_CLIENT,ID_SOTRUDNIK,ID_USLUGA,count,cena,SUMMA,oplacheno,vid_oplati) "
-                            "VALUES(:NUMBER,:DATE_USLUGI,:ID_CLIENT,:ID_SOTRUDNIK,:ID_USLUGA,:count,:cena,:SUMMA,:oplacheno,:vid_oplati) ");
+            //            if (lst.count()==0){
+            QSqlQuery sql;
+            sql.prepare("INSERT INTO CLIENTS_HISTORY(NUMBER,DATE_USLUGI,ID_CLIENT,ID_SOTRUDNIK,ID_USLUGA,count,cena,SUMMA,oplacheno,vid_oplati) "
+                        "VALUES(:NUMBER,:DATE_USLUGI,:ID_CLIENT,:ID_SOTRUDNIK,:ID_USLUGA,:count,:cena,:SUMMA,:oplacheno,:vid_oplati) ");
 
-                sql.bindValue(":NUMBER",Number);
-                sql.bindValue(":DATE_USLUGI",date_usl.toString("dd.MM.yyyy"));
-                sql.bindValue(":ID_CLIENT",ID_client);
-                sql.bindValue(":ID_SOTRUDNIK",ID_sotr);
-                sql.bindValue(":ID_USLUGA",IDUsl);
-                sql.bindValue(":count",count);
-                sql.bindValue(":cena",cena);
-                sql.bindValue(":SUMMA",summa);
-                sql.bindValue(":oplacheno",true);
-                sql.bindValue(":vid_oplati",VidPlateja);
+            sql.bindValue(":NUMBER",Number);
+            sql.bindValue(":DATE_USLUGI",date_usl.toString("dd.MM.yyyy"));
+            sql.bindValue(":ID_CLIENT",ID_client);
+            sql.bindValue(":ID_SOTRUDNIK",ID_sotr);
+            sql.bindValue(":ID_USLUGA",IDUsl);
+            sql.bindValue(":count",count);
+            sql.bindValue(":cena",cena);
+            sql.bindValue(":SUMMA",summa);
+            sql.bindValue(":oplacheno",true);
+            sql.bindValue(":vid_oplati",VidPlateja);
 
-                sql.exec();
-                qDebug() << sql.lastError();
+            sql.exec();
 
-                ui->USLUGI->setDisabled(true);
-                ui->prodaja->setDisabled(true);
-                ui->but_oplatit->setDisabled(true);
-  //          }
+            ui->USLUGI->setDisabled(true);
+            ui->prodaja->setDisabled(true);
+            ui->but_oplatit->setDisabled(true);
         }
         // Списание материалов
         countRow = 0;
@@ -294,8 +310,8 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
         for (int ind = 0; ind < countRow; ind++){
             int ID_MATERIAL   = ui->Materials->model()->itemData(ui->Materials->model()->index(ind,0)).value(0).toInt();
             int COUNT   = ui->Materials->model()->itemData(ui->Materials->model()->index(ind,2)).value(0).toInt();
-//            double summa= ui->Materials->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
-//            double cena = ui->Materials->model()->itemData(ui->USLUGI->model()->index(ind,2)).value(0).toDouble();
+            //            double summa= ui->Materials->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
+            //            double cena = ui->Materials->model()->itemData(ui->USLUGI->model()->index(ind,2)).value(0).toDouble();
 
             QSqlQuery sql;
             sql.prepare("INSERT INTO SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,id_VID_ZATRAT,NUMBER) "
@@ -351,4 +367,14 @@ void frm_okazanie_uslug::on_closeButton_clicked()
 {
     frm->EnableButton(NumberUslugi);
     this->~frm_okazanie_uslug();
+}
+
+void frm_okazanie_uslug::on_checkSkidka_clicked()
+{
+    ui->Skidka->setVisible(ui->checkSkidka->isChecked());
+}
+
+void frm_okazanie_uslug::on_Skidka_editingFinished()
+{
+
 }

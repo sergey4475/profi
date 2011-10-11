@@ -28,9 +28,6 @@ public:
     double sum_uslugi;
     MainForm *frm;
 
-public slots:
-    void editFinish(QModelIndex index);
-
 };
 
 class Ost_model : public QSqlQueryModel{

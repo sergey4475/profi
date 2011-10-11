@@ -20,7 +20,7 @@
    <enum>QFrame::NoFrame</enum>
   </property>
   <property name="frameShadow">
-   <enum>QFrame::Plain</enum>
+   <enum>QFrame::Raised</enum>
   </property>
   <widget class="QLineEdit" name="number">
    <property name="enabled">
@@ -139,6 +139,9 @@
    </property>
    <property name="frameShape">
     <enum>QFrame::WinPanel</enum>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
    </property>
    <attribute name="verticalHeaderVisible">
     <bool>false</bool>
@@ -328,6 +331,9 @@
      <property name="frameShape">
       <enum>QFrame::WinPanel</enum>
      </property>
+     <property name="defaultDropAction">
+      <enum>Qt::IgnoreAction</enum>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab">
@@ -423,6 +429,35 @@
    </property>
    <property name="text">
     <string>Списать остатки со счета</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkSkidka">
+   <property name="geometry">
+    <rect>
+     <x>64</x>
+     <y>561</y>
+     <width>131</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Продать со скидкой</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="Skidka">
+   <property name="geometry">
+    <rect>
+     <x>194</x>
+     <y>560</y>
+     <width>101</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <property name="inputMask">
+    <string>999; </string>
    </property>
   </widget>
  </widget>
