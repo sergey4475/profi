@@ -49,14 +49,15 @@ private slots:
 
     void on_checkSkidka_clicked();
 
-    void on_Skidka_editingFinished();
-
     void editFinish(QModelIndex index);
+
+    void on_Skidka_textChanged(const QString &arg1);
 
 private:
     Ui::frm_okazanie_uslug *ui;
     int NumberUslugi;
     void updater();
+    double setProcent(double summa);
 };
 
 #endif // FRM_OKAZANIE_USLUG_H

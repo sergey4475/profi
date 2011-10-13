@@ -120,8 +120,17 @@ void frm_okazanie_uslug::editFinish(QModelIndex index){
     double sum_uslugi = 0;
     for (int ind = 0;ind < tempModel->rowCount(); ind++){
         sum_uslugi += tempModel->itemData(tempModel->index(ind,5)).value(0).toDouble();
-        frm->SetSumma(sum_uslugi);
     }
+    frm->SetSumma(sum_uslugi - setProcent(sum_uslugi));
+
+}
+
+double frm_okazanie_uslug::setProcent(double summa){
+    int skidka_p = ui->Skidka->text().toInt();
+    double summa_slidki = (summa * skidka_p)/100;
+//    double summa_vsego = summa - summa_slidki;
+
+    return summa_slidki;
 }
 
 // Добавление услуги
@@ -247,6 +256,9 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             for (int ind = 0;ind < countRow; ind++){
                 sum_uslugi += ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
             }
+            double summa_slidki = setProcent(sum_uslugi);
+            sum_uslugi = sum_uslugi - summa_slidki;
+
 
             if (GetOstatokNaSchete(ID_client,date_usl.toString("dd.MM.yyyy")) < sum_uslugi){
                 QMessageBox::question(0,"Внимание!!!!","На счете у клиента не достаточно средств!!! \n "
@@ -264,10 +276,16 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             for (int ind = 0;ind < countRow; ind++){
                 sum_uslugi += ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
             }
+            double summa_slidki = setProcent(sum_uslugi);
+            sum_uslugi = sum_uslugi - summa_slidki;
+
             ostatok = GetOstatokNaSchete(ID_client,date_usl.toString("dd.MM.yyyy"));
 
             if (ostatok < sum_uslugi){
                 sum_uslugi = ostatok;
+                double summa_slidki = setProcent(sum_uslugi);
+                sum_uslugi = sum_uslugi - summa_slidki;
+
             }
             bool result = EditChetClienta(ID_client,2,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
         }
@@ -277,13 +295,16 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             int count   = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,4)).value(0).toInt();
             double summa= ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
             double cena = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,2)).value(0).toDouble();
+            int skidka_p = ui->Skidka->text().toInt();
+            double summa_slidki = setProcent(summa);
+            double summa_vsego = summa - summa_slidki;
 
             //            QList<QStandardItem*> lst = mUslugi->findItems(QString(IDUsl),Qt::MatchContains,0);
 
             //            if (lst.count()==0){
             QSqlQuery sql;
-            sql.prepare("INSERT INTO CLIENTS_HISTORY(NUMBER,DATE_USLUGI,ID_CLIENT,ID_SOTRUDNIK,ID_USLUGA,count,cena,SUMMA,oplacheno,vid_oplati) "
-                        "VALUES(:NUMBER,:DATE_USLUGI,:ID_CLIENT,:ID_SOTRUDNIK,:ID_USLUGA,:count,:cena,:SUMMA,:oplacheno,:vid_oplati) ");
+            sql.prepare("INSERT INTO CLIENTS_HISTORY(NUMBER,DATE_USLUGI,ID_CLIENT,ID_SOTRUDNIK,ID_USLUGA,count,cena,SUMMA,oplacheno,vid_oplati,skidka_p,summa_skidki,summa_vsego) "
+                        "VALUES(:NUMBER,:DATE_USLUGI,:ID_CLIENT,:ID_SOTRUDNIK,:ID_USLUGA,:count,:cena,:SUMMA,:oplacheno,:vid_oplati,:skidka_p,:summa_skidki,:summa_vsego) ");
 
             sql.bindValue(":NUMBER",Number);
             sql.bindValue(":DATE_USLUGI",date_usl.toString("dd.MM.yyyy"));
@@ -295,9 +316,13 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             sql.bindValue(":SUMMA",summa);
             sql.bindValue(":oplacheno",true);
             sql.bindValue(":vid_oplati",VidPlateja);
+            sql.bindValue(":skidka_p",skidka_p);
+            sql.bindValue(":summa_skidki",summa_slidki);
+            sql.bindValue(":summa_vsego",summa_vsego);
+
 
             sql.exec();
-
+            qDebug() << sql.lastError();
             ui->USLUGI->setDisabled(true);
             ui->prodaja->setDisabled(true);
             ui->but_oplatit->setDisabled(true);
@@ -328,6 +353,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             if (ID_client != 0)
                 frm->UpdateClients(ID_client);
         }
+        on_closeButton_clicked();
     }
     else{
         QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Ok);
@@ -361,6 +387,7 @@ bool frm_okazanie_uslug::eventFilter(QObject *obj, QEvent *event){
         }
 
     }
+    return QWidget::eventFilter(obj , event);
 }
 
 void frm_okazanie_uslug::on_closeButton_clicked()
@@ -372,9 +399,28 @@ void frm_okazanie_uslug::on_closeButton_clicked()
 void frm_okazanie_uslug::on_checkSkidka_clicked()
 {
     ui->Skidka->setVisible(ui->checkSkidka->isChecked());
+    ui->Skidka->setText(0);
+    if (ui->USLUGI->model() != 0x0){
+        double sum_uslugi = 0;
+        for (int ind = 0;ind < tempModel->rowCount(); ind++){
+            sum_uslugi += tempModel->itemData(tempModel->index(ind,5)).value(0).toDouble();
+        }
+        frm->SetSumma(sum_uslugi - setProcent(sum_uslugi));
+
+    }
+
+
 }
 
-void frm_okazanie_uslug::on_Skidka_editingFinished()
+void frm_okazanie_uslug::on_Skidka_textChanged(const QString &arg1)
 {
+    if (ui->USLUGI->model() != 0x0){
+        double sum_uslugi = 0;
+        for (int ind = 0;ind < tempModel->rowCount(); ind++){
+            sum_uslugi += tempModel->itemData(tempModel->index(ind,5)).value(0).toDouble();
+        }
+        frm->SetSumma(sum_uslugi - setProcent(sum_uslugi));
+
+    }
 
 }

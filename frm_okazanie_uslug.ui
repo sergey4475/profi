@@ -137,14 +137,20 @@
      <height>113</height>
     </rect>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
+   </property>
    <property name="frameShape">
     <enum>QFrame::WinPanel</enum>
    </property>
    <property name="editTriggers">
-    <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+    <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
    <attribute name="verticalHeaderVisible">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
   </widget>
   <widget class="QWidget" name="horizontalLayoutWidget">
@@ -270,7 +276,7 @@
     <enum>QTabWidget::Triangular</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <property name="elideMode">
     <enum>Qt::ElideNone</enum>
@@ -328,8 +334,14 @@
        <height>141</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
      <property name="frameShape">
       <enum>QFrame::WinPanel</enum>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
      </property>
      <property name="defaultDropAction">
       <enum>Qt::IgnoreAction</enum>
@@ -445,6 +457,9 @@
    </property>
   </widget>
   <widget class="QLineEdit" name="Skidka">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>194</x>
@@ -458,6 +473,9 @@
    </property>
    <property name="inputMask">
     <string>999; </string>
+   </property>
+   <property name="text">
+    <string>0</string>
    </property>
   </widget>
  </widget>
