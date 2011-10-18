@@ -23,7 +23,7 @@ public:
     explicit frmDocument(QWidget *parent = 0);
     void initForm(PStandardItemModel *model,int vid_form, int type_doc);
     PStandardItemModel *tempModel;
-    int Number,type_doc_;
+    int Number,type_doc_,vid_form_;
 
     ~frmDocument();
 
@@ -35,6 +35,8 @@ private slots:
     void on_ApplyBut_clicked();
 
     void on_DateDoc_dateChanged(QDate &Date);
+
+    void on_Group_currentIndexChanged(const QString &arg1);
 
 private:
     void GetOstaok();

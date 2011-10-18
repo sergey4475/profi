@@ -16,16 +16,30 @@ frmDocument::~frmDocument()
 
 void frmDocument::GetOstaok(){
     QSqlQuery sql;
-
+    int vid_zatrat      = ui->Group->itemData(ui->Group->currentIndex()).toInt();
+    if (vid_zatrat <=0)
     sql.prepare("SELECT materials.NAME, "
                 "   SUM(O_SKLAD.COUNT) AS COUNT "
                 "FROM O_SKLAD INNER JOIN "
                 "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
                 "WHERE O_SKLAD.DATE <= :DATE "
                 "GROUP BY materials.NAME");
+    else{
+        sql.prepare("SELECT materials.NAME, "
+                    "   SUM(O_SKLAD.COUNT) AS COUNT "
+                    "FROM O_SKLAD INNER JOIN "
+                    "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
+                    "WHERE O_SKLAD.DATE <= :DATE "
+                    " AND O_SKLAD.id_group_o_sklad = :id_group_o_sklad "
+                    "GROUP BY materials.NAME");
+        sql.bindValue(":id_group_o_sklad",vid_zatrat);
+    }
+
     sql.bindValue(":DATE",ui->DateDoc->date().toString("dd.MM.yyyy"));
     Ost_model *model_ = new Ost_model;
     sql.exec();
+    qDebug() << ui->DateDoc->date().toString("dd.MM.yyyy");
+    qDebug() << sql.lastError();
     model_->setQuery(sql);
     model_->setHeaderData(0,Qt::Horizontal,"Материал");
     model_->setHeaderData(1,Qt::Horizontal,"Количество");
@@ -42,10 +56,20 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
     QSqlRecord record;
 
     type_doc_ = type_doc;
+    vid_form_ = vid_form;
     // --- Документ по складу ---
     if (type_doc_ == d_oskald){
+
+        sql.prepare("SELECT ID, Name "
+                    "FROM group_o_sklad ");
+        sql.exec();
+        record = sql.record();
+        while (sql.next()){
+            ui->Group->addItem(sql.value(1).toString(),sql.value(0).toInt());
+        }
+
         ui->l_group->setText("Отдел склада:");
-        if (vid_form == f_document){ // -- Тип формы документ
+        if (vid_form_ == f_document){ // -- Тип формы документ
             tempModel = model;
             sql.prepare("SELECT MAX(number) AS number "
                         "FROM O_SKLAD");
@@ -56,15 +80,6 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
             Number = sql.value(record.indexOf("number")).toInt();
 
             Number++;
-
-            sql.prepare("SELECT ID, Name "
-                        "FROM group_o_sklad ");
-            sql.exec();
-            record = sql.record();
-            while (sql.next()){
-                ui->Group->addItem(sql.value(1).toString(),sql.value(0).toInt());
-            }
-
 
             ui->Number->setText(QString::number(Number));
 
@@ -79,9 +94,8 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
             ui->tableView->setColumnWidth(6,50);
 
         }
-        if (vid_form == f_ostatki){ // -- Тип формы остатки
+        if (vid_form_ == f_ostatki){ // -- Тип формы остатки
             ui->Number->setDisabled(true);
-            ui->groupBox->setDisabled(true);
             ui->ApplyBut->setDisabled(true);
             GetOstaok();
         }
@@ -240,5 +254,12 @@ void frmDocument::on_ApplyBut_clicked()
 
 void frmDocument::on_DateDoc_dateChanged(QDate &Date)
 {
-    GetOstaok();
+    if (vid_form_ == f_ostatki) // -- Тип формы остатки
+        GetOstaok();
+}
+
+void frmDocument::on_Group_currentIndexChanged(const QString &arg1)
+{
+    if (vid_form_ == f_ostatki) // -- Тип формы остатки
+        GetOstaok();
 }
