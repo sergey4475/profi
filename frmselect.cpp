@@ -70,14 +70,22 @@ void frmSelect::init(QDate date){
     else if (type_select == n_MATERIAL) {
         tabl = new PSqlTableModel;
         tabl->setTable("MATERIALS");
-
+        tabl->setRelation(3,QSqlRelation("ed_izm","id","name"));
         tabl->select();
-        tabl->setHeaderData(0,Qt::Horizontal,tr("Код"));
-        tabl->setHeaderData(1,Qt::Horizontal,tr("Наименование"));
+        tabl->setHeaderData(0,Qt::Horizontal,QObject::tr("Код"));
+        tabl->setHeaderData(1,Qt::Horizontal,QObject::tr("Наименование"));
+        tabl->setHeaderData(2,Qt::Horizontal,QObject::tr("DEL"));
+        tabl->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед. Изм"));
+        tabl->sort(0,Qt::AscendingOrder);
+
 
         ui->tableView->setModel(tabl);
+        ui->tableView->setColumnWidth(0,30);
         ui->tableView->setColumnWidth(1,300);
+        ui->tableView->setColumnWidth(3,50);
         ui->tableView->setColumnHidden(2,true);
+        ui->tableView->setColumnHidden(0,true);
+        ui->tableView->setSortingEnabled(true);
     }
     //**************************** Добавление материала со склада //***********************
     else if (type_select == n_OSTATKI_SKALD || type_select == n_SKALD) {
@@ -89,6 +97,7 @@ void frmSelect::init(QDate date){
         tempModel->setHeaderData(0,Qt::Horizontal,tr("ID"));            //0
         tempModel->setHeaderData(1,Qt::Horizontal,tr("Наименование"));  //1
         tempModel->setHeaderData(2,Qt::Horizontal,tr("Кол-во"));        //2
+        tabl->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед. Изм"));
     }
     QSqlQuery sql;
     if (type_select == n_OSTATKI_SKALD){
@@ -226,6 +235,7 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
         tempModel->setData(tempModel->index(row,2),record.value(1).toString(),Qt::EditRole);
         tempModel->setData(tempModel->index(row,3),count,Qt::EditRole);
         tempModel->setData(tempModel->index(row,4),1,Qt::EditRole);
+        tempModel->setData(tempModel->index(row,6),record.value(3).toString(),Qt::EditRole);
     }
     ///////////////////
     if (type_select == n_OSTATKI_SKALD || type_select == n_SKALD){

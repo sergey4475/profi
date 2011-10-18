@@ -44,7 +44,7 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
     type_doc_ = type_doc;
     // --- Документ по складу ---
     if (type_doc_ == d_oskald){
-        ui->l_group->setText("Раздел склада:");
+        ui->l_group->setText("Отдел склада:");
         if (vid_form == f_document){ // -- Тип формы документ
             tempModel = model;
             sql.prepare("SELECT MAX(number) AS number "
@@ -73,6 +73,10 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
             ui->tableView->setColumnHidden(1,true);
             ui->tableView->setColumnHidden(4,true);
             ui->tableView->setColumnHidden(5,true);
+
+            ui->tableView->setColumnWidth(2,280);
+            ui->tableView->setColumnWidth(3,50);
+            ui->tableView->setColumnWidth(6,50);
 
         }
         if (vid_form == f_ostatki){ // -- Тип формы остатки
@@ -114,10 +118,13 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
             //ui->tableView->setColumnHidden(2,true);
             ui->tableView->setColumnHidden(4,true);
             ui->tableView->setColumnHidden(5,true);
+
+            ui->tableView->setColumnWidth(2,280);
+            ui->tableView->setColumnWidth(3,50);
+            ui->tableView->setColumnWidth(6,50);
+
         }
     }
-
-    ui->tableView->setColumnWidth(2,280);
 
     ui->tableView->setItemDelegateForColumn(0,del);
     ui->tableView->setItemDelegateForColumn(1,del);
