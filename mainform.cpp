@@ -251,13 +251,14 @@ void MainForm::on_raspredel_triggered()
     frmDocument *frm = new frmDocument;
 
     PStandardItemModel *model = new PStandardItemModel;
-    model->insertColumns(0,6);
+    model->insertColumns(0,8);
     model->setHeaderData(0,Qt::Horizontal,"ID");
     model->setHeaderData(1,Qt::Horizontal,"Дата");
     model->setHeaderData(2,Qt::Horizontal,"Материал");
-    model->setHeaderData(3,Qt::Horizontal,"Количество");
+    model->setHeaderData(3,Qt::Horizontal,"Кол-во");
     model->setHeaderData(4,Qt::Horizontal,"type_operacii");
     model->setHeaderData(5,Qt::Horizontal,"vid_zatrat");
+    model->setHeaderData(6,Qt::Horizontal,"Ед.изм");
 
     frm->initForm(model,f_document,d_raspred);
     frm->show();

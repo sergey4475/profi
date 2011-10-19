@@ -87,6 +87,8 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
         }
 
         ui->l_group->setText("Отдел склада:");
+        ui->l_vid_zatrat->setHidden(true);
+        ui->vid_zatrat->setHidden(true);
         if (vid_form_ == f_document){ // -- Тип формы документ
             tempModel = model;
             sql.prepare("SELECT MAX(number) AS number "
@@ -120,7 +122,8 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
     }
     // --- Документ по распределению материала ---
     if (type_doc_ == d_raspred){
-        ui->l_group->setText("Кабинет:");
+        ui->l_group->setText("Отдел склада:");
+        ui->l_vid_zatrat->setText("Кабинет:");
         if (vid_form == 0){
             tempModel = model;
             sql.prepare("SELECT MAX(number) AS number "
@@ -133,14 +136,23 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
 
             Number++;
 
+            // Заполняем выдами затрат материала
             sql.prepare("SELECT vidi_zatrat.ID, vidi_zatrat.Name "
                         "FROM vidi_zatrat");
             sql.exec();
             record = sql.record();
             while (sql.next()){
-                ui->Group->addItem(sql.value(1).toString(),sql.value(0).toInt());
+                ui->vid_zatrat->addItem(sql.value(1).toString(),sql.value(0).toInt());
             }
 
+            // Заполняем отделения на складе
+            sql.prepare("SELECT ID, Name "
+                        "FROM group_o_sklad ");
+            sql.exec();
+            record = sql.record();
+            while (sql.next()){
+                ui->Group->addItem(sql.value(1).toString(),sql.value(0).toInt());
+            }
 
             ui->Number->setText(QString::number(Number));
 
@@ -178,7 +190,7 @@ void frmDocument::on_add_button_clicked()
         fSelect->type_uslugi_= 0;
         fSelect->tempModel   = tempModel;
         fSelect->Id_Client   = 0;
-        fSelect->init(QDate::currentDate());
+        fSelect->init(ui->DateDoc->date());
         fSelect->setWindowModality(Qt::ApplicationModal);
         fSelect->show();
     }
@@ -194,7 +206,7 @@ void frmDocument::on_add_button_clicked()
         fSelect->type_uslugi_= ui->Group->itemData(ui->Group->currentIndex()).toInt();
         fSelect->tempModel   = tempModel;
         fSelect->Id_Client   = 0;
-        fSelect->init(QDate::currentDate());
+        fSelect->init(ui->DateDoc->date());
 
         fSelect->setWindowModality(Qt::ApplicationModal);
         fSelect->show();

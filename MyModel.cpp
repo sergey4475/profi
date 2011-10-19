@@ -2,6 +2,7 @@
 #include "include/delegats.h"
 
 QVariant clSqlQueryModel::data(const QModelIndex &index, int role) const {
+    // Чередование цвета строк
     if(role == Qt::BackgroundColorRole) {
         if(index.row() %2){
             return QVariant(QColor(200,220,255));
@@ -34,6 +35,7 @@ QVariant clSqlQueryModel::data(const QModelIndex &index, int role) const {
 
 // ******************* Оформление табличного поля *************************
 QVariant sotSqlQueryModel::data(const QModelIndex &index, int role) const {
+    // Чередование цвета строк
     if(role == Qt::BackgroundColorRole) {
         if(index.row() %2){
             return QVariant(QColor(200,220,255));
@@ -79,6 +81,7 @@ QVariant PSqlTableModel::data(const QModelIndex &index, int role) const {
         return image;
     }
 
+    // Чередование цвета строк
     if(role == Qt::BackgroundColorRole) {
         if(index.row() %2){
             return QVariant(QColor(200,220,255));
@@ -101,6 +104,7 @@ PStandardItemModel::~PStandardItemModel(){
 }
 
 QVariant PStandardItemModel::data(const QModelIndex &index, int role) const{
+    // Чередование цвета строк
     if(role == Qt::BackgroundColorRole) {
         if(index.row() %2){
             return QVariant(QColor(200,220,255));
@@ -120,6 +124,15 @@ QVariant Ost_model::data(const QModelIndex &index, int role) const {
             return QVariant(QColor(0,0,0));
         }
     }
+    // Чередование цвета строк
+    if(role == Qt::BackgroundColorRole) {
+        if(index.row() %2){
+            return QVariant(QColor(200,220,255));
+        }else{
+            return QVariant(QColor(255,255,255));
+        }
+    }
+
     return QSqlQueryModel::data(index, role);
 
 }

@@ -94,10 +94,11 @@ void frmSelect::init(QDate date){
         tempModel->insertColumn(0);
         tempModel->insertColumn(1);
         tempModel->insertColumn(2);
+        tempModel->insertColumn(3);
         tempModel->setHeaderData(0,Qt::Horizontal,tr("ID"));            //0
         tempModel->setHeaderData(1,Qt::Horizontal,tr("Наименование"));  //1
         tempModel->setHeaderData(2,Qt::Horizontal,tr("Кол-во"));        //2
-        tabl->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед. Изм"));
+        tempModel->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед. Изм"));
     }
     QSqlQuery sql;
     if (type_select == n_OSTATKI_SKALD){
@@ -105,56 +106,73 @@ void frmSelect::init(QDate date){
             sql.prepare("SELECT "
                         "   materials.ID, "
                         "   materials.NAME, "
-                        "   SUM(SKLAD.COUNT) AS COUNT "
+                        "   SUM(SKLAD.COUNT) AS COUNT, "
+                        "   ed_izm.name "
                         "FROM SKLAD INNER JOIN "
-                        "   materials ON materials.ID = SKLAD.ID_MATERIAL "
-                        "WHERE SKLAD.DATE <= :DATE "
+                        "   materials ON materials.ID = SKLAD.ID_MATERIAL, "
+                        "   ed_izm "
+                        "WHERE "
+                        "   SKLAD.DATE <= :DATE "
+                        "   AND materials.id_ed_izm = ed_izm.id "
                         "GROUP BY "
                         "   materials.NAME, "
-                        "   materials.ID");
+                        "   materials.ID,"
+                        "   ed_izm.name ");
         }else{
             sql.prepare("SELECT "
                         "   materials.ID, "
                         "   materials.NAME, "
-                        "   SUM(SKLAD.COUNT) AS COUNT "
+                        "   SUM(SKLAD.COUNT) AS COUNT, "
+                        "   ed_izm.name "
                         "FROM SKLAD INNER JOIN "
                         "   materials ON materials.ID = SKLAD.ID_MATERIAL "
+                        "   ed_izm "
                         "WHERE SKLAD.DATE <= :DATE "
                         "   AND SKLAD.id_Vid_Zatrat = :VidZatrat "
+                        "   AND materials.id_ed_izm = ed_izm.id "
                         "GROUP BY "
                         "   materials.NAME, "
-                        "   materials.ID");
+                        "   materials.ID,"
+                        "   ed_izm.name ");
             sql.bindValue(":VidZatrat",type_uslugi_);
         }
     }else
-        if (ui->all_ostatki->isChecked()){
+        if (! ui->all_ostatki->isChecked()){
             sql.prepare("SELECT "
-                            "materials.ID, "
-                            "materials.NAME, "
-                            "SUM(O_SKLAD.COUNT) AS COUNT "
+                        "   materials.ID, "
+                        "   materials.NAME, "
+                        "   SUM(O_SKLAD.COUNT) AS COUNT, "
+                        "   ed_izm.name "
                         "FROM O_SKLAD INNER JOIN "
                         "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
                         "   INNER JOIN "
-                        "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad "
+                        "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad, "
+                        "   ed_izm "
                         "WHERE O_SKLAD.DATE <= :DATE "
-                        "AND vidi_zatrat.ID = :VidZatrat "
+                        "   AND vidi_zatrat.ID = :VidZatrat "
+                        "   AND materials.id_ed_izm = ed_izm.id "
                         "GROUP BY "
                         "   materials.NAME, "
-                        "   materials.ID");
+                        "   materials.ID,"
+                        "   ed_izm.name ");
             sql.bindValue(":VidZatrat",type_uslugi_);
         }else{
             sql.prepare("SELECT "
-                            "materials.ID, "
-                            "materials.NAME, "
-                            "SUM(O_SKLAD.COUNT) AS COUNT "
+                        "   materials.ID, "
+                        "   materials.NAME, "
+                        "   SUM(O_SKLAD.COUNT) AS COUNT, "
+                        "   ed_izm.name "
                         "FROM O_SKLAD INNER JOIN "
                         "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
                         "   INNER JOIN "
-                        "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad "
+                        "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad, "
+                        "   ed_izm "
                         "WHERE O_SKLAD.DATE <= :DATE "
+                        "   AND materials.id_ed_izm = ed_izm.id "
                         "GROUP BY "
                         "   materials.NAME, "
-                        "   materials.ID");
+                        "   materials.ID,"
+                        "   ed_izm.name ");
         }
 
     sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
@@ -163,8 +181,9 @@ void frmSelect::init(QDate date){
     tabl_->setQuery(sql);
     tabl_->setHeaderData(1,Qt::Horizontal,QObject::tr("Наименование"));
     tabl_->setHeaderData(2,Qt::Horizontal,QObject::tr("Кол-во"));
+    tabl_->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед.изм"));
     ui->tableView->setModel(tabl_);
-    ui->tableView->setColumnWidth(1,300);
+    ui->tableView->setColumnWidth(1,250);
     ui->tableView->setColumnHidden(0,true);
     }
 }
@@ -269,6 +288,7 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
             tempModel->setData(tempModel->index(row,0),record.value(0).toString(),Qt::EditRole);
             tempModel->setData(tempModel->index(row,1),record.value(1).toString(),Qt::EditRole);
             tempModel->setData(tempModel->index(row,2),count,Qt::EditRole);
+            tempModel->setData(tempModel->index(row,3),record.value(2).toString(),Qt::EditRole);
         }else{
             flag = true;
             if(record.value("COUNT").toInt()<=0){
@@ -295,11 +315,12 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
             tempModel->setData(tempModel->index(row,3),count,Qt::EditRole);
             tempModel->setData(tempModel->index(row,4),1,Qt::EditRole);
             tempModel->setData(tempModel->index(row,5),type_uslugi_,Qt::EditRole);
+            tempModel->setData(tempModel->index(row,6),record.value(3).toString(),Qt::EditRole);
         }
     }
 }
 
 void frmSelect::on_all_ostatki_clicked()
 {
-//    init(QDate::currentDate());
+    init(QDate::currentDate());
 }

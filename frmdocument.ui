@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>416</width>
-    <height>328</height>
+    <height>382</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
   <widget class="QTableView" name="tableView">
    <property name="geometry">
     <rect>
-     <x>6</x>
-     <y>99</y>
+     <x>10</x>
+     <y>130</y>
      <width>401</width>
      <height>192</height>
     </rect>
@@ -52,8 +52,8 @@
   <widget class="QPushButton" name="ApplyBut">
    <property name="geometry">
     <rect>
-     <x>303</x>
-     <y>297</y>
+     <x>307</x>
+     <y>340</y>
      <width>103</width>
      <height>23</height>
     </rect>
@@ -78,7 +78,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QDateLineEdit" name="DateDoc" native="true">
+  <widget class="QDateLineEdit" name="DateDoc">
    <property name="geometry">
     <rect>
      <x>63</x>
@@ -134,7 +134,7 @@
    <property name="geometry">
     <rect>
      <x>6</x>
-     <y>70</y>
+     <y>100</y>
      <width>88</width>
      <height>24</height>
     </rect>
@@ -259,6 +259,51 @@
    <property name="text">
     <string>Вид:</string>
    </property>
+  </widget>
+  <widget class="QLabel" name="l_vid_zatrat">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>72</y>
+     <width>131</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Вид:</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="vid_zatrat">
+   <property name="geometry">
+    <rect>
+     <x>154</x>
+     <y>70</y>
+     <width>251</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="editable">
+    <bool>false</bool>
+   </property>
+   <item>
+    <property name="text">
+     <string/>
+    </property>
+   </item>
   </widget>
  </widget>
  <customwidgets>
