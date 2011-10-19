@@ -16,33 +16,51 @@ frmDocument::~frmDocument()
 
 void frmDocument::GetOstaok(){
     QSqlQuery sql;
-    int vid_zatrat      = ui->Group->itemData(ui->Group->currentIndex()).toInt();
-    if (vid_zatrat <=0)
-    sql.prepare("SELECT materials.NAME, "
-                "   SUM(O_SKLAD.COUNT) AS COUNT "
-                "FROM O_SKLAD INNER JOIN "
-                "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
-                "WHERE O_SKLAD.DATE <= :DATE "
-                "GROUP BY materials.NAME");
+    int id_group      = ui->Group->itemData(ui->Group->currentIndex()).toInt();
+    if (id_group <=0)
+    sql.prepare("SELECT "
+                "   materials.name, "
+                "   SUM(o_sklad.count) AS count, "
+                "   ed_izm.name "
+                "FROM "
+                "   public.o_sklad, "
+                "   public.materials, "
+                "   public.ed_izm "
+                "WHERE "
+                "   o_sklad.id_material = materials.id "
+                "   AND o_sklad.DATE <= :DATE "
+                "   AND materials.id_ed_izm = ed_izm.id "
+                "GROUP BY "
+                "   ed_izm.name, "
+                "   materials.name ");
     else{
-        sql.prepare("SELECT materials.NAME, "
-                    "   SUM(O_SKLAD.COUNT) AS COUNT "
-                    "FROM O_SKLAD INNER JOIN "
-                    "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
-                    "WHERE O_SKLAD.DATE <= :DATE "
-                    " AND O_SKLAD.id_group_o_sklad = :id_group_o_sklad "
-                    "GROUP BY materials.NAME");
-        sql.bindValue(":id_group_o_sklad",vid_zatrat);
+        sql.prepare("SELECT "
+                    "   materials.name, "
+                    "   SUM(o_sklad.count) AS count, "
+                    "   ed_izm.name "
+                    "FROM "
+                    "   o_sklad, "
+                    "   materials, "
+                    "   ed_izm "
+                    "WHERE "
+                    "   o_sklad.id_material = materials.id "
+                    "   AND o_sklad.DATE <= :DATE "
+                    "   AND materials.id_ed_izm = ed_izm.id "
+                    "   AND O_SKLAD.id_group_o_sklad = :id_group_o_sklad "
+                    "GROUP BY "
+                    "   ed_izm.name, "
+                    "   materials.name ");
+        sql.bindValue(":id_group_o_sklad",id_group);
     }
 
     sql.bindValue(":DATE",ui->DateDoc->date().toString("dd.MM.yyyy"));
     Ost_model *model_ = new Ost_model;
     sql.exec();
-    qDebug() << ui->DateDoc->date().toString("dd.MM.yyyy");
     qDebug() << sql.lastError();
     model_->setQuery(sql);
     model_->setHeaderData(0,Qt::Horizontal,"Материал");
-    model_->setHeaderData(1,Qt::Horizontal,"Количество");
+    model_->setHeaderData(1,Qt::Horizontal,"Кол-во");
+    model_->setHeaderData(2,Qt::Horizontal,"Ед.изм");
 
     ui->tableView->setModel(model_);
 }
