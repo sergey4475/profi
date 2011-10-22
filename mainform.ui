@@ -253,6 +253,48 @@
       <enum>Qt::NoArrow</enum>
      </property>
     </widget>
+    <widget class="QLabel" name="count_client">
+     <property name="geometry">
+      <rect>
+       <x>124</x>
+       <y>104</y>
+       <width>37</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>108</y>
+       <width>113</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Кол-во посещений:</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -261,7 +303,7 @@
      <x>0</x>
      <y>0</y>
      <width>877</width>
-     <height>21</height>
+     <height>18</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">

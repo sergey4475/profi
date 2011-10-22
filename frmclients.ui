@@ -321,46 +321,6 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QDateEdit" name="dateEdit">
-      <property name="geometry">
-       <rect>
-        <x>306</x>
-        <y>42</y>
-        <width>127</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="inputMethodHints">
-       <set>Qt::ImhDigitsOnly|Qt::ImhFormattedNumbersOnly|Qt::ImhPreferNumbers</set>
-      </property>
-      <property name="wrapping">
-       <bool>false</bool>
-      </property>
-      <property name="frame">
-       <bool>true</bool>
-      </property>
-      <property name="buttonSymbols">
-       <enum>QAbstractSpinBox::UpDownArrows</enum>
-      </property>
-      <property name="accelerated">
-       <bool>false</bool>
-      </property>
-      <property name="correctionMode">
-       <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
-      </property>
-      <property name="keyboardTracking">
-       <bool>false</bool>
-      </property>
-      <property name="currentSection">
-       <enum>QDateTimeEdit::DaySection</enum>
-      </property>
-      <property name="calendarPopup">
-       <bool>true</bool>
-      </property>
-      <property name="timeSpec">
-       <enum>Qt::LocalTime</enum>
-      </property>
-     </widget>
      <widget class="QComboBox" name="Pol">
       <property name="geometry">
        <rect>
@@ -398,6 +358,16 @@
       </property>
       <property name="text">
        <string>Пол:</string>
+      </property>
+     </widget>
+     <widget class="QDateLineEdit" name="dateEdit">
+      <property name="geometry">
+       <rect>
+        <x>306</x>
+        <y>42</y>
+        <width>127</width>
+        <height>22</height>
+       </rect>
       </property>
      </widget>
     </widget>
@@ -457,6 +427,13 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="9"/>
+ <customwidgets>
+  <customwidget>
+   <class>QDateLineEdit</class>
+   <extends>QWidget</extends>
+   <header>qdatelineedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="icons.qrc"/>
  </resources>

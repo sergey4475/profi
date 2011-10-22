@@ -150,7 +150,7 @@
     <bool>true</bool>
    </property>
    <attribute name="verticalHeaderVisible">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
   </widget>
   <widget class="QWidget" name="horizontalLayoutWidget">
@@ -276,7 +276,7 @@
     <enum>QTabWidget::Triangular</enum>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <property name="elideMode">
     <enum>Qt::ElideNone</enum>

@@ -39,6 +39,7 @@ private slots:
 
 private:
     Ui::frmSelect *ui;
+    void Updater();
 };
 
 #endif // FRMSELECT_H

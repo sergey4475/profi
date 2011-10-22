@@ -157,6 +157,7 @@ void MainForm::UpdateClients(int IDClient){
         ui->but_schet->setEnabled(true);
 
     ui->na_schetu->setText("0");
+    ui->count_client->setText("");
     QSqlQuery sql;
     sql.prepare("SELECT SUM(scheta_clients.summa) AS Summa "
                 "FROM scheta_clients "
@@ -167,6 +168,16 @@ void MainForm::UpdateClients(int IDClient){
     while (sql.next()){
         ui->na_schetu->setText(sql.value(0).toString());
     }
+
+    sql.prepare("SELECT COUNT(DISTINCT number) "
+                "FROM clients_history "
+                "WHERE clients_history.ID_Client = :ID_Client");
+    sql.bindValue(":ID_Client",IDClient);
+    sql.exec();
+    while (sql.next()){
+        ui->count_client->setText(sql.value(0).toString());
+    }
+
     ui->summa_uslug->setText("");
 }
 

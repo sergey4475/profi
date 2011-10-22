@@ -48,7 +48,7 @@ void frmClients::on_tableView_clicked(const QModelIndex &index)
 {
     ui->FIOEdit->setReadOnly(true);
     ui->Nom_Edit->setReadOnly(true);
-    ui->dateEdit->setReadOnly(true);
+    ui->dateEdit->setDisabled(true);
     ui->InfoEdit->setReadOnly(true);
     ui->Pol->setDisabled(true);
 
@@ -63,7 +63,7 @@ void frmClients::on_tableView_clicked(const QModelIndex &index)
     while (query.next()){
         ui->FIOEdit->setText(query.value(0).toString());
         ui->Nom_Edit->setText(query.value(1).toString());
-        ui->dateEdit->setDate(query.value(2).toDate());
+        ui->dateEdit->setDateCalendar(QDate::fromString(query.value(2).toString(),"dd.MM.yyyy"));
         ui->InfoEdit->setText(query.value(3).toString());
         ui->Pol->setCurrentIndex(query.value(4).toInt());
    }
@@ -90,7 +90,7 @@ void frmClients::on_edit_button_clicked()
 {
     ui->FIOEdit->setReadOnly(false);
     ui->Nom_Edit->setReadOnly(false);
-    ui->dateEdit->setReadOnly(false);
+    ui->dateEdit->setDisabled(false);
     ui->InfoEdit->setReadOnly(false);
     ui->Pol->setDisabled(false);
     ui->FIOEdit->setFocus();
@@ -102,13 +102,13 @@ void frmClients::on_toolButton_4_clicked()
 {
     ui->FIOEdit->clear();
     ui->Nom_Edit->clear();
-    ui->dateEdit->clear();
+    ui->dateEdit->setDateCalendar(QDate::fromString("01.01.0001","yyyy.MM.dd"));
     ui->InfoEdit->clear();
     ui->Pol->setCurrentIndex(0);
 
     ui->FIOEdit->setReadOnly(false);
     ui->Nom_Edit->setReadOnly(false);
-    ui->dateEdit->setReadOnly(false);
+    ui->dateEdit->setDisabled(false);
     ui->InfoEdit->setReadOnly(false);
     ui->Pol->setDisabled(false);
     ui->FIOEdit->setFocus();
@@ -117,36 +117,38 @@ void frmClients::on_toolButton_4_clicked()
 //=============  нопка применить =======================
 void frmClients::on_ApplyBut_clicked()
 {
-    if (ui->FIOEdit->text() != "" && ui->Nom_Edit->text() != "" && ui->dateEdit->text() != "")
+    if (ui->FIOEdit->text() != "" && ui->Nom_Edit->text() != "" && ui->dateEdit->date() != QDate::fromString("01.01.0001","yyyy.MM.dd"))
     {
         QString g_driverName;
         QSqlQuery query;
         g_driverName = GetNameDriver();
         if (flag_record == add_rec){
-            if (g_driverName != "QSQLITE")
+            if (g_driverName == "QIBASE")
             {
                 IDClients = GetID("GEN_CLIENTS_ID");
                 query.prepare("INSERT INTO Clients(ID,FIO,Nom_tel,date_R,info, pol) VALUES(:ID,:FIO,:Nom_tel,:Date_R,:info,:pol)");
             }
-            else if (g_driverName == "QSQLITE")
+            else
             {
                 query.prepare("INSERT INTO Clients(FIO,Nom_tel,date_R,info, pol) VALUES(:FIO,:Nom_tel,:Date_R,:info,:pol)");
             }
         }else if (flag_record==edit_rec){
-            query.prepare("UPDATE Clients SET FIO=:FIO,Nom_tel=:Nom_tel,Date_R=:Date_r,info=:info,pol=:pol WHERE Id=:ID");
+            query.prepare("UPDATE Clients SET FIO=:FIO,Nom_tel=:Nom_tel,Date_R=:Date_R,info=:info,pol=:pol WHERE Id=:ID");
+//            query.bindValue(":ID",IDClients);
         }
 
         if (flag_record != 0)
         {
-            ui->dateEdit->setDisplayFormat("dd.MM.yyyy");
             query.bindValue(":FIO",ui->FIOEdit->text());
             query.bindValue(":Nom_Tel",ui->Nom_Edit->text());
-            query.bindValue(":Date_R",ui->dateEdit->date().toString("yyyy.MM.dd"));
+            query.bindValue(":Date_R",ui->dateEdit->date().toString("dd.MM.yyyy"));
             query.bindValue(":info",ui->InfoEdit->toPlainText());
-            query.bindValue(":Pol",ui->Pol->currentIndex());
-            if (g_driverName != "QSQLITE")
+            query.bindValue(":pol",ui->Pol->currentIndex());
+            if (flag_record==edit_rec)
                 query.bindValue(":ID",IDClients);
+
             query.exec();
+            qDebug() << query.lastError();
 
             frmClients::on_toolButton_4_clicked();
             frmClients::initForm(0x0,0);

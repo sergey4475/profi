@@ -99,6 +99,10 @@ void frm_okazanie_uslug::InitForm(int nUslugi, WId w_ID){
 //Обновление элементов формы
 void frm_okazanie_uslug::updater(){
     int VidPlateja = ui->sposobOplati->itemData(ui->sposobOplati->currentIndex()).toInt();
+    ui->Skidka->setText("0");
+    ui->Skidka->setDisabled(false);
+    ui->checkSkidka->setVisible(true);
+    ui->checkSkidka->setChecked(false);
     ui->spisanie_so_scheta->setChecked(g_spisanie_so_scheta);
     if (VidPlateja == 1){
         ui->spisanie_so_scheta->setVisible(true);
@@ -107,19 +111,29 @@ void frm_okazanie_uslug::updater(){
         ui->spisanie_so_scheta->setVisible(false);
         ui->spisanie_so_scheta->setChecked(false);
     }
+    if (VidPlateja == 4){
+        ui->spisanie_so_scheta->setVisible(false);
+        ui->spisanie_so_scheta->setChecked(false);
+        ui->checkSkidka->setVisible(false);
+        ui->checkSkidka->setChecked(true);
+        ui->Skidka->setText("100");
+        ui->Skidka->setDisabled(true);
+    }
+
+
 }
 
 //
 void frm_okazanie_uslug::editFinish(QModelIndex index){
-    double cena = tempModel->itemData(tempModel->index(index.row(),2)).value(0).toDouble();
-    int count   = tempModel->itemData(tempModel->index(index.row(),4)).value(0).toInt();
+    double cena = uslModel->itemData(uslModel->index(index.row(),2)).value(0).toDouble();
+    int count   = uslModel->itemData(uslModel->index(index.row(),4)).value(0).toInt();
 
     double summa = cena * count;
-    tempModel->setData(tempModel->index(index.row(),5),summa);
+    uslModel->setData(uslModel->index(index.row(),5),summa);
 
     double sum_uslugi = 0;
-    for (int ind = 0;ind < tempModel->rowCount(); ind++){
-        sum_uslugi += tempModel->itemData(tempModel->index(ind,5)).value(0).toDouble();
+    for (int ind = 0;ind < uslModel->rowCount(); ind++){
+        sum_uslugi += uslModel->itemData(uslModel->index(ind,5)).value(0).toDouble();
     }
     frm->SetSumma(sum_uslugi - setProcent(sum_uslugi));
 
@@ -140,19 +154,19 @@ void frm_okazanie_uslug::on_add_usluga_clicked()
     if ((ui->Client->text() != "" && ui->Sotrudnik->text() != "")||(ID_client != 0 && ID_sotr != 0) ){
         QString str = QString("%1").arg(NumberUslugi);
         frmSelect *fSelect = new frmSelect();
-        tempModel = new PStandardItemModel;
-        tempModel->frm = frm;
-        ui->USLUGI->setModel(tempModel);
+        uslModel = new PStandardItemModel;
+        uslModel->frm = frm;
+        ui->USLUGI->setModel(uslModel);
         ui->USLUGI->setColumnHidden(0,true);
         ui->USLUGI->setColumnHidden(3,true);
         ui->USLUGI->setItemDelegateForColumn(1,DelegatNotEditCol);
         ui->USLUGI->setItemDelegateForColumn(5,DelegatNotEditCol);
         ui->USLUGI->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-        connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
+        connect(uslModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
         fSelect->frm = frm;
         fSelect->type_select = n_USLUGI;
         fSelect->type_uslugi_= NumberUslugi;
-        fSelect->tempModel   = tempModel;
+        fSelect->tempModel   = uslModel;
         fSelect->Id_Client   = ID_client;
         fSelect->init(QDate::currentDate());
         ui->USLUGI->setColumnHidden(0,true);
@@ -168,18 +182,18 @@ void frm_okazanie_uslug::on_add_material_clicked()
 {
     NotEditableDelegate *DelegatNotEditCol = new NotEditableDelegate;
     if ((ui->Client->text() != "" && ui->Sotrudnik->text() != "")||(ID_client != 0 && ID_sotr != 0) ){
-        disconnect(tempModel);
+        //disconnect(tempModel);
         frmSelect *fSelect = new frmSelect();
-        tempModel = new PStandardItemModel;
+        matModel = new PStandardItemModel;
         //tempModel->frm = frm;
-        ui->Materials->setModel(tempModel);
+        ui->Materials->setModel(matModel);
         ui->Materials->setItemDelegateForColumn(1,DelegatNotEditCol);
         ui->Materials->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
         //connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),,SLOT(editFinish(QModelIndex)));
         //fSelect->frm = frm;
         fSelect->type_select = n_OSTATKI_SKALD;
         fSelect->type_uslugi_= NumberUslugi;
-        fSelect->tempModel   = tempModel;
+        fSelect->tempModel   = matModel;
         fSelect->Id_Client   = ID_client;
         fSelect->init(QDate::currentDate());
         fSelect->show();
@@ -194,14 +208,13 @@ void frm_okazanie_uslug::on_add_material_clicked()
 void frm_okazanie_uslug::on_del_material_clicked()
 {
     ui->Materials->model()->removeRow(ui->Materials->currentIndex().row());
-    disconnect(tempModel);
 }
 
 // Удаление услуги из списка
 void frm_okazanie_uslug::on_del_usluga_clicked()
 {
     ui->USLUGI->model()->removeRow(ui->USLUGI->currentIndex().row());
-    connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
+    //connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
 }
 
 // Окончание выбора или ввода клиента
@@ -270,7 +283,6 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
         // Если способ оплаты, НЕ счет клиента и установлен параметр списывать со счета при оплате
 
         if (VidPlateja == 1 && ui->spisanie_so_scheta->checkState()){
-            qDebug() << "Вошли в условие!!!!!!!!!!!";
             double sum_uslugi = 0;
             double ostatok = 0;
             for (int ind = 0;ind < countRow; ind++){
@@ -289,7 +301,6 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             }
             bool result = EditChetClienta(ID_client,2,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
         }
-
         for (int ind = 0; ind < countRow; ind++){
             int IDUsl   = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,0)).value(0).toInt();
             int count   = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,4)).value(0).toInt();
@@ -402,8 +413,8 @@ void frm_okazanie_uslug::on_checkSkidka_clicked()
     ui->Skidka->setText(0);
     if (ui->USLUGI->model() != 0x0){
         double sum_uslugi = 0;
-        for (int ind = 0;ind < tempModel->rowCount(); ind++){
-            sum_uslugi += tempModel->itemData(tempModel->index(ind,5)).value(0).toDouble();
+        for (int ind = 0;ind < uslModel->rowCount(); ind++){
+            sum_uslugi += uslModel->itemData(uslModel->index(ind,5)).value(0).toDouble();
         }
         frm->SetSumma(sum_uslugi - setProcent(sum_uslugi));
 
@@ -416,8 +427,8 @@ void frm_okazanie_uslug::on_Skidka_textChanged(const QString &arg1)
 {
     if (ui->USLUGI->model() != 0x0){
         double sum_uslugi = 0;
-        for (int ind = 0;ind < tempModel->rowCount(); ind++){
-            sum_uslugi += tempModel->itemData(tempModel->index(ind,5)).value(0).toDouble();
+        for (int ind = 0;ind < uslModel->rowCount(); ind++){
+            sum_uslugi += uslModel->itemData(uslModel->index(ind,5)).value(0).toDouble();
         }
         frm->SetSumma(sum_uslugi - setProcent(sum_uslugi));
 

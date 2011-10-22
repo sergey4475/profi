@@ -18,7 +18,7 @@ class frm_okazanie_uslug : public QFrame
 public:
     explicit frm_okazanie_uslug(QWidget *parent = 0);
     ~frm_okazanie_uslug();
-    PStandardItemModel *tempModel;
+    PStandardItemModel *uslModel, *matModel;
     void InitForm(int nUslugi,WId w_ID);
     int ID_sotr, ID_client, Number;
     MainForm *frm;

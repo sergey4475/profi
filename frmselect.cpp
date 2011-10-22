@@ -15,11 +15,8 @@ frmSelect::~frmSelect()
     delete ui;
 }
 
-void frmSelect::init(QDate date){
-    this->setWindowFlags(Qt::Tool);
-    this->setWindowModality(Qt::ApplicationModal);
+void frmSelect::Updater(){
     QString mass ="0";
-    DateDoc = date;
     /////
     if (type_select == n_USLUGI) {
         QSqlQuery query;
@@ -52,8 +49,9 @@ void frmSelect::init(QDate date){
 
         tabl = new PSqlTableModel;
         tabl->setTable("USLUGI");
-        tabl->setFilter("USLUGI.VID_USLUGI="+ QString("%1").arg(type_uslugi_));
-        tabl->setFilter("ID NOT IN ("+mass+")");
+        if (!ui->all_ostatki->isChecked())
+            tabl->setFilter("USLUGI.VID_USLUGI="+ QString("%1").arg(type_uslugi_));
+        //tabl->setFilter("ID NOT IN ("+mass+")");
         tabl->select();
         tabl->setHeaderData(0,Qt::Horizontal,tr("ID"));
         tabl->setHeaderData(1,Qt::Horizontal,tr("Наименование"));
@@ -128,7 +126,7 @@ void frmSelect::init(QDate date){
                         "   materials ON materials.ID = SKLAD.ID_MATERIAL "
                         "   ed_izm "
                         "WHERE SKLAD.DATE <= :DATE "
-                        "   AND SKLAD.id_Vid_Zatrat = :VidZatrat "
+                        "   AND SKLAD.id_vid_zatrat = :VidZatrat "
                         "   AND materials.id_ed_izm = ed_izm.id "
                         "GROUP BY "
                         "   materials.NAME, "
@@ -177,6 +175,7 @@ void frmSelect::init(QDate date){
 
     sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
     sql.exec();
+    qDebug() << sql.lastError();
     tabl_ = new Ost_model;
     tabl_->setQuery(sql);
     tabl_->setHeaderData(1,Qt::Horizontal,QObject::tr("Наименование"));
@@ -186,6 +185,15 @@ void frmSelect::init(QDate date){
     ui->tableView->setColumnWidth(1,250);
     ui->tableView->setColumnHidden(0,true);
     }
+}
+
+void frmSelect::init(QDate date){
+    this->setWindowFlags(Qt::Tool);
+    this->setWindowModality(Qt::ApplicationModal);
+    DateDoc = date;
+    Updater();
+
+    ui->all_ostatki->setVisible(false);
 }
 
 void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
@@ -322,5 +330,5 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
 
 void frmSelect::on_all_ostatki_clicked()
 {
-    init(QDate::currentDate());
+    Updater();
 }
