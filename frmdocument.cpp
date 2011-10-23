@@ -79,9 +79,9 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
     if (type_doc_ == d_oskald){
 
         sql.prepare("SELECT ID, Name "
-                    "FROM group_o_sklad ");
+                    "FROM group_o_sklad "
+                    "ORDER BY ID");
         sql.exec();
-        record = sql.record();
         while (sql.next()){
             ui->Group->addItem(sql.value(1).toString(),sql.value(0).toInt());
         }
@@ -138,7 +138,8 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
 
             // Заполняем выдами затрат материала
             sql.prepare("SELECT vidi_zatrat.ID, vidi_zatrat.Name "
-                        "FROM vidi_zatrat");
+                        "FROM vidi_zatrat "
+                        "ORDER BY vidi_zatrat.ID");
             sql.exec();
             record = sql.record();
             while (sql.next()){
@@ -147,7 +148,8 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
 
             // Заполняем отделения на складе
             sql.prepare("SELECT ID, Name "
-                        "FROM group_o_sklad ");
+                        "FROM group_o_sklad "
+                        "ORDER BY ID");
             sql.exec();
             record = sql.record();
             while (sql.next()){

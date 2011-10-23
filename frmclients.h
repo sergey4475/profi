@@ -42,6 +42,7 @@ private slots:
 
 private:
     Ui::frmClients *ui;
+    bool selClients;
 };
 
 #endif // FRMCLIENTS_H

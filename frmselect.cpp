@@ -104,33 +104,35 @@ void frmSelect::Updater(){
             sql.prepare("SELECT "
                         "   materials.ID, "
                         "   materials.NAME, "
-                        "   SUM(SKLAD.COUNT) AS COUNT, "
-                        "   ed_izm.name "
-                        "FROM SKLAD INNER JOIN "
-                        "   materials ON materials.ID = SKLAD.ID_MATERIAL, "
-                        "   ed_izm "
+                        "   ed_izm.name, "
+                        "   SUM(SKLAD.COUNT) AS COUNT "
+                        "FROM "
+                        "   ed_izm, "
+                        "   SKLAD INNER JOIN "
+                        "       materials ON materials.ID = SKLAD.ID_MATERIAL "
                         "WHERE "
                         "   SKLAD.DATE <= :DATE "
                         "   AND materials.id_ed_izm = ed_izm.id "
                         "GROUP BY "
                         "   materials.NAME, "
-                        "   materials.ID,"
+                        "   materials.ID, "
                         "   ed_izm.name ");
         }else{
             sql.prepare("SELECT "
                         "   materials.ID, "
                         "   materials.NAME, "
-                        "   SUM(SKLAD.COUNT) AS COUNT, "
-                        "   ed_izm.name "
-                        "FROM SKLAD INNER JOIN "
-                        "   materials ON materials.ID = SKLAD.ID_MATERIAL "
-                        "   ed_izm "
+                        "   ed_izm.name, "
+                        "   SUM(SKLAD.COUNT) AS COUNT "
+                        "FROM "
+                        "   ed_izm, "
+                        "   SKLAD INNER JOIN "
+                        "       materials ON materials.ID = SKLAD.ID_MATERIAL "
                         "WHERE SKLAD.DATE <= :DATE "
-                        "   AND SKLAD.id_vid_zatrat = :VidZatrat "
                         "   AND materials.id_ed_izm = ed_izm.id "
+                        "   AND SKLAD.id_vid_zatrat = :VidZatrat "
                         "GROUP BY "
                         "   materials.NAME, "
-                        "   materials.ID,"
+                        "   materials.ID, "
                         "   ed_izm.name ");
             sql.bindValue(":VidZatrat",type_uslugi_);
         }
@@ -185,6 +187,42 @@ void frmSelect::Updater(){
     ui->tableView->setColumnWidth(1,250);
     ui->tableView->setColumnHidden(0,true);
     }
+    if (type_select == n_CLIENTS){
+        tempModel->insertColumn(0);
+        tempModel->setHeaderData(0,Qt::Horizontal,tr("ÔÈÎ"));  //1
+
+        QSqlQuery sql;
+        sql.prepare("select FIO, POL FROM clients");
+        sql.exec();
+
+        selTabl = new clSqlQueryModel;
+        selTabl->setQuery(sql);
+        selTabl->setHeaderData(0,Qt::Horizontal,QObject::tr("ÔÈÎ"));
+        ui->tableView->setModel(selTabl);
+        ui->tableView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+        ui->tableView->hideColumn(1);
+    }
+
+    if (type_select == n_MASTER){
+        tempModel->insertColumn(0);
+        tempModel->setHeaderData(0,Qt::Horizontal,tr("ÔÈÎ"));  //1
+
+        QSqlQuery sql;
+        sql.prepare("SELECT Personal.FIO, "
+                    " Personal.POL "
+                    "FROM Personal INNER JOIN DOLJNOSTI ON Personal.DOLJN = DOLJNOSTI.ID "
+                    "WHERE DOLJNOSTI.VID_USLUGI = :Vid" );
+        sql.bindValue(":VID",type_uslugi_);
+        sql.exec();
+
+        selTabl = new clSqlQueryModel;
+        selTabl->setQuery(sql);
+        selTabl->setHeaderData(0,Qt::Horizontal,QObject::tr("ÔÈÎ"));
+        ui->tableView->setModel(selTabl);
+        ui->tableView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+        ui->tableView->hideColumn(1);
+    }
+
 }
 
 void frmSelect::init(QDate date){
@@ -326,9 +364,29 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
             tempModel->setData(tempModel->index(row,6),record.value(3).toString(),Qt::EditRole);
         }
     }
+    if (type_select == n_CLIENTS){
+        tempModel->insertRow(countRow);
+        QSqlRecord record = selTabl->record(index.row());
+        tempModel->setData(tempModel->index(countRow,0),record.value(0).toString(),Qt::EditRole);
+        this->close();
+    }
+
+    if (type_select == n_MASTER){
+        tempModel->insertRow(countRow);
+        QSqlRecord record = selTabl->record(index.row());
+        tempModel->setData(tempModel->index(countRow,0),record.value(0).toString(),Qt::EditRole);
+        this->close();
+    }
+
 }
 
 void frmSelect::on_all_ostatki_clicked()
 {
     Updater();
+}
+
+void frmSelect::on_sel_button_clicked()
+{
+    on_tableView_doubleClicked(ui->tableView->currentIndex());
+    this->close();
 }

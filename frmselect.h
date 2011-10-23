@@ -24,6 +24,7 @@ public:
     explicit frmSelect(QWidget *parent = 0);
     PSqlTableModel *tabl;
     Ost_model *tabl_;
+    clSqlQueryModel *selTabl;
     PStandardItemModel *tempModel;
     MainForm *frm;
     QDate DateDoc;
@@ -36,6 +37,8 @@ private slots:
     void on_tableView_doubleClicked(const QModelIndex &index);
 
     void on_all_ostatki_clicked();
+
+    void on_sel_button_clicked();
 
 private:
     Ui::frmSelect *ui;

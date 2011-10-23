@@ -141,6 +141,12 @@
     <property name="title">
      <string/>
     </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
@@ -234,8 +240,14 @@
        <x>12</x>
        <y>70</y>
        <width>151</width>
-       <height>19</height>
+       <height>25</height>
       </rect>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::TabFocus</enum>
+     </property>
+     <property name="acceptDrops">
+      <bool>false</bool>
      </property>
      <property name="autoFillBackground">
       <bool>false</bool>
@@ -243,11 +255,17 @@
      <property name="text">
       <string>Счет клиента</string>
      </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
      <property name="toolButtonStyle">
       <enum>Qt::ToolButtonIconOnly</enum>
      </property>
      <property name="autoRaise">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="arrowType">
       <enum>Qt::NoArrow</enum>

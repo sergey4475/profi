@@ -19,10 +19,14 @@ frmClients::~frmClients()
 
 void frmClients::initForm(WId w_ID,int fl){
 
-    if (fl==1)
+    if (fl==1){
         ui->closeFrame->setHidden(true);
-    else
+        selClients = true;
+    }
+    else{
         ui->closeFrame->setVisible(true);
+        selClients = false;
+    }
 
     if (w_ID != 0x0){
         QWidget *frm = find(w_ID);
@@ -82,7 +86,6 @@ void frmClients::on_tableView_clicked(const QModelIndex &index)
     model->setHeaderData(2,Qt::Horizontal,QObject::tr("Сумма"));
     ui->tClient_history->setModel(model);
     ui->tClient_history->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-
 }
 
 //============== Кнопка редактирования записи ===========================

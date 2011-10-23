@@ -34,5 +34,4 @@ class Ost_model : public QSqlQueryModel{
     QVariant data(const QModelIndex &index, int role) const;
 };
 
-
 #endif // MYMODEL_H

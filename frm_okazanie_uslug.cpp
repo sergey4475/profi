@@ -31,6 +31,9 @@ void frm_okazanie_uslug::InitForm(int nUslugi, WId w_ID){
         QWidget *f = find(w_ID);
         f->deleteLater();
     }
+    ID_sotr = 0;
+    ID_client = 0;
+
     ui->Skidka->setVisible(ui->checkSkidka->isChecked());
 
     NumberUslugi = nUslugi;
@@ -123,7 +126,7 @@ void frm_okazanie_uslug::updater(){
 
 }
 
-//
+// Обработка выбора Услуги
 void frm_okazanie_uslug::editFinish(QModelIndex index){
     double cena = uslModel->itemData(uslModel->index(index.row(),2)).value(0).toDouble();
     int count   = uslModel->itemData(uslModel->index(index.row(),4)).value(0).toInt();
@@ -137,14 +140,6 @@ void frm_okazanie_uslug::editFinish(QModelIndex index){
     }
     frm->SetSumma(sum_uslugi - setProcent(sum_uslugi));
 
-}
-
-double frm_okazanie_uslug::setProcent(double summa){
-    int skidka_p = ui->Skidka->text().toInt();
-    double summa_slidki = (summa * skidka_p)/100;
-//    double summa_vsego = summa - summa_slidki;
-
-    return summa_slidki;
 }
 
 // Добавление услуги
@@ -176,6 +171,7 @@ void frm_okazanie_uslug::on_add_usluga_clicked()
         QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Yes);
     }
 }
+
 
 // Добавление материала
 void frm_okazanie_uslug::on_add_material_clicked()
@@ -214,8 +210,29 @@ void frm_okazanie_uslug::on_del_material_clicked()
 void frm_okazanie_uslug::on_del_usluga_clicked()
 {
     ui->USLUGI->model()->removeRow(ui->USLUGI->currentIndex().row());
-    //connect(tempModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
 }
+
+// Начало выбора клиента
+void frm_okazanie_uslug::on_Client_buttonClicked()
+{
+    selModel = new PStandardItemModel;
+    frmSelect *frm_client = new frmSelect;
+    connect(selModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(selClientsFinish(QModelIndex)));
+    frm_client->tempModel = selModel;
+    frm_client->type_select = n_CLIENTS;
+    frm_client->frm = frm;
+    frm_client->init(QDate::currentDate());
+    frm_client->show();
+
+//    ui->Client->setText(model->item(0,0)->text());
+}
+
+// Обработка выбора клиента
+void frm_okazanie_uslug::selClientsFinish(QModelIndex index){
+    ui->Client->setText(selModel->itemData(selModel->index(index.row(),0)).value(0).toString());
+    on_Client_editingFinished();
+}
+
 
 // Окончание выбора или ввода клиента
 void frm_okazanie_uslug::on_Client_editingFinished()
@@ -236,6 +253,28 @@ void frm_okazanie_uslug::on_Client_editingFinished()
         frm->UpdateClients(ID_client);
 }
 
+//Начало выбора сотрудника
+void frm_okazanie_uslug::on_Sotrudnik_buttonClicked()
+{
+    selModel = new PStandardItemModel;
+    frmSelect *frm_client = new frmSelect;
+    connect(selModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(selSotrFinish(QModelIndex)));
+    frm_client->tempModel = selModel;
+    frm_client->type_uslugi_= NumberUslugi;
+    frm_client->type_select = n_MASTER;
+    frm_client->frm = frm;
+    frm_client->init(QDate::currentDate());
+    frm_client->show();
+
+}
+
+// Обработка выбора клиента
+void frm_okazanie_uslug::selSotrFinish(QModelIndex index){
+    ui->Sotrudnik->setText(selModel->itemData(selModel->index(index.row(),0)).value(0).toString());
+    on_Sotrudnik_editingFinished();
+}
+
+
 // Окончание выбора или ввода сотрудника
 void frm_okazanie_uslug::on_Sotrudnik_editingFinished()
 {
@@ -250,6 +289,13 @@ void frm_okazanie_uslug::on_Sotrudnik_editingFinished()
 
     ID_sotr = query.value(record.indexOf("ID")).toInt();
 }
+// расчет процента
+double frm_okazanie_uslug::setProcent(double summa){
+    int skidka_p = ui->Skidka->text().toInt();
+    double summa_slidki = (summa * skidka_p)/100;
+
+    return summa_slidki;
+}
 
 // Оплата
 void frm_okazanie_uslug::on_but_oplatit_clicked()
@@ -259,6 +305,9 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
     int VidPlateja = ui->sposobOplati->itemData(ui->sposobOplati->currentIndex()).toInt();
 
     // Оплата услуг
+    if (ui->USLUGI->model() == 0x0)
+        return;
+
     int countRow = ui->USLUGI->model()->rowCount();
     if (ID_sotr != 0 && ID_client != 0 && countRow !=0 ){
 
@@ -370,13 +419,6 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
         QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Ok);
     }
 
-}
-
-void frm_okazanie_uslug::on_Client_buttonClicked()
-{
-    frmClients *frm_client = new frmClients;
-    frm_client->initForm(0,1);
-    frm_client->show();
 }
 
 void frm_okazanie_uslug::on_sposobOplati_activated(const QString &arg1)

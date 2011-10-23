@@ -6,10 +6,14 @@
 #define n_USL_UHOD 3
 #define n_USL_STIL 4
 
-#define n_USLUGI 1
-#define n_MATERIAL 2
+#define n_USLUGI        1
+#define n_MATERIAL      2
 #define n_OSTATKI_SKALD 3
-#define n_SKALD 4
+#define n_SKALD         4
+#define n_CLIENTS       5
+#define n_MASTER        6
+
+
 #define n_PRIHOD 1
 #define n_RASHOD 2
 
