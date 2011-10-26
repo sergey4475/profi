@@ -1,7 +1,7 @@
 #include "procedures.h"
 
 bool EditChetClienta(int ID_cl, int VidOperacii, double summa, QString Date){
-if (VidOperacii == 2)
+if (VidOperacii == N_CH_RASHOD || VidOperacii == N_CH_SPISAN)
     summa = summa * -1;
 
 QSqlQuery sql;

@@ -327,7 +327,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
                                       "¬ыберите другой способ оплаты или пополните счет клиента",QMessageBox::Ok);
                 return;
             }
-            bool result = EditChetClienta(ID_client,2,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
+            bool result = EditChetClienta(ID_client,N_CH_RASHOD,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
         }
         // ≈сли способ оплаты, Ќ≈ счет клиента и установлен параметр списывать со счета при оплате
 
@@ -348,7 +348,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
                 sum_uslugi = sum_uslugi - summa_slidki;
 
             }
-            bool result = EditChetClienta(ID_client,2,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
+            bool result = EditChetClienta(ID_client,N_CH_RASHOD,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
         }
         for (int ind = 0; ind < countRow; ind++){
             int IDUsl   = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,0)).value(0).toInt();
@@ -405,7 +405,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             sql.bindValue(":DATE",date_usl.toString("dd.MM.yyyy"));
             sql.bindValue(":ID_MATERIAL",ID_MATERIAL);
             sql.bindValue(":COUNT",COUNT * (-1));
-            sql.bindValue(":type_operacii",n_PRIHOD);
+            sql.bindValue(":type_operacii",n_RASHOD);
             sql.bindValue(":vid_zatrat",NumberUslugi);
             sql.bindValue(":NUMBER",Number);
             sql.exec();

@@ -1,4 +1,6 @@
 #include "sqlmodules.h"
+#include "params.h"
+
 #ifndef PROCEDURES_H
 #define PROCEDURES_H
 
