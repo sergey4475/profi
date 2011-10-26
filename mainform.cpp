@@ -157,6 +157,7 @@ void MainForm::UpdateClients(int IDClient){
         ui->but_schet->setEnabled(true);
 
     ui->na_schetu->setText("0");
+    ui->summa_uslug->setText("0");
     ui->count_client->setText("");
     QSqlQuery sql;
     sql.prepare("SELECT SUM(scheta_clients.summa) AS Summa "
