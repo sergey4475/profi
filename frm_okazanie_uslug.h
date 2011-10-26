@@ -63,6 +63,7 @@ private:
     Ui::frm_okazanie_uslug *ui;
     int NumberUslugi;
     void updater();
+    QDate DateDoc;
     double setProcent(double summa);
 };
 

@@ -27,6 +27,8 @@ frm_okazanie_uslug::~frm_okazanie_uslug()
 
 void frm_okazanie_uslug::InitForm(int nUslugi, WId w_ID){
 
+    DateDoc = QDate::currentDate();
+    ui->Date->setText(DateDoc.toString("dd.MM.yyyy"));
     if (w_ID != 0x0){
         QWidget *f = find(w_ID);
         f->deleteLater();
@@ -163,7 +165,7 @@ void frm_okazanie_uslug::on_add_usluga_clicked()
         fSelect->type_uslugi_= NumberUslugi;
         fSelect->tempModel   = uslModel;
         fSelect->Id_Client   = ID_client;
-        fSelect->init(QDate::currentDate());
+        fSelect->init(DateDoc);
         ui->USLUGI->setColumnHidden(0,true);
         ui->USLUGI->setColumnHidden(3,true);
         fSelect->show();
@@ -191,7 +193,7 @@ void frm_okazanie_uslug::on_add_material_clicked()
         fSelect->type_uslugi_= NumberUslugi;
         fSelect->tempModel   = matModel;
         fSelect->Id_Client   = ID_client;
-        fSelect->init(QDate::currentDate());
+        fSelect->init(DateDoc);
         fSelect->show();
         ui->Materials->setColumnHidden(0,true);
     }else{
@@ -221,7 +223,7 @@ void frm_okazanie_uslug::on_Client_buttonClicked()
     frm_client->tempModel = selModel;
     frm_client->type_select = n_CLIENTS;
     frm_client->frm = frm;
-    frm_client->init(QDate::currentDate());
+    frm_client->init(DateDoc);
     frm_client->show();
 
 //    ui->Client->setText(model->item(0,0)->text());
@@ -263,7 +265,7 @@ void frm_okazanie_uslug::on_Sotrudnik_buttonClicked()
     frm_client->type_uslugi_= NumberUslugi;
     frm_client->type_select = n_MASTER;
     frm_client->frm = frm;
-    frm_client->init(QDate::currentDate());
+    frm_client->init(DateDoc);
     frm_client->show();
 
 }
@@ -301,9 +303,10 @@ double frm_okazanie_uslug::setProcent(double summa){
 void frm_okazanie_uslug::on_but_oplatit_clicked()
 {
 
-    QDate date_usl = QDate::currentDate();
+    QDate date_usl = DateDoc;
     int VidPlateja = ui->sposobOplati->itemData(ui->sposobOplati->currentIndex()).toInt();
 
+    double sum_uslugi = 0;
     // Оплата услуг
     if (ui->USLUGI->model() == 0x0)
         return;
@@ -311,16 +314,39 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
     int countRow = ui->USLUGI->model()->rowCount();
     if (ID_sotr != 0 && ID_client != 0 && countRow !=0 ){
 
+        QSqlDatabase::database().transaction();
+        for (int ind = 0;ind < countRow; ind++){
+            sum_uslugi += ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
+        }
+        double summa_skidki = setProcent(sum_uslugi);
+        sum_uslugi = sum_uslugi - summa_skidki;
+
+
+        // Добавляем оплату клиента
+        if (VidPlateja != 4){
+            double summa_Oplati = QInputDialog::getDouble(this,"Введите сумму ","Сумма:",sum_uslugi,0,99999999,2,0,0);
+            if (summa_Oplati == 0)
+                return;
+
+            QSqlQuery sql;
+            sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL) "
+                        "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL) ");
+            sql.bindValue(":NUMBER",Number);
+            sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
+            sql.bindValue(":TYPE_OPERACII",n_PL_OSN);
+            sql.bindValue(":ID_CLIENT",ID_client);
+            sql.bindValue(":SUMMA_K_OPL",sum_uslugi);
+            sql.bindValue(":SUMMA_OPL",summa_Oplati);
+
+            sql.exec();
+            if (sql.lastError().isValid())
+                QSqlDatabase::database().rollback();
+        };
+
+
+
         // Если способ оплаты, счет клиента, то списываем со счета сумму платежа
         if (VidPlateja == 5){
-
-            double sum_uslugi = 0;
-            for (int ind = 0;ind < countRow; ind++){
-                sum_uslugi += ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
-            }
-            double summa_slidki = setProcent(sum_uslugi);
-            sum_uslugi = sum_uslugi - summa_slidki;
-
 
             if (GetOstatokNaSchete(ID_client,date_usl.toString("dd.MM.yyyy")) < sum_uslugi){
                 QMessageBox::question(0,"Внимание!!!!","На счете у клиента не достаточно средств!!! \n "
@@ -332,13 +358,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
         // Если способ оплаты, НЕ счет клиента и установлен параметр списывать со счета при оплате
 
         if (VidPlateja == 1 && ui->spisanie_so_scheta->checkState()){
-            double sum_uslugi = 0;
             double ostatok = 0;
-            for (int ind = 0;ind < countRow; ind++){
-                sum_uslugi += ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
-            }
-            double summa_slidki = setProcent(sum_uslugi);
-            sum_uslugi = sum_uslugi - summa_slidki;
 
             ostatok = GetOstatokNaSchete(ID_client,date_usl.toString("dd.MM.yyyy"));
 
@@ -382,7 +402,9 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
 
 
             sql.exec();
-            qDebug() << sql.lastError();
+            if (sql.lastError().isValid())
+                QSqlDatabase::database().rollback();
+
             ui->USLUGI->setDisabled(true);
             ui->prodaja->setDisabled(true);
             ui->but_oplatit->setDisabled(true);
@@ -409,10 +431,13 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             sql.bindValue(":vid_zatrat",NumberUslugi);
             sql.bindValue(":NUMBER",Number);
             sql.exec();
-            qDebug() << sql.lastError();
+            if (sql.lastError().isValid())
+                QSqlDatabase::database().rollback();
+
             if (ID_client != 0)
                 frm->UpdateClients(ID_client);
         }
+        QSqlDatabase::database().commit();
         on_closeButton_clicked();
     }
     else{

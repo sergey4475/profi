@@ -25,8 +25,13 @@
 #define N_CH_RASHOD 2
 #define N_CH_SPISAN 3
 
+#define n_PL_OSN    1
+#define n_PL_DOLG   2
+
 #include <QtCore>
 #include <QSettings>
+#include <QMessageBox>
+#include <QInputDialog>
 
     static QSettings set("conf.ini",QSettings::IniFormat);
     static QString g_hostname       = set.value("HostName").toString();
