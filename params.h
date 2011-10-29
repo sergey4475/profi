@@ -2,10 +2,11 @@
 #define PARAMS_H
 
 // Тип услуг
-#define n_USL_MAN 1
-#define n_USL_KOS 2
+#define n_USL_MAN  1
+#define n_USL_KOS  2
 #define n_USL_UHOD 3
 #define n_USL_STIL 4
+#define n_USL_MAG  5
 
 // тип отображаемых данных в таблице выбора
 #define n_USLUGI        1
@@ -14,6 +15,7 @@
 #define n_SKALD         4
 #define n_CLIENTS       5
 #define n_MASTER        6
+#define n_MAGAZIN       7
 
 // Операции склада
 #define n_PRIHOD 1
@@ -27,6 +29,10 @@
 
 #define n_PL_OSN    1
 #define n_PL_DOLG   2
+
+// Тип склада
+#define N_O_SKLAD   1
+#define N_SKLAD     2
 
 #include <QtCore>
 #include <QSettings>

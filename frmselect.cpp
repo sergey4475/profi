@@ -17,7 +17,7 @@ frmSelect::~frmSelect()
 
 void frmSelect::Updater(){
     QString mass ="0";
-    /////
+    ///// Выбор услуги ////////////////////
     if (type_select == n_USLUGI) {
         QSqlQuery query;
         query.prepare("SELECT CLIENTS_HISTORY.ID_USLUGA "
@@ -64,7 +64,7 @@ void frmSelect::Updater(){
         ui->tableView->setColumnHidden(4,true);
         ui->tableView->setColumnHidden(5,true);
     }
-    //////////////////
+    ////////////////// Выбор материалов /////////////////
     else if (type_select == n_MATERIAL) {
         tabl = new PSqlTableModel;
         tabl->setTable("MATERIALS");
@@ -104,8 +104,8 @@ void frmSelect::Updater(){
             sql.prepare("SELECT "
                         "   materials.ID, "
                         "   materials.NAME, "
-                        "   ed_izm.name, "
-                        "   SUM(SKLAD.COUNT) AS COUNT "
+                        "   SUM(SKLAD.COUNT) AS COUNT, "
+                        "   ed_izm.name "
                         "FROM "
                         "   ed_izm, "
                         "   SKLAD INNER JOIN "
@@ -121,8 +121,8 @@ void frmSelect::Updater(){
             sql.prepare("SELECT "
                         "   materials.ID, "
                         "   materials.NAME, "
-                        "   ed_izm.name, "
-                        "   SUM(SKLAD.COUNT) AS COUNT "
+                        "   SUM(SKLAD.COUNT) AS COUNT, "
+                        "   ed_izm.name "
                         "FROM "
                         "   ed_izm, "
                         "   SKLAD INNER JOIN "
@@ -149,7 +149,7 @@ void frmSelect::Updater(){
                         "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad, "
                         "   ed_izm "
                         "WHERE O_SKLAD.DATE <= :DATE "
-                        "   AND vidi_zatrat.ID = :VidZatrat "
+                        "   AND vidi_zatrat.id_group_o_sklad = :VidZatrat "
                         "   AND materials.id_ed_izm = ed_izm.id "
                         "GROUP BY "
                         "   materials.NAME, "
@@ -177,7 +177,6 @@ void frmSelect::Updater(){
 
     sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
     sql.exec();
-    qDebug() << sql.lastError();
     tabl_ = new Ost_model;
     tabl_->setQuery(sql);
     tabl_->setHeaderData(1,Qt::Horizontal,QObject::tr("Наименование"));
@@ -187,6 +186,7 @@ void frmSelect::Updater(){
     ui->tableView->setColumnWidth(1,250);
     ui->tableView->setColumnHidden(0,true);
     }
+    /////////////// Выбор клиента //////////////////
     if (type_select == n_CLIENTS){
         tempModel->insertColumn(0);
         tempModel->setHeaderData(0,Qt::Horizontal,tr("ФИО"));  //1
@@ -202,7 +202,7 @@ void frmSelect::Updater(){
         ui->tableView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
         ui->tableView->hideColumn(1);
     }
-
+    ////////////////// Выбор мастера ////////////////
     if (type_select == n_MASTER){
         tempModel->insertColumn(0);
         tempModel->setHeaderData(0,Qt::Horizontal,tr("ФИО"));  //1
@@ -223,6 +223,67 @@ void frmSelect::Updater(){
         ui->tableView->hideColumn(1);
     }
 
+    if (type_select == n_MAGAZIN){
+        if (tempModel->columnCount() == 0) {
+            tempModel->insertColumn(0);
+            tempModel->insertColumn(1);
+            tempModel->insertColumn(2);
+            tempModel->insertColumn(3);
+            tempModel->setHeaderData(0,Qt::Horizontal,tr("ID"));            //0
+            tempModel->setHeaderData(1,Qt::Horizontal,tr("Наименование"));  //1
+            tempModel->setHeaderData(2,Qt::Horizontal,tr("Кол-во"));        //2
+            tempModel->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед. Изм"));
+        }
+        QSqlQuery sql;
+
+        if (ui->all_ostatki->isChecked()){
+            sql.prepare("SELECT "
+                        "   materials.ID, "
+                        "   materials.NAME, "
+                        "   SUM(SKLAD.COUNT) AS COUNT, "
+                        "   ed_izm.name "
+                        "FROM "
+                        "   ed_izm, "
+                        "   SKLAD INNER JOIN "
+                        "       materials ON materials.ID = SKLAD.ID_MATERIAL "
+                        "WHERE "
+                        "   SKLAD.DATE <= :DATE "
+                        "   AND materials.id_ed_izm = ed_izm.id "
+                        "GROUP BY "
+                        "   materials.NAME, "
+                        "   materials.ID, "
+                        "   ed_izm.name ");
+        }else{
+            sql.prepare("SELECT "
+                        "   materials.ID, "
+                        "   materials.NAME, "
+                        "   SUM(SKLAD.COUNT) AS COUNT, "
+                        "   ed_izm.name "
+                        "FROM "
+                        "   ed_izm, "
+                        "   SKLAD INNER JOIN "
+                        "       materials ON materials.ID = SKLAD.ID_MATERIAL "
+                        "WHERE SKLAD.DATE <= :DATE "
+                        "   AND materials.id_ed_izm = ed_izm.id "
+                        "   AND SKLAD.id_vid_zatrat = :VidZatrat "
+                        "GROUP BY "
+                        "   materials.NAME, "
+                        "   materials.ID, "
+                        "   ed_izm.name ");
+            sql.bindValue(":VidZatrat",type_uslugi_);
+
+        }
+        sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
+        sql.exec();
+        tabl_ = new Ost_model;
+        tabl_->setQuery(sql);
+        tabl_->setHeaderData(1,Qt::Horizontal,QObject::tr("Наименование"));
+        tabl_->setHeaderData(2,Qt::Horizontal,QObject::tr("Кол-во"));
+        tabl_->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед.изм"));
+        ui->tableView->setModel(tabl_);
+        ui->tableView->setColumnWidth(1,250);
+        ui->tableView->setColumnHidden(0,true);
+    }
 }
 
 void frmSelect::init(QDate date){
@@ -232,6 +293,15 @@ void frmSelect::init(QDate date){
     Updater();
 
     ui->all_ostatki->setVisible(false);
+}
+
+void frmSelect::multeSelect(const QModelIndexList &indexList){
+    QModelIndex index;
+
+     foreach(index, indexList)
+         on_tableView_doubleClicked(index);
+
+//    int count = indexList.count();
 }
 
 void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
@@ -334,7 +404,7 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
             tempModel->setData(tempModel->index(row,0),record.value(0).toString(),Qt::EditRole);
             tempModel->setData(tempModel->index(row,1),record.value(1).toString(),Qt::EditRole);
             tempModel->setData(tempModel->index(row,2),count,Qt::EditRole);
-            tempModel->setData(tempModel->index(row,3),record.value(2).toString(),Qt::EditRole);
+            tempModel->setData(tempModel->index(row,3),record.value(3).toString(),Qt::EditRole);
         }else{
             flag = true;
             if(record.value("COUNT").toInt()<=0){
@@ -378,6 +448,40 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
         this->close();
     }
 
+    ///////////////////
+    if (type_select == n_MAGAZIN){
+        QSqlRecord record = tabl_->record(index.row());
+        int countRec = record.value("COUNT").toInt();
+        QList<QStandardItem*> lst = tempModel->findItems(record.value(0).toString(),Qt::MatchContains,0);
+
+        flag = true;
+        if(countRec <= 0){
+
+            flag = false;
+            QMessageBox::question(0,"Внимание","Данного материала нет на складе!",QMessageBox::Yes,QMessageBox::No);
+        }
+        if (flag == true){
+            if (lst.count()==0){
+                tempModel->insertRow(countRow);
+                row = countRow;
+                count = 1;
+            }else{
+                row = lst[0]->index().row();
+                count = tempModel->itemData(tempModel->index(lst[0]->index().row(),2)).value(0).toInt();
+                count++;
+            }
+            countRec = countRec - 1;
+
+            tabl_->setData(tabl_->index(index.row(),2),countRec);
+            ui->tableView->setModel(tabl_);
+        }
+
+        tempModel->setData(tempModel->index(row,0),record.value(0).toString(),Qt::EditRole);
+        tempModel->setData(tempModel->index(row,1),record.value(1).toString(),Qt::EditRole);
+        tempModel->setData(tempModel->index(row,2),count,Qt::EditRole);
+        tempModel->setData(tempModel->index(row,3),record.value(3).toString(),Qt::EditRole);
+
+    }
 }
 
 void frmSelect::on_all_ostatki_clicked()
@@ -387,6 +491,8 @@ void frmSelect::on_all_ostatki_clicked()
 
 void frmSelect::on_sel_button_clicked()
 {
-    on_tableView_doubleClicked(ui->tableView->currentIndex());
+//    ui->tableView->selectedIndexes();
+    multeSelect(ui->tableView->selectionModel()->selectedRows());
+//    on_tableView_doubleClicked(ui->tableView->currentIndex());
     this->close();
 }

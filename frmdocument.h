@@ -10,6 +10,7 @@
 #include "MyModel.h"
 #include "include/delegats.h"
 #include "frmselect.h"
+#include "procedures.h"
 
 namespace Ui {
     class frmDocument;

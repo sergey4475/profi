@@ -137,9 +137,9 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
             Number++;
 
             // Заполняем выдами затрат материала
-            sql.prepare("SELECT vidi_zatrat.ID, vidi_zatrat.Name "
+            sql.prepare("SELECT vidi_zatrat.id_group_o_sklad, vidi_zatrat.Name "
                         "FROM vidi_zatrat "
-                        "ORDER BY vidi_zatrat.ID");
+                        "ORDER BY vidi_zatrat.id_group_o_sklad");
             sql.exec();
             record = sql.record();
             while (sql.next()){
@@ -236,6 +236,13 @@ void frmDocument::on_ApplyBut_clicked()
         // --- Операции по документу склад ---
         if (type_doc_ == d_oskald){
 
+//            double ostatok = GetOstatokNaSklade(ID_MATERIAL,vid_zatrat,DATE,N_O_SKLAD);
+//            if (COUNT > ostatok){
+//                QMessageBox::warning(0,"Внимание!!!!!!!!!!!",tempModel->itemData(tempModel->index(ind,2)).value(0).toString(),QMessageBox::Ok);
+//                return;
+//            }
+
+
             sql.prepare("INSERT INTO O_SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,NUMBER,id_group_o_sklad) "
                         "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:NUMBER,:id_group_o_sklad) ");
             sql.bindValue(":DATE",DATE);
@@ -249,6 +256,13 @@ void frmDocument::on_ApplyBut_clicked()
         }
         // --- Операции по документу распределение материалов ---
         if (type_doc_ == d_raspred){
+            double ostatok = GetOstatokNaSklade(ID_MATERIAL,vid_zatrat,DATE,N_O_SKLAD);
+            if (COUNT > ostatok){
+                QMessageBox::warning(0,"Внимание!!!!!!!!!!!",tempModel->itemData(tempModel->index(ind,2)).value(0).toString(),QMessageBox::Ok);
+                return;
+            }
+
+
             sql.prepare("INSERT INTO SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,id_VID_ZATRAT,NUMBER) "
                         "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:vid_zatrat,:NUMBER) ");
 

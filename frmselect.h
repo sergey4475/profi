@@ -42,6 +42,7 @@ private slots:
 
 private:
     Ui::frmSelect *ui;
+    void multeSelect(const QModelIndexList &indexList);
     void Updater();
 };
 

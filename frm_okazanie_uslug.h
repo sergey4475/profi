@@ -18,7 +18,7 @@ class frm_okazanie_uslug : public QFrame
 public:
     explicit frm_okazanie_uslug(QWidget *parent = 0);
     ~frm_okazanie_uslug();
-    PStandardItemModel *uslModel, *matModel, *selModel;
+    PStandardItemModel *uslModel, *matModel, *magModel, *selModel;
     void InitForm(int nUslugi,WId w_ID);
     int ID_sotr, ID_client, Number;
     MainForm *frm;
@@ -55,9 +55,13 @@ private slots:
 
     void selSotrFinish(QModelIndex index);
 
+    void magSelectFinish(QModelIndex index);
+
     void on_Skidka_textChanged(const QString &arg1);
 
     void on_Sotrudnik_buttonClicked();
+
+    void on_add_prodaja_clicked();
 
 private:
     Ui::frm_okazanie_uslug *ui;

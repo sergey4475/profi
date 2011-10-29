@@ -144,6 +144,23 @@ void frm_okazanie_uslug::editFinish(QModelIndex index){
 
 }
 
+// Обработка выбора магазин
+void frm_okazanie_uslug::magSelectFinish(QModelIndex index){
+    double cena = magModel->itemData(magModel->index(index.row(),2)).value(0).toDouble();
+    int count   = magModel->itemData(magModel->index(index.row(),4)).value(0).toInt();
+
+    double summa = cena * count;
+    magModel->setData(magModel->index(index.row(),5),summa);
+
+    double sum_uslugi = 0;
+    for (int ind = 0;ind < magModel->rowCount(); ind++){
+        sum_uslugi += magModel->itemData(magModel->index(ind,5)).value(0).toDouble();
+    }
+    frm->SetSumma(sum_uslugi - setProcent(sum_uslugi));
+
+}
+
+
 // Добавление услуги
 void frm_okazanie_uslug::on_add_usluga_clicked()
 {
@@ -201,6 +218,33 @@ void frm_okazanie_uslug::on_add_material_clicked()
     }
 
 }
+
+void frm_okazanie_uslug::on_add_prodaja_clicked()
+{
+    NotEditableDelegate *DelegatNotEditCol = new NotEditableDelegate;
+    if ((ui->Client->text() != "" && ui->Sotrudnik->text() != "")||(ID_client != 0 && ID_sotr != 0) ){
+        //disconnect(tempModel);
+        frmSelect *fSelect = new frmSelect();
+        magModel = new PStandardItemModel;
+        //tempModel->frm = frm;
+        ui->prodaja->setModel(magModel);
+        ui->prodaja->setItemDelegateForColumn(1,DelegatNotEditCol);
+        ui->prodaja->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+        connect(magModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(magSelectFinish(QModelIndex)));
+        fSelect->frm = frm;
+        fSelect->type_select = n_MAGAZIN;
+        fSelect->type_uslugi_= n_USL_MAG;
+        fSelect->tempModel   = magModel;
+        fSelect->Id_Client   = ID_client;
+        fSelect->init(DateDoc);
+        fSelect->show();
+        ui->prodaja->setColumnHidden(0,true);
+    }else{
+        QMessageBox::question(0,"Внимание!!!","Не заполнены обязательные поля!!!",QMessageBox::Yes);
+    }
+
+}
+
 
 // Удаление материала из списка
 void frm_okazanie_uslug::on_del_material_clicked()
@@ -419,6 +463,12 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             int COUNT   = ui->Materials->model()->itemData(ui->Materials->model()->index(ind,2)).value(0).toInt();
             //            double summa= ui->Materials->model()->itemData(ui->USLUGI->model()->index(ind,5)).value(0).toDouble();
             //            double cena = ui->Materials->model()->itemData(ui->USLUGI->model()->index(ind,2)).value(0).toDouble();
+
+            double ostatok = GetOstatokNaSklade(ID_MATERIAL,NumberUslugi,DateDoc.toString("dd.MM.yyyy"),N_SKLAD);
+            if (COUNT > ostatok){
+                QMessageBox::warning(0,"Внимание!!!!!!!!!!!",ui->Materials->model()->itemData(ui->Materials->model()->index(ind,1)).value(0).toString()+ " не хватает на складе!",QMessageBox::Ok);
+                return;
+            }
 
             QSqlQuery sql;
             sql.prepare("INSERT INTO SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,id_VID_ZATRAT,NUMBER) "
