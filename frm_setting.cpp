@@ -54,16 +54,15 @@ void frm_setting::on_testBUt_clicked()
 
 void frm_setting::on_pushButton_clicked()
 {
-    QSettings settings("conf.ini",QSettings::IniFormat);
-    settings.setValue("HostName",ui->hostname->text());
-    settings.setValue("DataBase",ui->NameDataBase->text());
-    settings.setValue("Login",ui->loginDB->text());
-    settings.setValue("Password",ui->passwordDB->text());
-    settings.setValue("Port",ui->Port->text().toInt());
-    settings.setValue("DriverName",ui->DriversDB->currentText());
-    settings.setValue("spisanie_so_scheta",ui->spisanie_so_cheta->isChecked());
+    QSettings settings("Profi","");
+    settings.setValue("Sql/HostName",ui->hostname->text());
+    settings.setValue("Sql/DataBase",ui->NameDataBase->text());
+    settings.setValue("Sql/Login",ui->loginDB->text());
+    settings.setValue("Sql/Password",ui->passwordDB->text());
+    settings.setValue("Sql/Port",ui->Port->text().toInt());
+    settings.setValue("Sql/DriverName",ui->DriversDB->currentText());
+    settings.setValue("Main/spisanie_so_scheta",ui->spisanie_so_cheta->isChecked());
 
-    static QSettings set("conf.ini",QSettings::IniFormat);
     g_hostname          = ui->hostname->text();
     g_dataBase          = ui->NameDataBase->text();
     g_login             = ui->loginDB->text();
