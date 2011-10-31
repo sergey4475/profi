@@ -227,14 +227,14 @@ void frmSotr::on_ApplyBut_clicked()
     QSqlQuery query;
     g_driverName = GetNameDriver();
     if (flag_record == add_rec){
-        if (g_driverName != "QSQLITE")
+        if (g_driverName == "QIBASE")
         {
             IDSotr = GetID("GEN_CLIENTS_ID");
             query.prepare("INSERT INTO PERSONAL(ID,FIO,Nom_tel,DOLJN,info, pol, ADDRES) VALUES(:ID,:FIO,:Nom_tel,:DOLJN,:info,:Pol,:ADDRES)");
         }
-        else if (g_driverName == "QSQLITE")
+        else if (g_driverName != "QIBASE")
         {
-            query.prepare("INSERT INTO PERSONAL(FIO,Nom_tel,DOLJN,info, pol, ADDRES) VALUES(:FIO,:Nom_tel,:DOLJN,:info,:Pol,:ADDRES)");
+            query.prepare("INSERT INTO PERSONAL(FIO,DOLJN, ADDRES,Nom_tel,info,pol) VALUES(:FIO,:DOLJN,:ADDRES,:Nom_tel,:info,:Pol)");
         }
     }else if (flag_record==edit_rec){
         query.prepare("UPDATE PERSONAL SET FIO=:FIO,DOLJN=:DOLJN,ADDRES=:ADDRES, NOM_TEL=:Nom_tel,INFO=:info, POL=:Pol WHERE Id=:ID");
@@ -249,7 +249,15 @@ void frmSotr::on_ApplyBut_clicked()
         query.bindValue(":info",ui->sotrInfo->toPlainText());
         query.bindValue(":Pol",ui->sotrPol->currentIndex());
 
-        if ((flag_record == edit_rec) || (flag_record == add_rec && g_driverName != "QSQLITE"))
+        qDebug() << ui->sotrFIO->text();
+        qDebug() << ui->sotrDoljn->itemData(ui->sotrDoljn->currentIndex()).toInt();
+        qDebug() << ui->sotrAddres->text();
+        qDebug() << ui->sotr_nom->text();
+        qDebug() << ui->sotrInfo->toPlainText();
+        qDebug() << ui->sotrPol->currentIndex();
+
+
+        if ((flag_record == edit_rec) || (flag_record == add_rec && g_driverName == "QIBASE"))
                 query.bindValue(":ID",IDSotr);
 
         query.exec();
