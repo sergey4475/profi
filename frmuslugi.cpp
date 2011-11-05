@@ -207,6 +207,8 @@ void frmUslugi::updater(QTreeWidgetItem *item, int count_row,QObject *obj)
                 return;
         }
     }
+    if (obj->objectName() == "tableUslugi")
+        tabl->submit();
 }
 
 bool frmUslugi::eventFilter(QObject *obj, QEvent *event){

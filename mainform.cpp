@@ -11,6 +11,7 @@
 #include "frmdocument.h"
 #include "frm_setting.h"
 #include "ui_mainform.h"
+#include "print.h"
 
 MainForm::MainForm(QWidget *parent) :
     QMainWindow(parent),
@@ -283,4 +284,46 @@ void MainForm::on_settings_triggered()
     frm->setWindowFlags(Qt::Tool);
     frm->setWindowModality(Qt::WindowModal);
     frm->show();
+}
+
+void MainForm::on_otc_ostatok_triggered()
+{
+    NCReport *report = new NCReport();
+    report->setReportFile(QDir::currentPath()+"/reports/ostatki_o_skald.xml");
+    report->dataSource("SELECT "
+                       "   materials.name, "
+                       "   SUM(o_sklad.count) AS count, "
+                       "   ed_izm.name "
+                       "FROM "
+                       "   public.o_sklad, "
+                       "   public.materials, "
+                       "   public.ed_izm "
+                       "WHERE "
+                       "   o_sklad.id_material = materials.id "
+                       "   AND materials.id_ed_izm = ed_izm.id "
+                       "GROUP BY "
+                       "   ed_izm.name, "
+                       "   materials.name ");
+    NCReportOutput *output=0;
+    output = new NCReportPreviewOutput();
+    output->setAutoDelete( FALSE );
+    report->setOutput( output );
+//    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    report->runReport();
+    bool error = report->hasError();
+    QString err = report->lastErrorMsg();
+//    QApplication::restoreOverrideCursor();
+
+    if ( error )
+    QMessageBox::information( 0, "Riport error", err );
+    else {
+    //-----------------------------
+    // PRINT PREVIEW
+    //-----------------------------
+    NCReportPreviewWindow *pv = new NCReportPreviewWindow();
+    pv->setReport( report );
+    pv->setOutput( (NCReportPreviewOutput*)output );
+    pv->setWindowModality(Qt::ApplicationModal );
+    pv->setAttribute( Qt::WA_DeleteOnClose );
+    pv->show();}
 }

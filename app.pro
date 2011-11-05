@@ -1,6 +1,12 @@
-QT       += core gui sql
+QT       += core \
+        gui \
+        sql \
+        xml \
 
-INCLUDEPATH += include
+INCLUDEPATH += include \
+               "C:/dev/NCReport_minGW/include"
+
+LIBS += -L"c:/dev/NCReport_minGW/lib" -lncreport2 \
 
 TARGET = app
 TEMPLATE = app
@@ -16,7 +22,8 @@ SOURCES += main.cpp mainform.cpp frmclients.cpp sqlmodules.cpp frmsotr.cpp frmus
     include/qsellineedit.cpp \
     include/procedures.cpp \
     frm_setting.cpp \
-    frmdocument.cpp
+    frmdocument.cpp \
+    print.cpp
 
 
 HEADERS  += mainform.h sqlmodules.h frmclients.h frmsotr.h MyModel.h frmuslugi.h \
@@ -30,7 +37,8 @@ HEADERS  += mainform.h sqlmodules.h frmclients.h frmsotr.h MyModel.h frmuslugi.h
     include/procedures.h \
     frm_setting.h \
     frmdocument.h \
-    params.h
+    params.h \
+    print.h
 
 FORMS    += mainform.ui \
     frmclients.ui \
@@ -45,6 +53,8 @@ FORMS    += mainform.ui \
 
 RESOURCES += \
     icons.qrc
+
+
 
 
 

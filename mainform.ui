@@ -389,6 +389,7 @@
     <property name="title">
      <string>Отчеты</string>
     </property>
+    <addaction name="otc_ostatok"/>
    </widget>
    <widget class="QMenu" name="menu_6">
     <property name="layoutDirection">
@@ -488,6 +489,11 @@
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="otc_ostatok">
+   <property name="text">
+    <string>Остаток материала на складе</string>
    </property>
   </action>
  </widget>
