@@ -100,6 +100,7 @@ void MainForm::on_butMonMaster_clicked()
     ui->butKosmitolog->setEnabled(true);
     ui->butUhodzaTelom->setEnabled(true);
     ui->butStilist->setEnabled(true);
+    ui->butMagazin->setEnabled(true);
 }
 //*************** Услуги Космитолога
 void MainForm::on_butKosmitolog_clicked()
@@ -116,6 +117,7 @@ void MainForm::on_butKosmitolog_clicked()
     ui->butKosmitolog->setEnabled(false);
     ui->butUhodzaTelom->setEnabled(true);
     ui->butStilist->setEnabled(true);
+    ui->butMagazin->setEnabled(true);
 }
 //*************** Услуги По уходу за телом
 void MainForm::on_butUhodzaTelom_clicked()
@@ -132,6 +134,7 @@ void MainForm::on_butUhodzaTelom_clicked()
     ui->butKosmitolog->setEnabled(true);
     ui->butUhodzaTelom->setEnabled(false);
     ui->butStilist->setEnabled(true);
+    ui->butMagazin->setEnabled(true);
 }
 //*************** Услуги Стилиста
 void MainForm::on_butStilist_clicked()
@@ -148,7 +151,27 @@ void MainForm::on_butStilist_clicked()
     ui->butKosmitolog->setEnabled(true);
     ui->butUhodzaTelom->setEnabled(true);
     ui->butStilist->setEnabled(false);
+    ui->butMagazin->setEnabled(true);
 }
+//*************** Услуги Магазин
+void MainForm::on_butMagazin_clicked()
+{
+    UpdateClients(0);
+    frm_okazanie_uslug *frm_uslugi = new frm_okazanie_uslug;
+    frm_uslugi->InitForm(n_USL_MAG,w_ID);
+    frm_uslugi->setParent(ui->frame);
+    frm_uslugi->frm = this;
+    frm_uslugi->show();
+    w_ID = frm_uslugi->winId();
+    ui->butClients->setEnabled(true);
+    ui->butMonMaster->setEnabled(true);
+    ui->butKosmitolog->setEnabled(true);
+    ui->butUhodzaTelom->setEnabled(true);
+    ui->butStilist->setEnabled(true);
+    ui->butMagazin->setEnabled(false);
+
+}
+
 //*************** Обновление информации по клиенту
 void MainForm::UpdateClients(int IDClient){
     ID_Client = IDClient;
@@ -290,24 +313,11 @@ void MainForm::on_otc_ostatok_triggered()
 {
     NCReport *report = new NCReport();
     report->setReportFile(QDir::currentPath()+"/reports/ostatki_o_skald.xml");
-    report->dataSource("SELECT "
-                       "   materials.name, "
-                       "   SUM(o_sklad.count) AS count, "
-                       "   ed_izm.name "
-                       "FROM "
-                       "   public.o_sklad, "
-                       "   public.materials, "
-                       "   public.ed_izm "
-                       "WHERE "
-                       "   o_sklad.id_material = materials.id "
-                       "   AND materials.id_ed_izm = ed_izm.id "
-                       "GROUP BY "
-                       "   ed_izm.name, "
-                       "   materials.name ");
+    report->addParameter("Date",QDate::currentDate());
     NCReportOutput *output=0;
     output = new NCReportPreviewOutput();
     output->setAutoDelete( FALSE );
-    report->setOutput( output );
+    report->setOutput(output);
 //    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     report->runReport();
     bool error = report->hasError();

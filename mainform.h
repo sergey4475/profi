@@ -52,6 +52,8 @@ private slots:
 
     void on_otc_ostatok_triggered();
 
+    void on_butMagazin_clicked();
+
 private:
     Ui::MainForm *ui;
     double summa_uslug;

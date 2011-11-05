@@ -94,6 +94,25 @@ void frm_okazanie_uslug::InitForm(int nUslugi, WId w_ID){
     while (sql.next()){
         ui->sposobOplati->addItem(sql.value(1).toString(),sql.value(0).toInt());
     }
+    if (NumberUslugi == n_USL_MAG){
+        ui->USLUGI->setHidden(true);
+        ui->Materials->setHidden(true);
+        ui->groupMat->setVisible(false);
+        ui->label_Mat->setVisible(false);
+        ui->groupUsl->setVisible(false);
+        ui->label_Usl->setVisible(false);
+
+        ui->prodaja->setVisible(true);
+        ui->groupMag->setVisible(true);
+        ui->label_Mag->setVisible(true);
+        ui->prodaja->setGeometry(ui->USLUGI->geometry());
+        ui->groupMag->setGeometry(ui->groupUsl->geometry());
+        ui->label_Mag->setGeometry(ui->label_Usl->geometry());
+    }else{
+        ui->prodaja->setVisible(false);
+        ui->groupMag->setVisible(false);
+        ui->label_Mag->setVisible(false);
+    }
     ui->but_oplatit->setEnabled(true);
     ui->USLUGI->installEventFilter(this);
     ui->Materials->installEventFilter(this);

@@ -380,7 +380,7 @@
     <bool>true</bool>
    </attribute>
   </widget>
-  <widget class="QGroupBox" name="groupBox">
+  <widget class="QGroupBox" name="groupMat">
    <property name="geometry">
     <rect>
      <x>64</x>
@@ -442,7 +442,7 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_2">
+  <widget class="QGroupBox" name="groupUsl">
    <property name="geometry">
     <rect>
      <x>64</x>
@@ -495,7 +495,7 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_3">
+  <widget class="QGroupBox" name="groupMag">
    <property name="geometry">
     <rect>
      <x>64</x>
@@ -548,7 +548,7 @@
     </property>
    </widget>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="label_Usl">
    <property name="geometry">
     <rect>
      <x>128</x>
@@ -568,7 +568,7 @@
     <string>Услуги</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_6">
+  <widget class="QLabel" name="label_Mat">
    <property name="geometry">
     <rect>
      <x>128</x>
@@ -588,7 +588,7 @@
     <string>Материалы</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_7">
+  <widget class="QLabel" name="label_Mag">
    <property name="geometry">
     <rect>
      <x>128</x>

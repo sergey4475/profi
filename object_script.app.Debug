@@ -15,6 +15,7 @@ INPUT(
 ./debug\procedures.o
 ./debug\frm_setting.o
 ./debug\frmdocument.o
+./debug\print.o
 ./debug\moc_mainform.o
 ./debug\moc_frmclients.o
 ./debug\moc_frmsotr.o

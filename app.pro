@@ -6,7 +6,7 @@ QT       += core \
 INCLUDEPATH += include \
                "C:/dev/NCReport_minGW/include"
 
-LIBS += -L"c:/dev/NCReport_minGW/lib" -lncreport2 \
+LIBS += -L"c:/dev/NCReport_minGW/lib" -lncreportd2 \
 
 TARGET = app
 TEMPLATE = app
@@ -53,6 +53,20 @@ FORMS    += mainform.ui \
 
 RESOURCES += \
     icons.qrc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -44,10 +44,10 @@
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>252</x>
-      <y>0</y>
+      <x>256</x>
+      <y>10</y>
       <width>619</width>
-      <height>631</height>
+      <height>621</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -369,6 +369,9 @@
     <addaction name="m_spr"/>
    </widget>
    <widget class="QMenu" name="menu_3">
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
     <property name="title">
      <string>Операции</string>
     </property>
@@ -389,7 +392,13 @@
     <property name="title">
      <string>Отчеты</string>
     </property>
-    <addaction name="otc_ostatok"/>
+    <widget class="QMenu" name="menu_7">
+     <property name="title">
+      <string>Отчеты</string>
+     </property>
+     <addaction name="otc_ostatok"/>
+    </widget>
+    <addaction name="menu_7"/>
    </widget>
    <widget class="QMenu" name="menu_6">
     <property name="layoutDirection">
@@ -408,21 +417,10 @@
    <addaction name="menu"/>
    <addaction name="menu_2"/>
    <addaction name="menu_3"/>
-   <addaction name="menu_5"/>
    <addaction name="menu_6"/>
+   <addaction name="menu_5"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
   <action name="m_sprsotr">
    <property name="icon">
     <iconset resource="icons.qrc">

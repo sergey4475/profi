@@ -15,6 +15,7 @@ INPUT(
 ./release\procedures.o
 ./release\frm_setting.o
 ./release\frmdocument.o
+./release\print.o
 ./release\moc_mainform.o
 ./release\moc_frmclients.o
 ./release\moc_frmsotr.o
