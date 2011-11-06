@@ -127,14 +127,15 @@ void frmSelect::Updater(){
                         "   ed_izm, "
                         "   SKLAD INNER JOIN "
                         "       materials ON materials.ID = SKLAD.ID_MATERIAL "
+                        "       INNER JOIN vidi_zatrat ON vidi_zatrat.id = SKLAD.id_vid_zatrat "
                         "WHERE SKLAD.DATE <= :DATE "
                         "   AND materials.id_ed_izm = ed_izm.id "
-                        "   AND SKLAD.id_vid_zatrat = :VidZatrat "
+                        "   AND vidi_zatrat.id_vid_uslug = :type_uslugi "
                         "GROUP BY "
                         "   materials.NAME, "
                         "   materials.ID, "
                         "   ed_izm.name ");
-            sql.bindValue(":VidZatrat",type_uslugi_);
+            sql.bindValue(":type_uslugi",type_uslugi_);
         }
     }else
         if (! ui->all_ostatki->isChecked()){
@@ -269,14 +270,15 @@ void frmSelect::Updater(){
                         "   ed_izm, "
                         "   SKLAD INNER JOIN "
                         "       materials ON materials.ID = SKLAD.ID_MATERIAL "
+                        "       INNER JOIN vidi_zatrat ON vidi_zatrat.id = SKLAD.id_vid_zatrat "
                         "WHERE SKLAD.DATE <= :DATE "
                         "   AND materials.id_ed_izm = ed_izm.id "
-                        "   AND SKLAD.id_vid_zatrat = :VidZatrat "
+                        "   AND vidi_zatrat.id_vid_uslug = :type_uslugi "
                         "GROUP BY "
                         "   materials.NAME, "
                         "   materials.ID, "
                         "   ed_izm.name ");
-            sql.bindValue(":VidZatrat",type_uslugi_);
+            sql.bindValue(":type_uslugi",type_uslugi_);
 
         }
         sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
@@ -306,8 +308,6 @@ void frmSelect::multeSelect(const QModelIndexList &indexList){
 
      foreach(index, indexList)
          on_tableView_doubleClicked(index);
-
-//    int count = indexList.count();
 }
 
 void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)

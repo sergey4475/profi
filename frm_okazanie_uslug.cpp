@@ -163,8 +163,6 @@ void frm_okazanie_uslug::updater(){
         ui->Skidka->setText("100");
         ui->Skidka->setDisabled(true);
     }
-
-
 }
 
 // Обработка выбора Услуги

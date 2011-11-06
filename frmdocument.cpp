@@ -16,7 +16,7 @@ frmDocument::~frmDocument()
 
 void frmDocument::GetOstaok(){
     QSqlQuery sql;
-    int id_group      = ui->Group->itemData(ui->Group->currentIndex()).toInt();
+    int id_group = ui->Group->itemData(ui->Group->currentIndex()).toInt();
     if (id_group <=0)
     sql.prepare("SELECT "
                 "   materials.name, "
@@ -78,6 +78,7 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
     // --- Документ по складу ---
     if (type_doc_ == d_oskald){
 
+        //************ Заполняем отделы склада
         sql.prepare("SELECT ID, Name "
                     "FROM group_o_sklad "
                     "ORDER BY ID");
@@ -136,10 +137,10 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
 
             Number++;
 
-            // Заполняем выдами затрат материала
-            sql.prepare("SELECT vidi_zatrat.id_group_o_sklad, vidi_zatrat.Name "
+            // Заполняем видами затрат материала
+            sql.prepare("SELECT vidi_zatrat.id, vidi_zatrat.Name "
                         "FROM vidi_zatrat "
-                        "ORDER BY vidi_zatrat.id_group_o_sklad");
+                        "ORDER BY vidi_zatrat.id");
             sql.exec();
             record = sql.record();
             while (sql.next()){
@@ -229,7 +230,8 @@ void frmDocument::on_ApplyBut_clicked()
         int ID_MATERIAL     = tempModel->itemData(tempModel->index(ind,0)).value(0).toInt();
         int COUNT           = tempModel->itemData(tempModel->index(ind,3)).value(0).toDouble();
         int type_operacii   = tempModel->itemData(tempModel->index(ind,4)).value(0).toInt();
-        int vid_zatrat      = ui->Group->itemData(ui->Group->currentIndex()).toInt();
+        int id_group        = ui->Group->itemData(ui->Group->currentIndex()).toInt();
+        int vid_zatrat      = ui->vid_zatrat->itemData(ui->vid_zatrat->currentIndex()).toInt();
         int NUMBER          = Number;
         QSqlQuery sql;
         // --- Операции по документу склад ---
@@ -249,13 +251,13 @@ void frmDocument::on_ApplyBut_clicked()
             sql.bindValue(":COUNT",COUNT);
             sql.bindValue(":type_operacii",type_operacii);
             sql.bindValue(":NUMBER",NUMBER);
-            sql.bindValue(":id_group_o_sklad",vid_zatrat);
+            sql.bindValue(":id_group_o_sklad",id_group);
             sql.exec();
 
         }
         // --- Операции по документу распределение материалов ---
         if (type_doc_ == d_raspred){
-            double ostatok = GetOstatokNaSklade(ID_MATERIAL,vid_zatrat,DATE,N_O_SKLAD);
+            double ostatok = GetOstatokNaSklade(ID_MATERIAL,id_group,DATE,N_O_SKLAD);
             if (COUNT > ostatok){
                 QMessageBox::warning(0,"Внимание!!!!!!!!!!!",tempModel->itemData(tempModel->index(ind,2)).value(0).toString(),QMessageBox::Ok);
                 return;
@@ -273,13 +275,13 @@ void frmDocument::on_ApplyBut_clicked()
             sql.bindValue(":NUMBER",NUMBER);
             sql.exec();
 
-            sql.prepare("SELECT vidi_zatrat.id_group_o_sklad "
-                        "FROM vidi_zatrat "
-                        "WHERE vidi_zatrat.id_vid_uslug = :vid_zatrat");
-            sql.bindValue(":vid_zatrat",vid_zatrat);
-            sql.exec();
-            sql.next();
-            int id_group_o_sklad = sql.record().value("id_group_o_sklad").toInt();
+//            sql.prepare("SELECT vidi_zatrat.id_group_o_sklad "
+//                        "FROM vidi_zatrat "
+//                        "WHERE vidi_zatrat.id_vid_uslug = :vid_zatrat");
+//            sql.bindValue(":vid_zatrat",vid_zatrat);
+//            sql.exec();
+//            sql.next();
+//            int id_group_o_sklad = sql.record().value("id_group_o_sklad").toInt();
 
             //Добавляем расход с общего склада
             sql.prepare("INSERT INTO O_SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,NUMBER,id_group_o_sklad) "
@@ -289,7 +291,7 @@ void frmDocument::on_ApplyBut_clicked()
             sql.bindValue(":COUNT",COUNT * (-1));
             sql.bindValue(":type_operacii",n_RASHOD);
             sql.bindValue(":NUMBER",NUMBER);
-            sql.bindValue(":id_group_o_sklad",id_group_o_sklad);
+            sql.bindValue(":id_group_o_sklad",id_group);
             sql.exec();
         }
     }
