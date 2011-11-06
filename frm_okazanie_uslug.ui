@@ -168,73 +168,6 @@
     <bool>true</bool>
    </attribute>
   </widget>
-  <widget class="QComboBox" name="sposobOplati">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>64</x>
-     <y>542</y>
-     <width>231</width>
-     <height>22</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QToolButton" name="but_oplatit">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>542</y>
-     <width>101</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Оплатить</string>
-   </property>
-   <property name="icon">
-    <iconset resource="icons.qrc">
-     <normaloff>:/res/icons/27.ico</normaloff>:/res/icons/27.ico</iconset>
-   </property>
-   <property name="autoRepeatDelay">
-    <number>303</number>
-   </property>
-   <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonTextBesideIcon</enum>
-   </property>
-   <property name="autoRaise">
-    <bool>true</bool>
-   </property>
-   <property name="arrowType">
-    <enum>Qt::NoArrow</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>64</x>
-     <y>522</y>
-     <width>99</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>Способ оплаты:</string>
-   </property>
-  </widget>
   <widget class="QSelLineEdit" name="Client">
    <property name="geometry">
     <rect>
@@ -253,54 +186,6 @@
      <width>281</width>
      <height>20</height>
     </rect>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="spisanie_so_scheta">
-   <property name="geometry">
-    <rect>
-     <x>64</x>
-     <y>570</y>
-     <width>157</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Списать остатки со счета</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSkidka">
-   <property name="geometry">
-    <rect>
-     <x>64</x>
-     <y>595</y>
-     <width>131</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Продать со скидкой</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Skidka">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>194</x>
-     <y>594</y>
-     <width>101</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="autoFillBackground">
-    <bool>true</bool>
-   </property>
-   <property name="inputMask">
-    <string>999; </string>
-   </property>
-   <property name="text">
-    <string>0</string>
    </property>
   </widget>
   <widget class="QTableView" name="Materials">
@@ -649,6 +534,143 @@
    <property name="readOnly">
     <bool>true</bool>
    </property>
+  </widget>
+  <widget class="QGroupBox" name="groupOplati">
+   <property name="geometry">
+    <rect>
+     <x>64</x>
+     <y>504</y>
+     <width>325</width>
+     <height>109</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
+   </property>
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <widget class="QLineEdit" name="Skidka">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>136</x>
+      <y>76</y>
+      <width>101</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="inputMask">
+     <string>999; </string>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>4</y>
+      <width>99</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Способ оплаты:</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkSkidka">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>77</y>
+      <width>131</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Продать со скидкой</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="spisanie_so_scheta">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>52</y>
+      <width>157</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Списать остатки со счета</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="sposobOplati">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>24</y>
+      <width>231</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="but_oplatit">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>24</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="text">
+     <string>Оплатить</string>
+    </property>
+    <property name="icon">
+     <iconset resource="icons.qrc">
+      <normaloff>:/res/icons/27.ico</normaloff>:/res/icons/27.ico</iconset>
+    </property>
+    <property name="autoRepeatDelay">
+     <number>303</number>
+    </property>
+    <property name="toolButtonStyle">
+     <enum>Qt::ToolButtonTextBesideIcon</enum>
+    </property>
+    <property name="autoRaise">
+     <bool>true</bool>
+    </property>
+    <property name="arrowType">
+     <enum>Qt::NoArrow</enum>
+    </property>
+   </widget>
   </widget>
  </widget>
  <customwidgets>

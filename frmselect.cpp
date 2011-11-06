@@ -208,11 +208,17 @@ void frmSelect::Updater(){
         tempModel->setHeaderData(0,Qt::Horizontal,tr("‘»Œ"));  //1
 
         QSqlQuery sql;
-        sql.prepare("SELECT Personal.FIO, "
-                    " Personal.POL "
-                    "FROM Personal INNER JOIN DOLJNOSTI ON Personal.DOLJN = DOLJNOSTI.ID "
-                    "WHERE DOLJNOSTI.VID_USLUGI = :Vid" );
-        sql.bindValue(":VID",type_uslugi_);
+        if (type_uslugi_ != 5){
+            sql.prepare("SELECT Personal.FIO, "
+                        " Personal.POL "
+                        "FROM Personal INNER JOIN DOLJNOSTI ON Personal.DOLJN = DOLJNOSTI.ID "
+                        "WHERE DOLJNOSTI.VID_USLUGI = :Vid" );
+            sql.bindValue(":VID",type_uslugi_);
+        }else{
+            sql.prepare("SELECT Personal.FIO, "
+                        " Personal.POL "
+                        "FROM Personal INNER JOIN DOLJNOSTI ON Personal.DOLJN = DOLJNOSTI.ID ");
+        }
         sql.exec();
 
         selTabl = new clSqlQueryModel;

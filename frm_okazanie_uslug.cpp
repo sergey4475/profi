@@ -68,16 +68,28 @@ void frm_okazanie_uslug::InitForm(int nUslugi, WId w_ID){
     ui->Client->setCompleter(completer);
 
     sotSqlQueryModel *smodel = new sotSqlQueryModel;
-    query.prepare("SELECT Personal.FIO, "
-                  "DOLJNOSTI.NAME, "
-                  "Personal.Nom_Tel, "
-                  "Personal.DEL, "
-                  "Personal.POL, "
-                  "Personal.ID, "
-                  "DOLJNOSTI.ID AS Doljn "
-                  "FROM Personal INNER JOIN DOLJNOSTI ON Personal.DOLJN = DOLJNOSTI.ID "
-                  "WHERE DOLJNOSTI.VID_USLUGI = :Vid" );
-    query.bindValue(":VID",NumberUslugi);
+    if (NumberUslugi != n_USL_MAG){
+        query.prepare("SELECT Personal.FIO, "
+                      "DOLJNOSTI.NAME, "
+                      "Personal.Nom_Tel, "
+                      "Personal.DEL, "
+                      "Personal.POL, "
+                      "Personal.ID, "
+                      "DOLJNOSTI.ID AS Doljn "
+                      "FROM Personal INNER JOIN DOLJNOSTI ON Personal.DOLJN = DOLJNOSTI.ID "
+                      "WHERE DOLJNOSTI.VID_USLUGI = :Vid" );
+        query.bindValue(":VID",NumberUslugi);
+    }else{
+        query.prepare("SELECT Personal.FIO, "
+                      "DOLJNOSTI.NAME, "
+                      "Personal.Nom_Tel, "
+                      "Personal.DEL, "
+                      "Personal.POL, "
+                      "Personal.ID, "
+                      "DOLJNOSTI.ID AS Doljn "
+                      "FROM Personal INNER JOIN DOLJNOSTI ON Personal.DOLJN = DOLJNOSTI.ID ");
+    }
+
     query.exec();
     smodel->setQuery(query);
     smodel->setHeaderData(0,Qt::Horizontal,"ФИО");
@@ -108,10 +120,18 @@ void frm_okazanie_uslug::InitForm(int nUslugi, WId w_ID){
         ui->prodaja->setGeometry(ui->USLUGI->geometry());
         ui->groupMag->setGeometry(ui->groupUsl->geometry());
         ui->label_Mag->setGeometry(ui->label_Usl->geometry());
+
+        QRect R = ui->groupOplati->geometry();
+        R.setY(264);
+        ui->groupOplati->setGeometry(R);
+
     }else{
         ui->prodaja->setVisible(false);
         ui->groupMag->setVisible(false);
         ui->label_Mag->setVisible(false);
+        QRect R = ui->groupOplati->geometry();
+        R.setY(384);
+        ui->groupOplati->setGeometry(R);
     }
     ui->but_oplatit->setEnabled(true);
     ui->USLUGI->installEventFilter(this);
@@ -237,7 +257,7 @@ void frm_okazanie_uslug::on_add_material_clicked()
     }
 
 }
-
+// Добавление магазин
 void frm_okazanie_uslug::on_add_prodaja_clicked()
 {
     NotEditableDelegate *DelegatNotEditCol = new NotEditableDelegate;
@@ -252,7 +272,7 @@ void frm_okazanie_uslug::on_add_prodaja_clicked()
         connect(magModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(magSelectFinish(QModelIndex)));
         fSelect->frm = frm;
         fSelect->type_select = n_MAGAZIN;
-        fSelect->type_uslugi_= n_USL_MAG;
+        fSelect->type_uslugi_= NumberUslugi;
         fSelect->tempModel   = magModel;
         fSelect->Id_Client   = ID_client;
         fSelect->init(DateDoc);

@@ -161,7 +161,6 @@ void frmDocument::initForm(PStandardItemModel *model, int vid_form, int type_doc
             ui->tableView->setModel(tempModel);
             ui->tableView->setColumnHidden(0,true);
             ui->tableView->setColumnHidden(1,true);
-            //ui->tableView->setColumnHidden(2,true);
             ui->tableView->setColumnHidden(4,true);
             ui->tableView->setColumnHidden(5,true);
 
@@ -250,7 +249,7 @@ void frmDocument::on_ApplyBut_clicked()
             sql.bindValue(":COUNT",COUNT);
             sql.bindValue(":type_operacii",type_operacii);
             sql.bindValue(":NUMBER",NUMBER);
-            sql.bindValue(":vid_zatrat",vid_zatrat);
+            sql.bindValue(":id_group_o_sklad",vid_zatrat);
             sql.exec();
 
         }
