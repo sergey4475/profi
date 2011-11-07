@@ -87,6 +87,7 @@ void frmUslugi::on_treeWidget_itemActivated(QTreeWidgetItem *item, int column)
     ui->tableUslugi->setColumnHidden(4,true);
     ui->tableUslugi->setColumnHidden(5,true);
     tabl->setSort(0,Qt::AscendingOrder);
+    bEdit = false;
     QObject::connect(tabl,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(editFinish(QModelIndex)));
 }
 
@@ -94,6 +95,7 @@ void frmUslugi::editFinish(QModelIndex index){
     ui->tableUslugi->setFocus();
     ui->tableUslugi->setCurrentIndex(index);
     tabl->submitAll();
+    bEdit = false;
 }
 
 void frmUslugi::on_add_usluga_clicked()
@@ -105,6 +107,7 @@ void frmUslugi::on_add_usluga_clicked()
     tabl->submitAll();
     ui->tableUslugi->edit(tabl->index(row,1));
     ui->tableUslugi->scrollToBottom();
+    bEdit = true;
 }
 
 void frmUslugi::on_del_usluga_clicked()
@@ -158,21 +161,23 @@ void frmUslugi::on_treeWidget_itemPressed(QTreeWidgetItem *item, int column)
 
 void frmUslugi::updater(QModelIndex item, int count_row, QObject *obj){
     if (obj->objectName() == "tableUslugi"){
-        int col = item.column();
-        int row = item.row();
+        if (bEdit == false){
+            int col = item.column();
+            int row = item.row();
 
-        if (col == 1){
-            col++;
-        }else if (col == 2){
-            col--;
-            row++;
-        }else
-            col = 1;
+            if (col == 1){
+                col++;
+            }else if (col == 2){
+                col--;
+                row++;
+            }else
+                col = 1;
 
-        if (row >= count_row || row < 0)
-            row = 0;
-        item = item.model()->index(row,col);
-        ui->tableUslugi->setCurrentIndex(item);
+            if (row >= count_row || row < 0)
+                row = 0;
+            item = item.model()->index(row,col);
+            ui->tableUslugi->setCurrentIndex(item);
+        }
     }
 }
 
