@@ -174,6 +174,7 @@ void MainForm::on_butMagazin_clicked()
 
 //*************** Обновление информации по клиенту
 void MainForm::UpdateClients(int IDClient){
+
     ID_Client = IDClient;
     if (IDClient == 0)
         ui->but_schet->setDisabled(true);
@@ -182,6 +183,7 @@ void MainForm::UpdateClients(int IDClient){
 
     ui->na_schetu->setText("0");
     ui->summa_uslug->setText("0");
+    ui->dolg_client->setText("");
     ui->count_client->setText("");
     QSqlQuery sql;
     sql.prepare("SELECT SUM(scheta_clients.summa) AS Summa "
@@ -202,6 +204,20 @@ void MainForm::UpdateClients(int IDClient){
     while (sql.next()){
         ui->count_client->setText(sql.value(0).toString());
     }
+
+    sql.prepare("SELECT SUM(oplati_clients.summa_k_opl - oplati_clients.summa_opl) AS dolg  "
+                "FROM oplati_clients "
+                "WHERE oplati_clients.ID_Client = :ID_Client");
+    sql.bindValue(":ID_Client",IDClient);
+    sql.exec();
+    sql.next();
+    double summa_dolg = sql.value(0).toDouble();
+
+    qDebug() << sql.lastError();
+
+    if (summa_dolg != 0)
+        ui->dolg_client->setText(QString("%1").arg(summa_dolg));
+
 
     ui->summa_uslug->setText("");
 }

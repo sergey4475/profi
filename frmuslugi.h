@@ -39,6 +39,7 @@ private:
     Ui::frmUslugi *ui;
     QString idVID, idGR;
     bool bEdit;
+    int edRow, edCol;
     QTreeWidgetItem *root, *folder, *currentItem;
     bool eventFilter(QObject * obj, QEvent * event);
     void updater(QTreeWidgetItem *item, int count_row,QObject *obj);

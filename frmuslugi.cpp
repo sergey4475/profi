@@ -177,6 +177,11 @@ void frmUslugi::updater(QModelIndex item, int count_row, QObject *obj){
                 row = 0;
             item = item.model()->index(row,col);
             ui->tableUslugi->setCurrentIndex(item);
+        }else{
+            ui->tableUslugi->setFocus();
+            ui->tableUslugi->setCurrentIndex(item);
+            tabl->submit();
+            bEdit == false;
         }
     }
 }
