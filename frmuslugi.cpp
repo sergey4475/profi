@@ -158,22 +158,28 @@ void frmUslugi::on_treeWidget_itemPressed(QTreeWidgetItem *item, int column)
 
 void frmUslugi::updater(QModelIndex item, int count_row, QObject *obj){
     if (obj->objectName() == "tableUslugi"){
-        int col = item.column();
-        int row = item.row();
+        qDebug() << ui->tableUslugi->state();
+//        if (! ui->tableUslugi->State == EditingState ){
+//        int col = item.column();
+//        int row = item.row();
 
-        if (col == 1){
-            col++;
-        }else if (col == 2){
-            col--;
-            row++;
-        }else
-            col = 1;
+//        if (col == 1){
+//            col++;
+//        }else if (col == 2){
+//            col--;
+//            row++;
+//        }else
+//            col = 1;
 
-        if (row >= count_row || row < 0)
-            row = 0;
-        item = item.model()->index(row,col);
-        ui->tableUslugi->setCurrentIndex(item);
+//        if (row >= count_row || row < 0)
+//            row = 0;
+//        item = item.model()->index(row,col);
+//        ui->tableUslugi->setCurrentIndex(item);
+//        }
     }
+    if (obj->objectName() == "tableUslugi")
+        tabl->submit();
+
 }
 
 void frmUslugi::updater(QTreeWidgetItem *item, int count_row,QObject *obj)

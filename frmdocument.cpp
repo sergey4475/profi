@@ -237,13 +237,6 @@ void frmDocument::on_ApplyBut_clicked()
         // --- Операции по документу склад ---
         if (type_doc_ == d_oskald){
 
-//            double ostatok = GetOstatokNaSklade(ID_MATERIAL,vid_zatrat,DATE,N_O_SKLAD);
-//            if (COUNT > ostatok){
-//                QMessageBox::warning(0,"Внимание!!!!!!!!!!!",tempModel->itemData(tempModel->index(ind,2)).value(0).toString(),QMessageBox::Ok);
-//                return;
-//            }
-
-
             sql.prepare("INSERT INTO O_SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,NUMBER,id_group_o_sklad) "
                         "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:NUMBER,:id_group_o_sklad) ");
             sql.bindValue(":DATE",DATE);
@@ -259,10 +252,9 @@ void frmDocument::on_ApplyBut_clicked()
         if (type_doc_ == d_raspred){
             double ostatok = GetOstatokNaSklade(ID_MATERIAL,id_group,DATE,N_O_SKLAD);
             if (COUNT > ostatok){
-                QMessageBox::warning(0,"Внимание!!!!!!!!!!!",tempModel->itemData(tempModel->index(ind,2)).value(0).toString(),QMessageBox::Ok);
+                QMessageBox::warning(0,"Внимание!!!!!!!!!!!","Материала "+tempModel->itemData(tempModel->index(ind,2)).value(0).toString()+ "недостаточно на основном складе ",QMessageBox::Ok);
                 return;
             }
-
 
             sql.prepare("INSERT INTO SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,id_VID_ZATRAT,NUMBER) "
                         "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:vid_zatrat,:NUMBER) ");
@@ -274,14 +266,6 @@ void frmDocument::on_ApplyBut_clicked()
             sql.bindValue(":vid_zatrat",vid_zatrat);
             sql.bindValue(":NUMBER",NUMBER);
             sql.exec();
-
-//            sql.prepare("SELECT vidi_zatrat.id_group_o_sklad "
-//                        "FROM vidi_zatrat "
-//                        "WHERE vidi_zatrat.id_vid_uslug = :vid_zatrat");
-//            sql.bindValue(":vid_zatrat",vid_zatrat);
-//            sql.exec();
-//            sql.next();
-//            int id_group_o_sklad = sql.record().value("id_group_o_sklad").toInt();
 
             //Добавляем расход с общего склада
             sql.prepare("INSERT INTO O_SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,NUMBER,id_group_o_sklad) "
