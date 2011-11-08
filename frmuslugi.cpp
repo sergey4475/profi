@@ -184,6 +184,9 @@ void frmUslugi::updater(QModelIndex item, int count_row, QObject *obj){
             bEdit == false;
         }
     }
+    if (obj->objectName() == "tableUslugi")
+        tabl->submit();
+
 }
 
 void frmUslugi::updater(QTreeWidgetItem *item, int count_row,QObject *obj)
