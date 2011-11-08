@@ -41,16 +41,17 @@ double GetOstatokNaSklade(int ID_MATERIAL, int vid_zatrat, QString Date, int typ
         sql.prepare("SELECT SUM(O_SKLAD.count) AS count "
                     "FROM O_SKLAD "
                     "WHERE O_SKLAD.id_material = :id_material "
-                    "AND O_SKLAD.id_group_o_sklad = :id_vid_zatrat "
-                    "AND O_SKLAD.Date <= :Date");
+                    "   AND O_SKLAD.id_group_o_sklad = :id_vid_zatrat "
+                    "   AND O_SKLAD.Date <= :Date");
     }
 
     if (type_sklad == N_SKLAD){
         sql.prepare("SELECT SUM(SKLAD.count) AS count "
                     "FROM SKLAD "
+                    "   INNER JOIN vidi_zatrat ON vidi_zatrat.id = SKLAD.id_vid_zatrat "
                     "WHERE SKLAD.id_material = :id_material "
-                    "AND SKLAD.id_vid_zatrat = :id_vid_zatrat "
-                    "AND SKLAD.Date <= :Date");
+                    "   AND vidi_zatrat.id_vid_uslug = :id_vid_zatrat "
+                    "   AND SKLAD.Date <= :Date");
     }
 
 
@@ -58,6 +59,7 @@ double GetOstatokNaSklade(int ID_MATERIAL, int vid_zatrat, QString Date, int typ
     sql.bindValue(":id_vid_zatrat",vid_zatrat);
     sql.bindValue(":Date",Date);
     sql.exec();
+    qDebug() << sql.lastError();
     sql.next();
     ostatok = sql.value(0).toDouble();
 
