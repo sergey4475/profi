@@ -1,9 +1,12 @@
 #include "print.h"
+#include <QDate>
 
 void printOstatok(){
     NCReport *report = new NCReport();
     report->setReportSource(NCReportSource::File);
     report->setReportFile( "C:/Report1.xml");
+    report->addParameter("date1",QDate::currentDate());
+    report->addParameter("date2","10.11.2011");
     NCReportOutput *output=0;
     output = new NCReportPreviewOutput();
     output->setAutoDelete( FALSE );

@@ -23,7 +23,8 @@ SOURCES += main.cpp mainform.cpp frmclients.cpp sqlmodules.cpp frmsotr.cpp frmus
     include/procedures.cpp \
     frm_setting.cpp \
     frmdocument.cpp \
-    print.cpp
+    print.cpp \
+    srcReports/repsklad.cpp
 
 
 HEADERS  += mainform.h sqlmodules.h frmclients.h frmsotr.h MyModel.h frmuslugi.h \
@@ -38,7 +39,8 @@ HEADERS  += mainform.h sqlmodules.h frmclients.h frmsotr.h MyModel.h frmuslugi.h
     frm_setting.h \
     frmdocument.h \
     params.h \
-    print.h
+    print.h \
+    srcReports/repsklad.h
 
 FORMS    += mainform.ui \
     frmclients.ui \
@@ -49,10 +51,14 @@ FORMS    += mainform.ui \
     frmschetclienta.ui \
     frmspr.ui \
     frm_setting.ui \
-    frmdocument.ui
+    frmdocument.ui \
+    srcReports/repsklad.ui
 
 RESOURCES += \
     icons.qrc
+
+
+
 
 
 
