@@ -226,7 +226,6 @@ void BoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewIt
 
 void BoxDelegate::currentIndexChanged(int index){
     QWidget *editor = qobject_cast<QWidget*>(sender());
-    QAbstractItemDelegate::EndEditHint hint = NoHint;
 //    emit closeEditor(editor,NoHint);
     emit commitData(editor);
 }
