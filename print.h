@@ -4,4 +4,4 @@
 #include "NCReportPreviewWindow.h"
 #include <QMessageBox>
 
-void printOstatok(QString sql);
+void printOstatok(QString sql,QDate date, QString otdel_sklada);

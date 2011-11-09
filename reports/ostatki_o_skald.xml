@@ -20,9 +20,7 @@
         <doublePass>true</doublePass>
     </options>
     <datasources>
-        <datasource id="ostatki" type="sql" openRole="begin" source="static" connection="internal" parentID="" connID="">
-	$P{sql}
-	</datasource>
+        <datasource id="ostatki" type="sql" openRole="begin" source="static" connection="internal" parentID="" connID="">$P{sql}</datasource>
     </datasources>
     <variables/>
     <pageheader id="phead" height="29.370" autoHeight="true">
@@ -31,13 +29,14 @@
         <label id="2" zValue="2" resource="static" posX="0.000" posY="23.812" width="52.387" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Наименование</label>
         <label id="3" zValue="3" resource="static" posX="52.387" posY="23.812" width="22.225" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Количество</label>
         <label id="4" zValue="4" resource="static" posX="74.612" posY="23.812" width="14.817" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Ед. изм</label>
-        <line id="5" zValue="5" resource="static" fromX="0.000" fromY="23.812" toX="88.900" toY="23.812" lineColor="#000000" lineStyle="solid" lineWidth="0.650"/>
-        <line id="6" zValue="6" resource="static" fromX="0.000" fromY="28.575" toX="88.900" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.650"/>
-        <line id="7" zValue="7" resource="static" fromX="0.000" fromY="23.812" toX="0.000" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.650"/>
-        <line id="8" zValue="8" resource="static" fromX="52.387" fromY="23.812" toX="52.387" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.650"/>
-        <line id="9" zValue="9" resource="static" fromX="74.612" fromY="23.812" toX="74.612" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.650"/>
-        <line id="10" zValue="10" resource="static" fromX="88.900" fromY="23.812" toX="88.900" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.150"/>
+        <line id="5" zValue="5" resource="static" fromX="0.000" fromY="23.812" toX="88.900" toY="23.812" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="6" zValue="6" resource="static" fromX="0.000" fromY="28.575" toX="88.900" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="7" zValue="7" resource="static" fromX="0.000" fromY="23.812" toX="0.000" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="8" zValue="8" resource="static" fromX="52.387" fromY="23.812" toX="52.387" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="9" zValue="9" resource="static" fromX="74.612" fromY="23.812" toX="74.612" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="10" zValue="10" resource="static" fromX="88.900" fromY="23.812" toX="88.900" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
         <label id="11" zValue="11" resource="static" posX="7.938" posY="11.112" width="38.100" height="4.762" fontName="Courier New" fontSize="12" fontWeight="bold" alignment="1" forecolor="#000000">Отдел склада:</label>
+        <field id="12" zValue="12" resource="static" posX="46.037" posY="11.112" width="44.450" height="4.762" fontName="Arial" fontSize="11" fontWeight="bold" alignment="33" forecolor="#000000" type="txt" ftype="par" arg="">OtdelSklada</field>
     </pageheader>
     <pagefooter id="pfoot" height="10.000"/>
     <details>
@@ -46,12 +45,12 @@
                 <field id="0" zValue="0" resource="static" autoHeight="true" posX="1.587" posY="0.000" width="50.800" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" capital="4" alignment="129" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.material</field>
                 <field id="1" zValue="1" resource="static" posX="52.387" posY="0.000" width="22.225" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="4" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.count</field>
                 <field id="2" zValue="2" resource="static" autoHeight="true" posX="74.612" posY="0.000" width="14.287" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="4" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.ed_izm</field>
-                <line id="3" zValue="3" resource="static" fromX="0.000" fromY="0.000" toX="88.900" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.250"/>
+                <line id="3" zValue="3" resource="static" fromX="0.000" fromY="0.000" toX="88.900" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                 <line id="4" zValue="4" resource="static" fromX="0.000" fromY="4.762" toX="88.900" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.050"/>
-                <line id="5" zValue="5" resource="static" fromX="0.000" fromY="4.762" toX="0.000" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="5" zValue="5" resource="static" fromX="0.000" fromY="4.762" toX="0.000" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
                 <line id="6" zValue="6" resource="static" fromX="52.387" fromY="4.762" toX="52.387" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="7" zValue="7" resource="static" fromX="74.612" fromY="4.762" toX="74.612" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.250"/>
-                <line id="8" zValue="8" resource="static" fromX="88.900" fromY="4.762" toX="88.900" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="7" zValue="7" resource="static" fromX="74.612" fromY="4.762" toX="74.612" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="8" zValue="8" resource="static" fromX="88.900" fromY="4.762" toX="88.900" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
             </items>
         </detail>
     </details>

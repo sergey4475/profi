@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "print.h"
 #include "params.h"
+#include "sqlmodules.h"
 
 namespace Ui {
     class repSklad;

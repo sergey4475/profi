@@ -1,10 +1,12 @@
 #include "print.h"
 #include <QDate>
 
-void printOstatok(QString sql){
+void printOstatok(QString sql,QDate date, QString otdel_sklada){
     NCReport *report = new NCReport();
     report->setReportFile(QDir::currentPath()+"/reports/ostatki_o_skald.xml");
     report->addParameter("sql",sql);
+    report->addParameter("Date",date);
+    report->addParameter("OtdelSklada",otdel_sklada);
     NCReportOutput *output=0;
     output = new NCReportPreviewOutput();
     output->setAutoDelete( FALSE );

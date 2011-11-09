@@ -452,6 +452,7 @@
       <string>отчеты по складу</string>
      </property>
      <addaction name="otc_ostatok"/>
+     <addaction name="otc_ostatok_kab"/>
     </widget>
     <addaction name="menu_7"/>
    </widget>
@@ -546,7 +547,12 @@
   </action>
   <action name="otc_ostatok">
    <property name="text">
-    <string>Остаток материала на складе</string>
+    <string>Остаток материала на общем складе</string>
+   </property>
+  </action>
+  <action name="otc_ostatok_kab">
+   <property name="text">
+    <string>Остаток материала в кабинетах мастеров</string>
    </property>
   </action>
  </widget>

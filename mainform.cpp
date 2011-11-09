@@ -331,11 +331,23 @@ void MainForm::on_settings_triggered()
     frm->show();
 }
 
+// *************** Отчет остаток на общем складе
 void MainForm::on_otc_ostatok_triggered()
 {
     repSklad *frmRepSklad = new repSklad;
+    frmRepSklad->init(O_OST_O_SKLAD);
     frmRepSklad->show();
 }
+
+// *************** Отчет остаток в кабинетах
+void MainForm::on_otc_ostatok_kab_triggered()
+{
+    repSklad *frmRepSklad = new repSklad;
+    frmRepSklad->init(O_OST_SKLAD);
+    frmRepSklad->show();
+
+}
+
 
 void MainForm::on_but_vnesti_dolg_clicked()
 {
@@ -364,6 +376,7 @@ void MainForm::on_but_vnesti_dolg_clicked()
     sql.bindValue(":SUMMA_OPL",summa_Oplati);
 
     sql.exec();
+    qDebug() << sql.lastError();
 
     UpdateClients(ID_Client);
 }

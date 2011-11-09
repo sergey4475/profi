@@ -35,8 +35,10 @@
 #define N_SKLAD     2
 
 // Òטןג מעקועמג
-#define O_OST_O_SKLAD   1
-#define O_OST_SKLAD     2
+#define O_OST_O_SKLAD    1
+#define O_OST_SKLAD      2
+#define O_PRIHOD_O_SKLAD 3
+#define O_RASHOD_O_SKLAD 4
 
 #include <QtCore>
 #include <QSettings>

@@ -1,7 +1,6 @@
 QT       += core \
         gui \
-        sql \
-        xml \
+        sql
 
 INCLUDEPATH += include \
                "C:/dev/NCReport_minGW/include"

@@ -56,6 +56,8 @@ private slots:
 
     void on_but_vnesti_dolg_clicked();
 
+    void on_otc_ostatok_kab_triggered();
+
 private:
     Ui::MainForm *ui;
     double summa_uslug;
