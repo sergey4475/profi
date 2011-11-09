@@ -54,6 +54,8 @@ private slots:
 
     void on_butMagazin_clicked();
 
+    void on_but_vnesti_dolg_clicked();
+
 private:
     Ui::MainForm *ui;
     double summa_uslug;

@@ -20,7 +20,9 @@
         <doublePass>true</doublePass>
     </options>
     <datasources>
-        <datasource id="ostatki" type="sql" openRole="begin" source="static" connection="internal" parentID="" connID="">$P{sql}</datasource>
+        <datasource id="ostatki" type="sql" openRole="begin" source="static" connection="internal" parentID="" connID="">
+	$P{sql}
+	</datasource>
     </datasources>
     <variables/>
     <pageheader id="phead" height="29.370" autoHeight="true">

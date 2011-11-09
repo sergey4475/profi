@@ -420,6 +420,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             sql.bindValue(":SUMMA_OPL",summa_Oplati);
 
             sql.exec();
+            qDebug() << sql.lastError();
             if (sql.lastError().isValid())
                 QSqlDatabase::database().rollback();
         };
@@ -460,9 +461,6 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             double summa_slidki = setProcent(summa);
             double summa_vsego = summa - summa_slidki;
 
-            //            QList<QStandardItem*> lst = mUslugi->findItems(QString(IDUsl),Qt::MatchContains,0);
-
-            //            if (lst.count()==0){
             QSqlQuery sql;
             sql.prepare("INSERT INTO CLIENTS_HISTORY(NUMBER,DATE_USLUGI,ID_CLIENT,ID_SOTRUDNIK,ID_USLUGA,count,cena,SUMMA,oplacheno,vid_oplati,skidka_p,summa_skidki,summa_vsego) "
                         "VALUES(:NUMBER,:DATE_USLUGI,:ID_CLIENT,:ID_SOTRUDNIK,:ID_USLUGA,:count,:cena,:SUMMA,:oplacheno,:vid_oplati,:skidka_p,:summa_skidki,:summa_vsego) ");
@@ -483,6 +481,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
 
 
             sql.exec();
+            qDebug() << sql.lastError();
             if (sql.lastError().isValid())
                 QSqlDatabase::database().rollback();
 
@@ -518,6 +517,8 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             sql.bindValue(":vid_zatrat",NumberUslugi);
             sql.bindValue(":NUMBER",Number);
             sql.exec();
+            qDebug() << sql.lastError();
+
             if (sql.lastError().isValid())
                 QSqlDatabase::database().rollback();
 

@@ -6,6 +6,7 @@ QT       += core \
 INCLUDEPATH += include \
                "C:/dev/NCReport_minGW/include"
 
+
 LIBS += -L"c:/dev/NCReport_minGW/lib" -lncreport2 \
 
 TARGET = app

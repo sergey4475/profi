@@ -34,6 +34,10 @@
 #define N_O_SKLAD   1
 #define N_SKLAD     2
 
+// Òטןג מעקועמג
+#define O_OST_O_SKLAD   1
+#define O_OST_SKLAD     2
+
 #include <QtCore>
 #include <QSettings>
 #include <QMessageBox>

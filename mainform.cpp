@@ -11,8 +11,7 @@
 #include "frmdocument.h"
 #include "frm_setting.h"
 #include "ui_mainform.h"
-#include "print.h"
-
+#include "srcReports/repsklad.h"
 MainForm::MainForm(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainForm)
@@ -21,6 +20,7 @@ MainForm::MainForm(QWidget *parent) :
 
     db = ConnectDB(g_hostname,g_dataBase,g_login,g_password,g_driverName,g_connect_port);
 //    CreateDb(db);
+    UpdateClients(0);
 
 }
 
@@ -181,9 +181,13 @@ void MainForm::UpdateClients(int IDClient){
     else
         ui->but_schet->setEnabled(true);
 
+    ui->but_vnesti_dolg->setVisible(false);
+    ui->dolg_client->setVisible(false);
+    ui->l_dolg->setVisible(false);
+    ui->dolg_client->setText("");
+
     ui->na_schetu->setText("0");
     ui->summa_uslug->setText("0");
-    ui->dolg_client->setText("");
     ui->count_client->setText("");
     QSqlQuery sql;
     sql.prepare("SELECT SUM(scheta_clients.summa) AS Summa "
@@ -213,10 +217,12 @@ void MainForm::UpdateClients(int IDClient){
     sql.next();
     double summa_dolg = sql.value(0).toDouble();
 
-    qDebug() << sql.lastError();
-
-    if (summa_dolg != 0)
+    if (summa_dolg != 0){
+        ui->but_vnesti_dolg->setVisible(true);
+        ui->dolg_client->setVisible(true);
+        ui->l_dolg->setVisible(true);
         ui->dolg_client->setText(QString("%1").arg(summa_dolg));
+    }
 
 
     ui->summa_uslug->setText("");
@@ -327,20 +333,37 @@ void MainForm::on_settings_triggered()
 
 void MainForm::on_otc_ostatok_triggered()
 {
-    QString sql = "SELECT "
-            "   materials.name AS material, "
-            "   SUM(o_sklad.count) AS count, "
-            "   ed_izm.name AS ed_izm "
-            "FROM "
-            "   public.o_sklad, "
-            "   public.materials, "
-            "   public.ed_izm "
-            "WHERE "
-            "   o_sklad.id_material = materials.id "
-            "   AND materials.id_ed_izm = ed_izm.id "
-            "GROUP BY "
-            "   materials.name, "
-            "   ed_izm.name";
+    repSklad *frmRepSklad = new repSklad;
+    frmRepSklad->show();
+}
 
-    printOstatok(sql);
+void MainForm::on_but_vnesti_dolg_clicked()
+{
+    QSqlQuery sql;
+    sql.prepare("SELECT MAX(OPLATI_CLIENTS) AS number "
+                "FROM OPLATI_CLIENTS");
+    sql.exec();
+    QSqlRecord record = sql.record();
+    sql.next();
+
+    int Number = sql.value(record.indexOf("number")).toInt();
+
+    Number++;
+
+
+    double summ = ui->dolg_client->text().toDouble();
+    double summa_Oplati = QInputDialog::getDouble(this,"¬ведите сумму ","—умма:",summ,0,99999999,2,0,0);
+
+    sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL) "
+                "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL) ");
+    sql.bindValue(":NUMBER",Number);
+    sql.bindValue(":DATE",QDate::currentDate().toString("dd.MM.yyyy"));
+    sql.bindValue(":TYPE_OPERACII",n_PL_DOLG);
+    sql.bindValue(":ID_CLIENT",ID_Client);
+    sql.bindValue(":SUMMA_K_OPL",0);
+    sql.bindValue(":SUMMA_OPL",summa_Oplati);
+
+    sql.exec();
+
+    UpdateClients(ID_Client);
 }
