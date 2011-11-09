@@ -1,6 +1,7 @@
 #include "ncreport.h"
+#include <QDir>
 #include "NCReportPreviewOutput.h"
 #include "NCReportPreviewWindow.h"
 #include <QMessageBox>
 
-void printOstatok();
+void printOstatok(QString sql);

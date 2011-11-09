@@ -20,18 +20,7 @@
         <doublePass>true</doublePass>
     </options>
     <datasources>
-        <datasource id="ostatki" type="sql" openRole="begin" source="static" connection="internal" parentID="" connID="">SELECT
-   materials.name AS material, 
-   SUM(o_sklad.count) AS count, 
-   ed_izm.name AS ed_izm
-FROM 
-   public.o_sklad, 
-   public.materials, 
-   public.ed_izm 
-WHERE 
-   o_sklad.id_material = materials.id 
-   AND materials.id_ed_izm = ed_izm.id 
-   AND o_sklad.date &lt; $P{date1}</datasource>
+        <datasource id="ostatki" type="sql" openRole="begin" source="static" connection="internal" parentID="" connID="">$P{sql}</datasource>
     </datasources>
     <variables/>
     <pageheader id="phead" height="29.370" autoHeight="true">

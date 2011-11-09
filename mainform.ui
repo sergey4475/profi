@@ -376,7 +376,7 @@
      <x>0</x>
      <y>0</y>
      <width>877</width>
-     <height>21</height>
+     <height>18</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -449,7 +449,7 @@
     </property>
     <widget class="QMenu" name="menu_7">
      <property name="title">
-      <string>Отчеты</string>
+      <string>отчеты по складу</string>
      </property>
      <addaction name="otc_ostatok"/>
     </widget>

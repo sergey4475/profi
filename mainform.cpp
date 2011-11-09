@@ -327,29 +327,20 @@ void MainForm::on_settings_triggered()
 
 void MainForm::on_otc_ostatok_triggered()
 {
-    NCReport *report = new NCReport();
-    report->setReportFile(QDir::currentPath()+"/reports/ostatki_o_skald.xml");
-    report->addParameter("Date",QDate::currentDate());
-    NCReportOutput *output=0;
-    output = new NCReportPreviewOutput();
-    output->setAutoDelete( FALSE );
-    report->setOutput(output);
-//    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    report->runReport();
-    bool error = report->hasError();
-    QString err = report->lastErrorMsg();
-//    QApplication::restoreOverrideCursor();
+    QString sql = "SELECT "
+            "   materials.name AS material, "
+            "   SUM(o_sklad.count) AS count, "
+            "   ed_izm.name AS ed_izm "
+            "FROM "
+            "   public.o_sklad, "
+            "   public.materials, "
+            "   public.ed_izm "
+            "WHERE "
+            "   o_sklad.id_material = materials.id "
+            "   AND materials.id_ed_izm = ed_izm.id "
+            "GROUP BY "
+            "   materials.name, "
+            "   ed_izm.name";
 
-    if ( error )
-    QMessageBox::information( 0, "Riport error", err );
-    else {
-    //-----------------------------
-    // PRINT PREVIEW
-    //-----------------------------
-    NCReportPreviewWindow *pv = new NCReportPreviewWindow();
-    pv->setReport( report );
-    pv->setOutput( (NCReportPreviewOutput*)output );
-    pv->setWindowModality(Qt::ApplicationModal );
-    pv->setAttribute( Qt::WA_DeleteOnClose );
-    pv->show();}
+    printOstatok(sql);
 }
