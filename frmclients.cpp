@@ -71,11 +71,19 @@ void frmClients::on_tableView_clicked(const QModelIndex &index)
         ui->InfoEdit->setText(query.value(3).toString());
         ui->Pol->setCurrentIndex(query.value(4).toInt());
    }
-    query.prepare("SELECT Clients_history.DATE_USLUGI, "
-                  "USLUGI.NAME, "
-                  "Clients_history.SUMMA "
+    query.prepare("SELECT "
+                  " Clients_history.DATE_USLUGI, "
+                  " USLUGI.NAME, "
+                  " SUM(Clients_history.SUMMA) AS SUMMA, "
+                  " Clients_history.NUMBER "
                   "FROM CLIENTS_HISTORY INNER JOIN USLUGI ON CLIENTS_HISTORY.ID_USLUGA = USLUGI.ID "
-                  "WHERE Clients_history.ID_CLIENT = :ID ");
+                  "WHERE Clients_history.ID_CLIENT = :ID "
+                  "GROUP BY"
+                  " Clients_history.DATE_USLUGI, "
+                  " USLUGI.NAME, "
+                  " Clients_history.NUMBER "
+                  "ORDER BY "
+                  " Clients_history.NUMBER");
     query.bindValue(":ID",IDClients);
     query.exec();
     qDebug() << query.lastError();
@@ -84,6 +92,7 @@ void frmClients::on_tableView_clicked(const QModelIndex &index)
     model->setHeaderData(0,Qt::Horizontal,QObject::tr("Дата"));
     model->setHeaderData(1,Qt::Horizontal,QObject::tr("Услуга"));
     model->setHeaderData(2,Qt::Horizontal,QObject::tr("Сумма"));
+    model->setHeaderData(3,Qt::Horizontal,QObject::tr("Ном. док."));
     ui->tClient_history->setModel(model);
     ui->tClient_history->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 }

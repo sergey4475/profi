@@ -525,6 +525,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             if (ID_client != 0)
                 frm->UpdateClients(ID_client);
         }
+        frm->UpdateClients(0);
         QSqlDatabase::database().commit();
         on_closeButton_clicked();
     }
