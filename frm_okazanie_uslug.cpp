@@ -427,21 +427,23 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
                 sql.bindValue(":type_oplati",VidPlateja);
                 sql.exec();
 
-                if (sql.lastError().isValid())
+                if (sql.lastError().isValid()){
                     QSqlDatabase::database().rollback();
+                    return;
+                }
             }
         }
         // Если способ оплаты, НЕ счет клиента и установлен параметр списывать со счета при оплате
 
-        if (VidPlateja != 5){
+        if (VidPlateja != 5 && VidPlateja != 4){
 
             double ostatok = 0;
-            double summa_doplati = 0;
             double summa_Oplati = sum_uslugi;
             double summa_spisan = sum_uslugi;
 
             if (ui->spisanie_so_scheta->checkState()){
             ostatok = GetOstatokNaSchete(ID_client,date_usl.toString("dd.MM.yyyy"));
+            summa_Oplati = 0;
 
             if (ostatok < sum_uslugi){
                 summa_spisan = ostatok;
@@ -464,17 +466,18 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
                 sql.bindValue(":SUMMA_OPL",summa_spisan);
                 sql.bindValue(":type_oplati",5);
                 sql.exec();
-                qDebug() << sql.lastError();
 
-                if (sql.lastError().isValid())
+                if (sql.lastError().isValid()){
                     QSqlDatabase::database().rollback();
+                    return;
+                }
             }
             }else{
-                summa_Oplati = QInputDialog::getDouble(this,"Введите сумму оплаты: ","Сумма:",sum_uslugi - ostatok,0,99999999,2,0,0);
+                summa_Oplati = QInputDialog::getDouble(this,"Введите сумму оплаты: ","Сумма:",sum_uslugi,0,99999999,2,0,0);
                 if (summa_Oplati == 0)
                     return;
             }
-
+            if(summa_Oplati > 0){
             QSqlQuery sql;
             sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL, type_oplati) "
                         "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL,:type_oplati) ");
@@ -486,10 +489,31 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             sql.bindValue(":SUMMA_OPL",summa_Oplati);
             sql.bindValue(":type_oplati",VidPlateja);
             sql.exec();
-            qDebug() << sql.lastError();
 
-            if (sql.lastError().isValid())
+            if (sql.lastError().isValid()){
                 QSqlDatabase::database().rollback();
+                return;
+            }
+
+            if (VidPlateja == 1){
+
+                sql.prepare("INSERT INTO KASSA(NUMBER, DATE, type_operacii, summa, id_vid_zatrat_kassa) "
+                            "VALUES(:NUMBER, :DATE, :type_operacii, :SUMMA, :id_vid_zatrat_kassa) ");
+                sql.bindValue(":NUMBER",Number);
+                sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
+                sql.bindValue(":TYPE_OPERACII",n_KASSA_PRIHOD);
+                sql.bindValue(":SUMMA",summa_Oplati);
+                sql.bindValue(":id_vid_zatrat_kassa",0);
+                sql.exec();
+                if (sql.lastError().isValid()){
+                    QSqlDatabase::database().rollback();
+                    return;
+                }
+
+
+            }
+
+            }
         }
 
         for (int ind = 0; ind < countRow; ind++){
@@ -520,9 +544,10 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             sql.bindValue(":summa_vsego",summa_vsego);
 
             sql.exec();
-            qDebug() << sql.lastError();
-            if (sql.lastError().isValid())
+            if (sql.lastError().isValid()){
                 QSqlDatabase::database().rollback();
+                return;
+            }
 
             ui->USLUGI->setDisabled(true);
             ui->prodaja->setDisabled(true);
@@ -556,10 +581,11 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             sql.bindValue(":vid_zatrat",NumberUslugi);
             sql.bindValue(":NUMBER",Number);
             sql.exec();
-            qDebug() << sql.lastError();
 
-            if (sql.lastError().isValid())
+            if (sql.lastError().isValid()){
                 QSqlDatabase::database().rollback();
+                return;
+            }
 
             if (ID_client != 0)
                 frm->UpdateClients(ID_client);

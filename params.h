@@ -27,8 +27,13 @@
 #define N_CH_RASHOD 2
 #define N_CH_SPISAN 3
 
+// Платежи
 #define n_PL_OSN    1
 #define n_PL_DOLG   2
+
+// Операции по кассе
+#define n_KASSA_PRIHOD 1
+#define n_KASSA_RASHOD 2
 
 // Тип склада
 #define N_O_SKLAD   1
