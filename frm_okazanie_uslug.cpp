@@ -307,7 +307,7 @@ void frm_okazanie_uslug::on_Client_buttonClicked()
     frm_client->init(DateDoc);
     frm_client->show();
 
-//    ui->Client->setText(model->item(0,0)->text());
+    //    ui->Client->setText(model->item(0,0)->text());
 }
 
 // Обработка выбора клиента
@@ -403,55 +403,95 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
         sum_uslugi = sum_uslugi - summa_skidki;
 
 
-        // Добавляем оплату клиента
-        if (VidPlateja != 4){
-            double summa_Oplati = QInputDialog::getDouble(this,"Введите сумму ","Сумма:",sum_uslugi,0,99999999,2,0,0);
-            if (summa_Oplati == 0)
-                return;
-
-            QSqlQuery sql;
-            sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL) "
-                        "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL) ");
-            sql.bindValue(":NUMBER",Number);
-            sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
-            sql.bindValue(":TYPE_OPERACII",n_PL_OSN);
-            sql.bindValue(":ID_CLIENT",ID_client);
-            sql.bindValue(":SUMMA_K_OPL",sum_uslugi);
-            sql.bindValue(":SUMMA_OPL",summa_Oplati);
-
-            sql.exec();
-            qDebug() << sql.lastError();
-            if (sql.lastError().isValid())
-                QSqlDatabase::database().rollback();
-        };
-
-
-
         // Если способ оплаты, счет клиента, то списываем со счета сумму платежа
         if (VidPlateja == 5){
-
             if (GetOstatokNaSchete(ID_client,date_usl.toString("dd.MM.yyyy")) < sum_uslugi){
                 QMessageBox::question(0,"Внимание!!!!","На счете у клиента не достаточно средств!!! \n "
                                       "Выберите другой способ оплаты или пополните счет клиента",QMessageBox::Ok);
                 return;
             }
             bool result = EditChetClienta(ID_client,N_CH_RASHOD,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
+
+            if (result){
+                // Добавляем оплату
+
+                QSqlQuery sql;
+                sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL, type_oplati) "
+                            "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL,type_oplati) ");
+                sql.bindValue(":NUMBER",Number);
+                sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
+                sql.bindValue(":TYPE_OPERACII",n_PL_OSN);
+                sql.bindValue(":ID_CLIENT",ID_client);
+                sql.bindValue(":SUMMA_K_OPL",sum_uslugi);
+                sql.bindValue(":SUMMA_OPL",sum_uslugi);
+                sql.bindValue(":type_oplati",VidPlateja);
+                sql.exec();
+
+                if (sql.lastError().isValid())
+                    QSqlDatabase::database().rollback();
+            }
         }
         // Если способ оплаты, НЕ счет клиента и установлен параметр списывать со счета при оплате
 
-        if (VidPlateja == 1 && ui->spisanie_so_scheta->checkState()){
-            double ostatok = 0;
+        if (VidPlateja != 5){
 
+            double ostatok = 0;
+            double summa_doplati = 0;
+            double summa_Oplati = sum_uslugi;
+            double summa_spisan = sum_uslugi;
+
+            if (ui->spisanie_so_scheta->checkState()){
             ostatok = GetOstatokNaSchete(ID_client,date_usl.toString("dd.MM.yyyy"));
 
             if (ostatok < sum_uslugi){
-                sum_uslugi = ostatok;
-                double summa_slidki = setProcent(sum_uslugi);
-                sum_uslugi = sum_uslugi - summa_slidki;
-
+                summa_spisan = ostatok;
+                summa_Oplati = QInputDialog::getDouble(this,"Введите сумму доплаты: ","Сумма:",sum_uslugi - ostatok,0,99999999,2,0,0);
+                if (summa_Oplati == 0)
+                    return;
             }
-            bool result = EditChetClienta(ID_client,N_CH_RASHOD,sum_uslugi,date_usl.toString("dd.MM.yyyy"));
+
+            bool result = EditChetClienta(ID_client,N_CH_RASHOD,summa_spisan,date_usl.toString("dd.MM.yyyy"));
+
+            if (result){
+                QSqlQuery sql;
+                sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL, type_oplati) "
+                            "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL,:type_oplati) ");
+                sql.bindValue(":NUMBER",Number);
+                sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
+                sql.bindValue(":TYPE_OPERACII",n_PL_OSN);
+                sql.bindValue(":ID_CLIENT",ID_client);
+                sql.bindValue(":SUMMA_K_OPL",summa_spisan);
+                sql.bindValue(":SUMMA_OPL",summa_spisan);
+                sql.bindValue(":type_oplati",5);
+                sql.exec();
+                qDebug() << sql.lastError();
+
+                if (sql.lastError().isValid())
+                    QSqlDatabase::database().rollback();
+            }
+            }else{
+                summa_Oplati = QInputDialog::getDouble(this,"Введите сумму оплаты: ","Сумма:",sum_uslugi - ostatok,0,99999999,2,0,0);
+                if (summa_Oplati == 0)
+                    return;
+            }
+
+            QSqlQuery sql;
+            sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL, type_oplati) "
+                        "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL,:type_oplati) ");
+            sql.bindValue(":NUMBER",Number);
+            sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
+            sql.bindValue(":TYPE_OPERACII",n_PL_OSN);
+            sql.bindValue(":ID_CLIENT",ID_client);
+            sql.bindValue(":SUMMA_K_OPL",sum_uslugi - ostatok);
+            sql.bindValue(":SUMMA_OPL",summa_Oplati);
+            sql.bindValue(":type_oplati",VidPlateja);
+            sql.exec();
+            qDebug() << sql.lastError();
+
+            if (sql.lastError().isValid())
+                QSqlDatabase::database().rollback();
         }
+
         for (int ind = 0; ind < countRow; ind++){
             int IDUsl   = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,0)).value(0).toInt();
             int count   = ui->USLUGI->model()->itemData(ui->USLUGI->model()->index(ind,4)).value(0).toInt();
@@ -478,7 +518,6 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             sql.bindValue(":skidka_p",skidka_p);
             sql.bindValue(":summa_skidki",summa_slidki);
             sql.bindValue(":summa_vsego",summa_vsego);
-
 
             sql.exec();
             qDebug() << sql.lastError();
