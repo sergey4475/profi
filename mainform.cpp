@@ -12,6 +12,7 @@
 #include "frm_setting.h"
 #include "ui_mainform.h"
 #include "srcReports/repsklad.h"
+#include "srcReports/repkassa.h"
 MainForm::MainForm(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainForm)
@@ -347,6 +348,14 @@ void MainForm::on_otc_ostatok_kab_triggered()
     frmRepSklad->show();
 
 }
+// *************** ќтчет по кассе
+void MainForm::on_otc_kassa_triggered()
+{
+    repkassa *frmRepKassa = new repkassa;
+    frmRepKassa->init();
+    frmRepKassa->show();
+}
+
 
 
 void MainForm::on_but_vnesti_dolg_clicked()
@@ -362,7 +371,6 @@ void MainForm::on_but_vnesti_dolg_clicked()
 
     Number++;
 
-
     double summ = ui->dolg_client->text().toDouble();
     double summa_Oplati = QInputDialog::getDouble(this,"¬ведите сумму ","—умма:",summ,0,99999999,2,0,0);
 
@@ -376,7 +384,6 @@ void MainForm::on_but_vnesti_dolg_clicked()
     sql.bindValue(":SUMMA_OPL",summa_Oplati);
 
     sql.exec();
-    qDebug() << sql.lastError();
 
     UpdateClients(ID_Client);
 }

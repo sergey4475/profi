@@ -455,6 +455,7 @@
      <addaction name="otc_ostatok_kab"/>
     </widget>
     <addaction name="menu_7"/>
+    <addaction name="otc_kassa"/>
    </widget>
    <widget class="QMenu" name="menu_6">
     <property name="layoutDirection">
@@ -553,6 +554,11 @@
   <action name="otc_ostatok_kab">
    <property name="text">
     <string>Остаток материала в кабинетах мастеров</string>
+   </property>
+  </action>
+  <action name="otc_kassa">
+   <property name="text">
+    <string>Кассовый отчет</string>
    </property>
   </action>
  </widget>

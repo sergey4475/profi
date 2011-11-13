@@ -58,6 +58,8 @@ private slots:
 
     void on_otc_ostatok_kab_triggered();
 
+    void on_otc_kassa_triggered();
+
 private:
     Ui::MainForm *ui;
     double summa_uslug;

@@ -23,34 +23,46 @@
         <datasource id="ostatki" type="sql" openRole="begin" source="static" connection="internal" parentID="" connID="">$P{sql}</datasource>
     </datasources>
     <variables/>
-    <pageheader id="phead" height="29.370" autoHeight="true">
-        <label id="0" zValue="0" resource="static" posX="7.938" posY="1.587" width="82.815" height="6.350" fontName="Arial" fontSize="16" fontWeight="bold" alignment="1" forecolor="#000000">Остатки на общем складе на :</label>
-        <field id="1" zValue="1" resource="static" posX="92.075" posY="1.587" width="47.625" height="6.350" fontName="Arial" fontSize="16" fontWeight="bold" alignment="33" forecolor="#000000" type="date" ftype="par" dateFormat="dd.MM.yyyy" arg="">Date</field>
-        <label id="2" zValue="2" resource="static" posX="0.000" posY="23.812" width="52.387" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Наименование</label>
-        <label id="3" zValue="3" resource="static" posX="52.387" posY="23.812" width="22.225" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Количество</label>
-        <label id="4" zValue="4" resource="static" posX="74.612" posY="23.812" width="14.817" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Ед. изм</label>
-        <line id="5" zValue="5" resource="static" fromX="0.000" fromY="23.812" toX="88.900" toY="23.812" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
-        <line id="6" zValue="6" resource="static" fromX="0.000" fromY="28.575" toX="88.900" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
-        <line id="7" zValue="7" resource="static" fromX="0.000" fromY="23.812" toX="0.000" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
-        <line id="8" zValue="8" resource="static" fromX="52.387" fromY="23.812" toX="52.387" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
-        <line id="9" zValue="9" resource="static" fromX="74.612" fromY="23.812" toX="74.612" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
-        <line id="10" zValue="10" resource="static" fromX="88.900" fromY="23.812" toX="88.900" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
-        <label id="11" zValue="11" resource="static" posX="7.938" posY="11.112" width="38.100" height="4.762" fontName="Courier New" fontSize="12" fontWeight="bold" alignment="1" forecolor="#000000">Отдел склада:</label>
-        <field id="12" zValue="12" resource="static" posX="46.037" posY="11.112" width="44.450" height="4.762" fontName="Arial" fontSize="11" fontWeight="bold" alignment="33" forecolor="#000000" type="txt" ftype="par" arg="">OtdelSklada</field>
+    <pageheader id="phead" height="28.984" autoHeight="true">
+        <label id="0" zValue="0" resource="static" posX="98.425" posY="20.637" width="14.287" height="7.938" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Расход</label>
+        <label id="1" zValue="1" resource="static" posX="112.712" posY="20.637" width="14.287" height="7.938" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Остаток на конец</label>
+        <label id="2" zValue="2" resource="static" posX="84.137" posY="20.637" width="14.287" height="7.938" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Приход</label>
+        <label id="3" zValue="3" resource="static" posX="66.675" posY="20.637" width="17.462" height="7.938" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Остаток на начало</label>
+        <label id="4" zValue="4" resource="static" posX="7.938" posY="1.587" width="120.121" height="6.350" fontName="Arial" fontSize="16" fontWeight="bold" alignment="33" forecolor="#000000">Движение материала на общем складе на :</label>
+        <field id="5" zValue="5" resource="static" posX="128.588" posY="1.587" width="28.575" height="6.350" fontName="Arial" fontSize="16" fontWeight="bold" alignment="33" forecolor="#000000" type="date" ftype="par" dateFormat="dd.MM.yyyy" arg="">Date</field>
+        <label id="6" zValue="6" resource="static" posX="0.000" posY="20.637" width="52.387" height="7.938" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Наименование</label>
+        <label id="7" zValue="7" resource="static" posX="52.387" posY="20.637" width="14.287" height="7.938" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" backcolor="#c0c0c0" bgDesign="true">Ед. изм</label>
+        <line id="8" zValue="8" resource="static" fromX="0.000" fromY="20.637" toX="127.000" toY="20.637" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="9" zValue="9" resource="static" fromX="0.000" fromY="28.575" toX="127.000" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="10" zValue="10" resource="static" fromX="0.000" fromY="20.637" toX="0.000" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="11" zValue="11" resource="static" fromX="52.387" fromY="20.637" toX="52.387" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <label id="12" zValue="12" resource="static" posX="7.938" posY="11.112" width="38.100" height="4.762" fontName="Courier New" fontSize="12" fontWeight="bold" alignment="1" forecolor="#000000">Отдел склада:</label>
+        <field id="13" zValue="13" resource="static" posX="46.037" posY="11.112" width="44.450" height="4.762" fontName="Arial" fontSize="11" fontWeight="bold" alignment="33" forecolor="#000000" type="txt" ftype="par" arg="">OtdelSklada</field>
+        <line id="14" zValue="14" resource="static" fromX="66.675" fromY="20.637" toX="66.675" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="15" zValue="15" resource="static" fromX="84.137" fromY="20.637" toX="84.137" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="16" zValue="16" resource="static" fromX="98.425" fromY="20.637" toX="98.425" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="17" zValue="17" resource="static" fromX="112.712" fromY="20.637" toX="112.712" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+        <line id="18" zValue="18" resource="static" fromX="127.000" fromY="20.637" toX="127.000" toY="28.575" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
     </pageheader>
     <pagefooter id="pfoot" height="10.000"/>
     <details>
-        <detail id="Detail1" height="65.881" autoHeight="true" datasource="ostatki" startsOnNewPage="false">
+        <detail id="Detail1" height="65.880" autoHeight="true" datasource="ostatki" startsOnNewPage="false">
             <items>
-                <field id="0" zValue="0" resource="static" autoHeight="true" posX="1.587" posY="0.000" width="50.800" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" capital="4" alignment="129" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.material</field>
-                <field id="1" zValue="1" resource="static" posX="52.387" posY="0.000" width="22.225" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="4" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.count</field>
-                <field id="2" zValue="2" resource="static" autoHeight="true" posX="74.612" posY="0.000" width="14.287" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="4" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.ed_izm</field>
-                <line id="3" zValue="3" resource="static" fromX="0.000" fromY="0.000" toX="88.900" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="4" zValue="4" resource="static" fromX="0.000" fromY="4.762" toX="88.900" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.050"/>
-                <line id="5" zValue="5" resource="static" fromX="0.000" fromY="4.762" toX="0.000" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
-                <line id="6" zValue="6" resource="static" fromX="52.387" fromY="4.762" toX="52.387" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="7" zValue="7" resource="static" fromX="74.612" fromY="4.762" toX="74.612" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="8" zValue="8" resource="static" fromX="88.900" fromY="4.762" toX="88.900" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+                <line id="0" zValue="0" resource="static" fromX="0.000" fromY="0.000" toX="127.000" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+                <line id="1" zValue="1" resource="static" fromX="52.387" fromY="0.000" toX="52.387" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+                <line id="2" zValue="2" resource="static" fromX="127.000" fromY="0.000" toX="127.000" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+                <line id="3" zValue="3" resource="static" fromX="66.675" fromY="0.000" toX="66.675" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+                <line id="4" zValue="4" resource="static" fromX="84.137" fromY="0.000" toX="84.137" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+                <line id="5" zValue="5" resource="static" fromX="0.000" fromY="0.000" toX="0.000" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+                <line id="6" zValue="6" resource="static" fromX="98.425" fromY="0.000" toX="98.425" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+                <line id="7" zValue="7" resource="static" fromX="0.000" fromY="4.762" toX="127.000" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+                <line id="8" zValue="8" resource="static" fromX="112.712" fromY="0.000" toX="112.712" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.350"/>
+                <field id="9" zValue="9" resource="static" posX="1.587" posY="0.000" width="49.212" height="4.762" fontName="Courier New" fontSize="9" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.material</field>
+                <field id="10" zValue="10" resource="static" posX="52.387" posY="0.000" width="14.287" height="4.762" fontName="Courier New" fontSize="9" alignment="4" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.ed_izm</field>
+                <field id="11" zValue="11" resource="static" posX="66.675" posY="0.000" width="17.462" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="4" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.count1</field>
+                <field id="12" zValue="12" resource="static" posX="84.137" posY="0.000" width="14.287" height="4.762" fontName="Courier New" fontSize="9" alignment="4" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.count2</field>
+                <field id="13" zValue="13" resource="static" posX="98.425" posY="0.000" width="14.287" height="4.762" fontName="Courier New" fontSize="9" alignment="4" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.count3</field>
+                <field id="14" zValue="14" resource="static" posX="112.712" posY="0.000" width="14.287" height="4.762" fontName="Courier New" fontSize="9" fontWeight="bold" alignment="4" forecolor="#000000" type="txt" ftype="ds" arg="">ostatki.count4</field>
             </items>
         </detail>
     </details>
