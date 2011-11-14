@@ -60,6 +60,11 @@ FORMS    += mainform.ui \
 RESOURCES += \
     icons.qrc
 
+OTHER_FILES += \
+    reports/uslugi_po_masteram.xml \
+    reports/ostatki_o_skald.xml
+
+
 
 
 
