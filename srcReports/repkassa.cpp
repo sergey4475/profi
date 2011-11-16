@@ -14,6 +14,7 @@ repkassa::~repkassa()
 }
 
 void repkassa::init(){
+    ID_sotr = 0;
     this->setWindowModality(Qt::ApplicationModal);
     this->setWindowTitle("");
     QDate date_temp = QDate(QDate::currentDate().year(),QDate::currentDate().month(),1);
@@ -39,6 +40,9 @@ void repkassa::init(){
     scompleter->setModel(smodel);
     scompleter->setCaseSensitivity(Qt::CaseInsensitive);
     ui->Sotrudnik->setCompleter(scompleter);
+
+    ui->Sotrudnik->setVisible(false);
+    ui->label_4->setVisible(false);
 }
 
 
@@ -76,4 +80,19 @@ void repkassa::on_start_report_clicked()
     pv->setWindowModality(Qt::ApplicationModal );
     pv->setAttribute( Qt::WA_DeleteOnClose );
     pv->show();}
+}
+
+void repkassa::on_Sotrudnik_editingFinished()
+{
+//    QSqlQuery query;
+//    query.prepare("SELECT PERSONAL.ID "
+//                  "FROM PERSONAL "
+//                  "WHERE PERSONAL.FIO = :FIO ");
+//    query.bindValue(":FIO",ui->Sotrudnik->text());
+//    query.exec();
+//    QSqlRecord record = query.record();
+//    query.next();
+
+//    ID_sotr = query.value(record.indexOf("ID")).toInt();
+
 }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>432</width>
-    <height>160</height>
+    <height>126</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>8</x>
      <y>4</y>
      <width>421</width>
-     <height>111</height>
+     <height>85</height>
     </rect>
    </property>
    <property name="title">
@@ -104,8 +104,8 @@
   <widget class="QPushButton" name="start_report">
    <property name="geometry">
     <rect>
-     <x>264</x>
-     <y>120</y>
+     <x>268</x>
+     <y>92</y>
      <width>161</width>
      <height>31</height>
     </rect>

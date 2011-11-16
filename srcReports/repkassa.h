@@ -22,8 +22,11 @@ public:
 private slots:
     void on_start_report_clicked();
 
+    void on_Sotrudnik_editingFinished();
+
 private:
     Ui::repkassa *ui;
+    int ID_sotr;
 };
 
 #endif // REPKASSA_H
