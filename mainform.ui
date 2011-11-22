@@ -441,7 +441,14 @@
      <addaction name="oststok_na_sklade"/>
      <addaction name="raspredel"/>
     </widget>
+    <widget class="QMenu" name="menu_8">
+     <property name="title">
+      <string>Касса</string>
+     </property>
+     <addaction name="kassa_rashod"/>
+    </widget>
     <addaction name="menu_4"/>
+    <addaction name="menu_8"/>
    </widget>
    <widget class="QMenu" name="menu_5">
     <property name="title">
@@ -559,6 +566,11 @@
   <action name="otc_kassa">
    <property name="text">
     <string>Кассовый отчет</string>
+   </property>
+  </action>
+  <action name="kassa_rashod">
+   <property name="text">
+    <string>Расход </string>
    </property>
   </action>
  </widget>

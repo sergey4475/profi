@@ -20,39 +20,53 @@
     </options>
     <datasources>
         <datasource id="sql" type="sql" openRole="begin" source="static" connection="internal" parentID="" connID="">SELECT 
+  ROW_NUMBER() over (order by clients.fio) AS Number,
   clients.fio AS client_name,
   uslugi.name AS usluga,
   personal.fio AS master_name,
   SUM(clients_history.summa) AS SUMMA,
-  SUM(clients_history.summa_skidki) AS summa_skidki,
-  SUM(clients_history.summa_vsego) AS summa_vsego
+  clients_history.summa_skidki AS summa_skidki,
+  SUM(CASE WHEN oplati_clients.type_oplati = 1 THEN
+oplati_clients.summa_opl
+  ELSE
+0 
+  END)  AS summa_vsego
   
 FROM 
   clients_history INNER JOIN personal ON personal.id = clients_history.id_sotrudnik
   INNER JOIN clients ON clients.id = clients_history.id_client
   INNER JOIN uslugi ON uslugi.id = clients_history.id_usluga
+  INNER JOIN oplati_clients ON oplati_clients.Number = clients_history.NUMBER
 WHERE 
   clients_history.date_uslugi BETWEEN '$P{date1}' AND '$P{date2}'
 GROUP BY
   clients.fio,
   personal.fio, 
+  clients_history.summa_skidki,
   clients_history.date_uslugi,
   uslugi.name
 ORDER BY  
   clients.fio,
   personal.fio</datasource>
         <datasource id="sql2" type="sql" openRole="begin" source="static" connection="internal" parentID="" connID="">SELECT 
+  ROW_NUMBER() over (order by personal.fio) AS Number,  
   personal.fio AS master_name,
   SUM(clients_history.summa) AS SUMMA,
   SUM(clients_history.summa_skidki) AS summa_skidki,
-  SUM(clients_history.summa_vsego) AS summa_vsego
+  SUM(CASE WHEN oplati_clients.type_oplati = 1 THEN
+oplati_clients.summa_opl
+  ELSE
+0 
+  END)  AS summa_vsego
   
 FROM 
   clients_history INNER JOIN personal ON personal.id = clients_history.id_sotrudnik
+  INNER JOIN oplati_clients ON oplati_clients.Number = clients_history.NUMBER
 WHERE 
   clients_history.date_uslugi BETWEEN '$P{date1}' AND '$P{date2}'
 GROUP BY
-  personal.fio
+  personal.fio,
+  clients_history.summa_skidki
 ORDER BY  
   personal.fio</datasource>
     </datasources>
@@ -90,25 +104,25 @@ ORDER BY
     </pageheader>
     <pagefooter id="pfoot" height="63.660"/>
     <details>
-        <detail id="Detail1" height="5.027" autoHeight="true" datasource="sql" startsOnNewPage="false">
+        <detail id="Detail1" height="11.910" autoHeight="true" datasource="sql" startsOnNewPage="false">
             <items>
-                <field id="0" zValue="0" resource="static" autoHeight="true" posX="14.287" posY="0.000" width="39.688" height="4.762" fontName="Arial" fontSize="8" alignment="1" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.client_name</field>
-                <field id="1" zValue="1" resource="static" autoHeight="true" posX="174.625" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa_vsego</field>
-                <field id="2" zValue="2" resource="static" posX="160.337" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa_skidki</field>
-                <field id="3" zValue="3" resource="static" posX="146.050" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa</field>
-                <field id="4" zValue="4" resource="static" autoHeight="true" posX="106.362" posY="0.000" width="38.100" height="4.762" fontName="Arial" fontSize="8" alignment="1" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.master_name</field>
-                <field id="5" zValue="5" resource="static" posX="4.762" posY="0.000" width="7.938" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">nom</field>
-                <field id="6" zValue="6" resource="static" autoHeight="true" posX="55.562" posY="0.000" width="49.212" height="4.762" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.usluga</field>
+                <field id="0" zValue="0" resource="static" autoHeight="true" posX="14.287" posY="0.000" width="39.688" height="6.350" fontName="Arial" fontSize="8" alignment="1" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.client_name</field>
+                <field id="1" zValue="1" resource="static" autoHeight="true" posX="174.625" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa_vsego</field>
+                <field id="2" zValue="2" resource="static" posX="160.337" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa_skidki</field>
+                <field id="3" zValue="3" resource="static" posX="146.050" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa</field>
+                <field id="4" zValue="4" resource="static" autoHeight="true" posX="106.362" posY="0.000" width="38.100" height="6.350" fontName="Arial" fontSize="8" alignment="1" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.master_name</field>
+                <field id="5" zValue="5" resource="static" posX="4.762" posY="0.000" width="7.938" height="6.350" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql.Number</field>
+                <field id="6" zValue="6" resource="static" autoHeight="true" posX="55.562" posY="0.000" width="49.212" height="6.350" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.usluga</field>
                 <line id="7" zValue="7" resource="static" fromX="3.175" fromY="0.000" toX="187.325" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="8" zValue="8" resource="static" fromX="3.175" fromY="4.762" toX="187.325" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="9" zValue="9" resource="static" fromX="3.175" fromY="4.762" toX="3.175" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="10" zValue="10" resource="static" fromX="12.700" fromY="4.762" toX="12.700" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="11" zValue="11" resource="static" fromX="104.775" fromY="4.762" toX="104.775" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="12" zValue="12" resource="static" fromX="144.463" fromY="4.762" toX="144.463" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="13" zValue="13" resource="static" fromX="158.750" fromY="4.762" toX="158.750" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="14" zValue="14" resource="static" fromX="173.037" fromY="4.762" toX="173.037" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="15" zValue="15" resource="static" fromX="187.325" fromY="4.762" toX="187.325" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="16" zValue="16" resource="static" fromX="53.975" fromY="4.762" toX="53.975" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="8" zValue="8" resource="static" fromX="3.175" fromY="6.350" toX="187.325" toY="6.350" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="9" zValue="9" resource="static" fromX="3.175" fromY="6.350" toX="3.175" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="10" zValue="10" resource="static" fromX="12.700" fromY="6.350" toX="12.700" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="11" zValue="11" resource="static" fromX="104.775" fromY="6.350" toX="104.775" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="12" zValue="12" resource="static" fromX="144.463" fromY="6.350" toX="144.463" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="13" zValue="13" resource="static" fromX="158.750" fromY="6.350" toX="158.750" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="14" zValue="14" resource="static" fromX="173.037" fromY="6.350" toX="173.037" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="15" zValue="15" resource="static" fromX="187.325" fromY="6.350" toX="187.325" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="16" zValue="16" resource="static" fromX="53.975" fromY="6.350" toX="53.975" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
             </items>
             <groups>
                 <group id="Group0" groupExp="%CONST" resetVariables="total_summa,total_summa_skidka,total_summa_vsego" reprintHeader="false" startsOnNewPage="false">
@@ -141,30 +155,30 @@ ORDER BY
         </detail>
         <detail id="Detail2" height="6.350" autoHeight="true" datasource="sql2" startsOnNewPage="false">
             <items>
-                <field id="6" zValue="6" resource="static" posX="3.175" posY="0.000" width="7.938" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">nom</field>
-                <field id="7" zValue="7" resource="static" posX="66.675" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa_skidki</field>
-                <field id="8" zValue="8" resource="static" autoHeight="true" posX="12.700" posY="0.000" width="38.100" height="4.762" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.master_name</field>
-                <field id="9" zValue="9" resource="static" posX="52.387" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa</field>
-                <field id="10" zValue="10" resource="static" autoHeight="true" posX="80.962" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa_vsego</field>
-                <line id="11" zValue="11" resource="static" fromX="1.587" fromY="0.000" toX="1.587" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="12" zValue="12" resource="static" fromX="1.587" fromY="4.762" toX="93.662" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="13" zValue="13" resource="static" fromX="1.587" fromY="0.000" toX="93.662" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="14" zValue="14" resource="static" fromX="11.112" fromY="4.762" toX="11.112" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="15" zValue="15" resource="static" fromX="50.800" fromY="4.762" toX="50.800" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="16" zValue="16" resource="static" fromX="65.087" fromY="4.762" toX="65.087" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="17" zValue="17" resource="static" fromX="79.375" fromY="4.762" toX="79.375" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="18" zValue="18" resource="static" fromX="93.662" fromY="4.762" toX="93.662" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <field id="0" zValue="0" resource="static" posX="3.175" posY="0.000" width="7.938" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.Number</field>
+                <field id="1" zValue="1" resource="static" posX="66.675" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa_skidki</field>
+                <field id="2" zValue="2" resource="static" autoHeight="true" posX="12.700" posY="0.000" width="38.100" height="4.762" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.master_name</field>
+                <field id="3" zValue="3" resource="static" posX="52.387" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa</field>
+                <field id="4" zValue="4" resource="static" autoHeight="true" posX="80.962" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa_vsego</field>
+                <line id="5" zValue="5" resource="static" fromX="1.587" fromY="0.000" toX="1.587" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="6" zValue="6" resource="static" fromX="1.587" fromY="4.762" toX="93.662" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="7" zValue="7" resource="static" fromX="1.587" fromY="0.000" toX="93.662" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="8" zValue="8" resource="static" fromX="11.112" fromY="4.762" toX="11.112" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="9" zValue="9" resource="static" fromX="50.800" fromY="4.762" toX="50.800" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="10" zValue="10" resource="static" fromX="65.087" fromY="4.762" toX="65.087" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="11" zValue="11" resource="static" fromX="79.375" fromY="4.762" toX="79.375" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="12" zValue="12" resource="static" fromX="93.662" fromY="4.762" toX="93.662" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
             </items>
             <groups>
                 <group id="Group1" groupExp="%CONST" resetVariables="total_summa2,total_summa_skidka2,total_summa_vsego2" reprintHeader="false" startsOnNewPage="false">
                     <groupfooter height="5.126" autoHeight="true">
-                        <field id="3" zValue="-9" resource="static" posX="50.800" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa2</field>
-                        <field id="6" zValue="-8" resource="static" posX="79.375" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa_vsego2</field>
-                        <line id="0" zValue="0" resource="static" fromX="50.800" fromY="0.000" toX="50.800" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <field id="1" zValue="1" resource="static" posX="65.087" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa_skidka2</field>
-                        <line id="2" zValue="2" resource="static" fromX="50.800" fromY="4.762" toX="93.662" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <line id="4" zValue="4" resource="static" fromX="93.662" fromY="0.000" toX="50.800" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <label id="5" zValue="5" resource="static" posX="30.162" posY="0.000" width="19.050" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000">Всего:</label>
+                        <field id="0" zValue="0" resource="static" posX="50.800" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa2</field>
+                        <field id="1" zValue="1" resource="static" posX="79.375" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa_vsego2</field>
+                        <line id="2" zValue="2" resource="static" fromX="50.800" fromY="0.000" toX="50.800" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <field id="3" zValue="3" resource="static" posX="65.087" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa_skidka2</field>
+                        <line id="4" zValue="4" resource="static" fromX="50.800" fromY="4.762" toX="93.662" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="5" zValue="5" resource="static" fromX="93.662" fromY="0.000" toX="50.800" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <label id="6" zValue="6" resource="static" posX="30.162" posY="0.000" width="19.050" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000">Всего:</label>
                         <line id="7" zValue="7" resource="static" fromX="93.662" fromY="4.762" toX="93.662" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                     </groupfooter>
                 </group>
