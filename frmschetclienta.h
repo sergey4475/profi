@@ -25,6 +25,8 @@ private slots:
     void on_add_summa_clicked();
     void on_del_summa_clicked();
 
+    void on_sertifikat_stateChanged(int arg1);
+
 private:
     Ui::frmSchetClienta *ui;
 };

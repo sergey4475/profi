@@ -183,6 +183,19 @@
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QCheckBox" name="sertifikat">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>76</y>
+     <width>161</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Подарочный сертификат</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

@@ -38,7 +38,11 @@ void frmSchetClienta::initForm(int IDClient){
 void frmSchetClienta::on_add_summa_clicked()
 {
     QDate date_ = QDate::currentDate();
-    EditChetClienta(ID_client,N_CH_PRIHOD,ui->summa->value(),date_.toString("dd.MM.yyyy"));
+    if (ui->sertifikat->checkState())
+        EditChetClienta(ID_client,N_CH_SERTIF,ui->summa->value(),date_.toString("dd.MM.yyyy"));
+    else
+        EditChetClienta(ID_client,N_CH_PRIHOD,ui->summa->value(),date_.toString("dd.MM.yyyy"));
+
     initForm(ID_client);
 }
 
@@ -47,4 +51,9 @@ void frmSchetClienta::on_del_summa_clicked()
     QDate date_ = QDate::currentDate();
     EditChetClienta(ID_client,N_CH_SPISAN,ui->summa->value(),date_.toString("dd.MM.yyyy"));
     initForm(ID_client);
+}
+
+void frmSchetClienta::on_sertifikat_stateChanged(int arg1)
+{
+    ui->del_summa->setEnabled(!ui->sertifikat->checkState());
 }

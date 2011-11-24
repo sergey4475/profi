@@ -26,6 +26,7 @@
 #define N_CH_PRIHOD 1
 #define N_CH_RASHOD 2
 #define N_CH_SPISAN 3
+#define N_CH_SERTIF 4
 
 // Платежи
 #define n_PL_OSN    1
