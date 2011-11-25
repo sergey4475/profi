@@ -10,6 +10,7 @@
 #include "frmschetclienta.h"
 #include "frmdocument.h"
 #include "frm_setting.h"
+#include "frmkassa.h"
 #include "ui_mainform.h"
 #include "srcReports/repsklad.h"
 #include "srcReports/repkassa.h"
@@ -386,4 +387,11 @@ void MainForm::on_but_vnesti_dolg_clicked()
     sql.exec();
 
     UpdateClients(ID_Client);
+}
+
+void MainForm::on_kassa_rashod_triggered()
+{
+    frmKassa *frm = new frmKassa;
+    frm->init();
+    frm->show();
 }

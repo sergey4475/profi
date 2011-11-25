@@ -60,6 +60,8 @@ private slots:
 
     void on_otc_kassa_triggered();
 
+    void on_kassa_rashod_triggered();
+
 private:
     Ui::MainForm *ui;
     double summa_uslug;

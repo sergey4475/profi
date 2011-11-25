@@ -24,10 +24,11 @@
   clients.fio AS client_name,
   uslugi.name AS usluga,
   personal.fio AS master_name,
+  vid_plateja.name AS vid_plateja,
   SUM(clients_history.summa) AS SUMMA,
   clients_history.summa_skidki AS summa_skidki,
   SUM(CASE WHEN oplati_clients.type_oplati = 1 THEN
-oplati_clients.summa_opl
+  oplati_clients.summa_opl
   ELSE
 0 
   END)  AS summa_vsego
@@ -37,11 +38,13 @@ FROM
   INNER JOIN clients ON clients.id = clients_history.id_client
   INNER JOIN uslugi ON uslugi.id = clients_history.id_usluga
   INNER JOIN oplati_clients ON oplati_clients.Number = clients_history.NUMBER
+  INNER JOIN vid_plateja ON vid_plateja.ID = oplati_clients.type_oplati
 WHERE 
   clients_history.date_uslugi BETWEEN '$P{date1}' AND '$P{date2}'
 GROUP BY
   clients.fio,
   personal.fio, 
+  vid_plateja.name,  
   clients_history.summa_skidki,
   clients_history.date_uslugi,
   uslugi.name
@@ -78,51 +81,55 @@ ORDER BY
         <variable id="total_summa_vsego2" type="num" funcType="sum" scope="group" initValue="0">sql2.summa_vsego</variable>
         <variable id="total_summa_skidka2" type="num" funcType="sum" scope="group" initValue="0">sql2.summa_skidki</variable>
     </variables>
-    <pageheader id="phead" height="52.652" autoHeight="true">
-        <field id="0" zValue="0" resource="static" posX="119.062" posY="0.000" width="20.637" height="5.821" fontName="Arial" fontSize="14" fontWeight="bold" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">Date</field>
-        <label id="1" zValue="1" resource="static" posX="19.050" posY="0.000" width="96.837" height="5.821" fontName="Arial" fontSize="12" alignment="33" forecolor="#000000">Центр красоты и Здоровья &quot;Эстетик-Профи&quot;</label>
+    <pageheader id="phead" height="40.220" autoHeight="true">
+        <field id="0" zValue="0" resource="static" posX="107.950" posY="0.000" width="39.688" height="5.821" fontName="Arial" fontSize="11" fontWeight="bold" alignment="33" forecolor="#000000" type="date" ftype="par" dateFormat="dd.MM.yyyy" arg="">Date</field>
+        <label id="1" zValue="1" resource="static" posX="19.050" posY="0.000" width="87.312" height="5.821" fontName="Arial" fontSize="12" alignment="33" forecolor="#000000">Центр красоты и Здоровья &quot;Эстетик-Профи&quot;</label>
         <label id="2" zValue="2" resource="static" posX="0.000" posY="7.938" width="169.862" height="4.762" fontName="Arial" fontSize="10" alignment="4" forecolor="#000000">Ежедневный отчет администратора-кассира</label>
         <label id="3" zValue="3" resource="static" posX="3.175" posY="19.050" width="41.275" height="4.762" fontName="Arial" fontSize="10" fontWeight="bold" alignment="1" forecolor="#000000">Администратор-кассир</label>
         <line id="4" zValue="4" resource="static" fromX="46.037" fromY="23.812" toX="90.487" toY="23.812" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
         <line id="5" zValue="5" resource="static" fromX="3.175" fromY="30.162" toX="187.325" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
         <line id="6" zValue="6" resource="static" fromX="3.175" fromY="39.688" toX="187.325" toY="39.688" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-        <label id="7" zValue="7" resource="static" autoHeight="true" posX="3.175" posY="30.162" width="9.525" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">№ п/п</label>
-        <label id="8" zValue="8" resource="static" posX="12.700" posY="30.162" width="41.275" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" forecolor="#000000">Ф.И.О. Клиента</label>
-        <label id="9" zValue="9" resource="static" posX="53.975" posY="30.162" width="50.800" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" forecolor="#000000">Услуга</label>
-        <label id="10" zValue="10" resource="static" autoHeight="true" posX="104.775" posY="30.162" width="39.688" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Ф.И.О. Специалиста</label>
-        <label id="11" zValue="11" resource="static" autoHeight="true" posX="144.463" posY="30.162" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма услуги</label>
-        <label id="12" zValue="12" resource="static" autoHeight="true" posX="158.750" posY="30.162" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма скидки</label>
-        <label id="13" zValue="13" resource="static" autoHeight="true" posX="173.037" posY="30.162" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма услуги</label>
+        <label id="7" zValue="7" resource="static" autoHeight="true" posX="3.175" posY="30.162" width="7.938" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">№ п/п</label>
+        <label id="8" zValue="8" resource="static" posX="12.700" posY="30.162" width="31.750" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" forecolor="#000000">Ф.И.О. Клиента</label>
+        <label id="9" zValue="9" resource="static" posX="44.450" posY="30.162" width="38.100" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" forecolor="#000000">Услуга</label>
+        <label id="10" zValue="10" resource="static" autoHeight="true" posX="82.550" posY="30.162" width="30.162" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Ф.И.О. Специалиста</label>
+        <label id="11" zValue="11" resource="static" autoHeight="true" posX="144.463" posY="30.162" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма услуги</label>
+        <label id="12" zValue="12" resource="static" autoHeight="true" posX="158.750" posY="30.162" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма скидки</label>
+        <label id="13" zValue="13" resource="static" autoHeight="true" posX="173.037" posY="30.162" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма услуги</label>
         <line id="14" zValue="14" resource="static" fromX="3.175" fromY="39.688" toX="3.175" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
         <line id="15" zValue="15" resource="static" fromX="12.700" fromY="39.688" toX="12.700" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-        <line id="16" zValue="16" resource="static" fromX="53.975" fromY="39.688" toX="53.975" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-        <line id="17" zValue="17" resource="static" fromX="104.775" fromY="39.688" toX="104.775" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-        <line id="18" zValue="18" resource="static" fromX="144.463" fromY="39.688" toX="144.463" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+        <line id="16" zValue="16" resource="static" fromX="44.450" fromY="39.688" toX="44.450" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+        <line id="17" zValue="17" resource="static" fromX="82.550" fromY="39.688" toX="82.550" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+        <line id="18" zValue="18" resource="static" fromX="112.712" fromY="39.688" toX="112.712" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
         <line id="19" zValue="19" resource="static" fromX="158.750" fromY="39.688" toX="158.750" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
         <line id="20" zValue="20" resource="static" fromX="173.037" fromY="39.688" toX="173.037" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
         <line id="21" zValue="21" resource="static" fromX="187.325" fromY="39.688" toX="187.325" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+        <label id="22" zValue="22" resource="static" autoHeight="true" posX="112.712" posY="30.162" width="31.750" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" forecolor="#000000">Вид оплаты</label>
+        <line id="23" zValue="23" resource="static" fromX="144.463" fromY="39.688" toX="144.463" toY="30.162" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
     </pageheader>
     <pagefooter id="pfoot" height="63.660"/>
     <details>
-        <detail id="Detail1" height="11.910" autoHeight="true" datasource="sql" startsOnNewPage="false">
+        <detail id="Detail1" height="21.431" autoHeight="true" datasource="sql" startsOnNewPage="false">
             <items>
-                <field id="0" zValue="0" resource="static" autoHeight="true" posX="14.287" posY="0.000" width="39.688" height="6.350" fontName="Arial" fontSize="8" alignment="1" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.client_name</field>
-                <field id="1" zValue="1" resource="static" autoHeight="true" posX="174.625" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa_vsego</field>
-                <field id="2" zValue="2" resource="static" posX="160.337" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa_skidki</field>
-                <field id="3" zValue="3" resource="static" posX="146.050" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa</field>
-                <field id="4" zValue="4" resource="static" autoHeight="true" posX="106.362" posY="0.000" width="38.100" height="6.350" fontName="Arial" fontSize="8" alignment="1" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.master_name</field>
-                <field id="5" zValue="5" resource="static" posX="4.762" posY="0.000" width="7.938" height="6.350" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql.Number</field>
-                <field id="6" zValue="6" resource="static" autoHeight="true" posX="55.562" posY="0.000" width="49.212" height="6.350" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.usluga</field>
+                <field id="0" zValue="0" resource="static" autoHeight="true" posX="14.287" posY="0.000" width="30.162" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="1" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.client_name</field>
+                <field id="1" zValue="1" resource="static" autoHeight="true" posX="174.625" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa_vsego</field>
+                <field id="2" zValue="2" resource="static" posX="160.337" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa_skidki</field>
+                <field id="3" zValue="3" resource="static" posX="146.050" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql.summa</field>
+                <field id="4" zValue="4" resource="static" autoHeight="true" posX="84.137" posY="0.000" width="28.575" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.master_name</field>
+                <field id="5" zValue="5" resource="static" posX="4.762" posY="0.000" width="7.938" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql.Number</field>
+                <field id="6" zValue="6" resource="static" autoHeight="true" posX="46.037" posY="0.000" width="36.512" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="1" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql.usluga</field>
                 <line id="7" zValue="7" resource="static" fromX="3.175" fromY="0.000" toX="187.325" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                 <line id="8" zValue="8" resource="static" fromX="3.175" fromY="6.350" toX="187.325" toY="6.350" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                 <line id="9" zValue="9" resource="static" fromX="3.175" fromY="6.350" toX="3.175" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                 <line id="10" zValue="10" resource="static" fromX="12.700" fromY="6.350" toX="12.700" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="11" zValue="11" resource="static" fromX="104.775" fromY="6.350" toX="104.775" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="12" zValue="12" resource="static" fromX="144.463" fromY="6.350" toX="144.463" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="11" zValue="11" resource="static" fromX="82.550" fromY="6.350" toX="82.550" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="12" zValue="12" resource="static" fromX="112.712" fromY="6.350" toX="112.712" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                 <line id="13" zValue="13" resource="static" fromX="158.750" fromY="6.350" toX="158.750" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                 <line id="14" zValue="14" resource="static" fromX="173.037" fromY="6.350" toX="173.037" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                 <line id="15" zValue="15" resource="static" fromX="187.325" fromY="6.350" toX="187.325" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="16" zValue="16" resource="static" fromX="53.975" fromY="6.350" toX="53.975" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="16" zValue="16" resource="static" fromX="44.450" fromY="6.350" toX="44.450" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="17" zValue="17" resource="static" fromX="144.463" fromY="0.000" toX="144.463" toY="6.350" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <field id="18" zValue="18" resource="static" posX="114.300" posY="0.000" width="30.162" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql.vid_plateja</field>
             </items>
             <groups>
                 <group id="Group0" groupExp="%CONST" resetVariables="total_summa,total_summa_skidka,total_summa_vsego" reprintHeader="false" startsOnNewPage="false">
@@ -135,51 +142,51 @@ ORDER BY
                         <line id="5" zValue="5" resource="static" fromX="187.325" fromY="0.000" toX="144.463" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                         <line id="6" zValue="6" resource="static" fromX="144.463" fromY="0.000" toX="144.463" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                         <line id="7" zValue="7" resource="static" fromX="144.463" fromY="4.762" toX="187.325" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <label id="8" zValue="8" resource="static" autoHeight="true" posX="65.087" posY="15.875" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма скидки</label>
-                        <label id="9" zValue="9" resource="static" autoHeight="true" posX="50.800" posY="15.875" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма услуги</label>
-                        <label id="10" zValue="10" resource="static" autoHeight="true" posX="79.375" posY="15.875" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма услуги</label>
-                        <label id="11" zValue="11" resource="static" autoHeight="true" posX="1.587" posY="15.875" width="9.525" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">№ п/п</label>
-                        <label id="12" zValue="12" resource="static" autoHeight="true" posX="11.112" posY="15.875" width="39.688" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Ф.И.О. Специалиста</label>
-                        <line id="13" zValue="13" resource="static" fromX="1.587" fromY="15.875" toX="93.662" toY="15.875" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <line id="14" zValue="14" resource="static" fromX="1.587" fromY="25.400" toX="93.662" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <line id="15" zValue="15" resource="static" fromX="1.587" fromY="15.875" toX="1.587" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <line id="16" zValue="16" resource="static" fromX="11.112" fromY="15.875" toX="11.112" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <line id="17" zValue="17" resource="static" fromX="50.800" fromY="15.875" toX="50.800" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <line id="18" zValue="18" resource="static" fromX="65.087" fromY="15.875" toX="65.087" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <line id="19" zValue="19" resource="static" fromX="79.375" fromY="15.875" toX="79.375" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <line id="20" zValue="20" resource="static" fromX="93.662" fromY="15.875" toX="93.662" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <label id="21" zValue="21" resource="static" posX="1.587" posY="9.525" width="68.263" height="4.762" fontName="Arial" fontSize="10" alignment="1" forecolor="#000000">Объем услуг, выполненый мастерами</label>
+                        <label id="8" zValue="8" resource="static" autoHeight="true" posX="66.675" posY="15.875" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма скидки</label>
+                        <label id="9" zValue="9" resource="static" autoHeight="true" posX="52.387" posY="15.875" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма услуги</label>
+                        <label id="10" zValue="10" resource="static" autoHeight="true" posX="80.962" posY="15.875" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма услуги</label>
+                        <label id="11" zValue="11" resource="static" autoHeight="true" posX="3.175" posY="15.875" width="9.525" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">№ п/п</label>
+                        <label id="12" zValue="12" resource="static" autoHeight="true" posX="12.700" posY="15.875" width="39.688" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Ф.И.О. Специалиста</label>
+                        <line id="13" zValue="13" resource="static" fromX="3.175" fromY="15.875" toX="95.250" toY="15.875" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="14" zValue="14" resource="static" fromX="3.175" fromY="25.400" toX="95.250" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="15" zValue="15" resource="static" fromX="3.175" fromY="15.875" toX="3.175" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="16" zValue="16" resource="static" fromX="12.700" fromY="15.875" toX="12.700" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="17" zValue="17" resource="static" fromX="52.387" fromY="15.875" toX="52.387" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="18" zValue="18" resource="static" fromX="66.675" fromY="15.875" toX="66.675" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="19" zValue="19" resource="static" fromX="80.962" fromY="15.875" toX="80.962" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="20" zValue="20" resource="static" fromX="95.250" fromY="15.875" toX="95.250" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <label id="21" zValue="21" resource="static" posX="3.175" posY="9.525" width="68.263" height="4.762" fontName="Arial" fontSize="10" alignment="1" forecolor="#000000">Объем услуг, выполненый мастерами</label>
                     </groupfooter>
                 </group>
             </groups>
         </detail>
         <detail id="Detail2" height="6.350" autoHeight="true" datasource="sql2" startsOnNewPage="false">
             <items>
-                <field id="0" zValue="0" resource="static" posX="3.175" posY="0.000" width="7.938" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.Number</field>
-                <field id="1" zValue="1" resource="static" posX="66.675" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa_skidki</field>
-                <field id="2" zValue="2" resource="static" autoHeight="true" posX="12.700" posY="0.000" width="38.100" height="4.762" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.master_name</field>
-                <field id="3" zValue="3" resource="static" posX="52.387" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa</field>
-                <field id="4" zValue="4" resource="static" autoHeight="true" posX="80.962" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa_vsego</field>
-                <line id="5" zValue="5" resource="static" fromX="1.587" fromY="0.000" toX="1.587" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="6" zValue="6" resource="static" fromX="1.587" fromY="4.762" toX="93.662" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="7" zValue="7" resource="static" fromX="1.587" fromY="0.000" toX="93.662" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="8" zValue="8" resource="static" fromX="11.112" fromY="4.762" toX="11.112" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="9" zValue="9" resource="static" fromX="50.800" fromY="4.762" toX="50.800" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="10" zValue="10" resource="static" fromX="65.087" fromY="4.762" toX="65.087" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="11" zValue="11" resource="static" fromX="79.375" fromY="4.762" toX="79.375" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                <line id="12" zValue="12" resource="static" fromX="93.662" fromY="4.762" toX="93.662" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <field id="0" zValue="0" resource="static" posX="4.762" posY="0.000" width="7.938" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.Number</field>
+                <field id="1" zValue="1" resource="static" posX="68.263" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa_skidki</field>
+                <field id="2" zValue="2" resource="static" autoHeight="true" posX="14.287" posY="0.000" width="38.100" height="4.762" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.master_name</field>
+                <field id="3" zValue="3" resource="static" posX="53.975" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa</field>
+                <field id="4" zValue="4" resource="static" autoHeight="true" posX="82.550" posY="0.000" width="12.700" height="4.762" fontName="Arial" fontSize="8" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql2.summa_vsego</field>
+                <line id="5" zValue="5" resource="static" fromX="3.175" fromY="0.000" toX="3.175" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="6" zValue="6" resource="static" fromX="3.175" fromY="4.762" toX="95.250" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="7" zValue="7" resource="static" fromX="3.175" fromY="0.000" toX="95.250" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="8" zValue="8" resource="static" fromX="12.700" fromY="4.762" toX="12.700" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="9" zValue="9" resource="static" fromX="52.387" fromY="4.762" toX="52.387" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="10" zValue="10" resource="static" fromX="66.675" fromY="4.762" toX="66.675" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="11" zValue="11" resource="static" fromX="80.962" fromY="4.762" toX="80.962" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="12" zValue="12" resource="static" fromX="95.250" fromY="4.762" toX="95.250" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
             </items>
             <groups>
                 <group id="Group1" groupExp="%CONST" resetVariables="total_summa2,total_summa_skidka2,total_summa_vsego2" reprintHeader="false" startsOnNewPage="false">
                     <groupfooter height="5.126" autoHeight="true">
-                        <field id="0" zValue="0" resource="static" posX="50.800" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa2</field>
-                        <field id="1" zValue="1" resource="static" posX="79.375" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa_vsego2</field>
-                        <line id="2" zValue="2" resource="static" fromX="50.800" fromY="0.000" toX="50.800" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <field id="3" zValue="3" resource="static" posX="65.087" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa_skidka2</field>
-                        <line id="4" zValue="4" resource="static" fromX="50.800" fromY="4.762" toX="93.662" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <line id="5" zValue="5" resource="static" fromX="93.662" fromY="0.000" toX="50.800" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
-                        <label id="6" zValue="6" resource="static" posX="30.162" posY="0.000" width="19.050" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000">Всего:</label>
-                        <line id="7" zValue="7" resource="static" fromX="93.662" fromY="4.762" toX="93.662" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <field id="0" zValue="0" resource="static" posX="52.387" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa2</field>
+                        <field id="1" zValue="1" resource="static" posX="80.962" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa_vsego2</field>
+                        <line id="2" zValue="2" resource="static" fromX="52.387" fromY="0.000" toX="52.387" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <field id="3" zValue="3" resource="static" posX="66.675" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa_skidka2</field>
+                        <line id="4" zValue="4" resource="static" fromX="52.387" fromY="4.762" toX="95.250" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="5" zValue="5" resource="static" fromX="95.250" fromY="0.000" toX="52.387" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <label id="6" zValue="6" resource="static" posX="31.750" posY="0.000" width="19.050" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000">Всего:</label>
+                        <line id="7" zValue="7" resource="static" fromX="95.250" fromY="4.762" toX="95.250" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                     </groupfooter>
                 </group>
             </groups>

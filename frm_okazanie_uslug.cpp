@@ -497,13 +497,12 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
 
             if (VidPlateja == 1){
 
-                sql.prepare("INSERT INTO KASSA(NUMBER, DATE, type_operacii, summa, id_vid_zatrat_kassa) "
-                            "VALUES(:NUMBER, :DATE, :type_operacii, :SUMMA, :id_vid_zatrat_kassa) ");
+                sql.prepare("INSERT INTO KASSA(NUMBER, DATE, type_operacii, summa) "
+                            "VALUES(:NUMBER, :DATE, :type_operacii, :SUMMA) ");
                 sql.bindValue(":NUMBER",Number);
                 sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
                 sql.bindValue(":TYPE_OPERACII",n_KASSA_PRIHOD);
                 sql.bindValue(":SUMMA",summa_Oplati);
-                sql.bindValue(":id_vid_zatrat_kassa",0);
                 sql.exec();
                 if (sql.lastError().isValid()){
                     QSqlDatabase::database().rollback();

@@ -25,7 +25,8 @@ SOURCES += main.cpp mainform.cpp frmclients.cpp sqlmodules.cpp frmsotr.cpp frmus
     frmdocument.cpp \
     print.cpp \
     srcReports/repsklad.cpp \
-    srcReports/repkassa.cpp
+    srcReports/repkassa.cpp \
+    frmkassa.cpp
 
 
 HEADERS  += mainform.h sqlmodules.h frmclients.h frmsotr.h MyModel.h frmuslugi.h \
@@ -42,7 +43,8 @@ HEADERS  += mainform.h sqlmodules.h frmclients.h frmsotr.h MyModel.h frmuslugi.h
     params.h \
     print.h \
     srcReports/repsklad.h \
-    srcReports/repkassa.h
+    srcReports/repkassa.h \
+    frmkassa.h
 
 FORMS    += mainform.ui \
     frmclients.ui \
@@ -55,7 +57,8 @@ FORMS    += mainform.ui \
     frm_setting.ui \
     frmdocument.ui \
     srcReports/repsklad.ui \
-    srcReports/repkassa.ui
+    srcReports/repkassa.ui \
+    frmkassa.ui
 
 RESOURCES += \
     icons.qrc
@@ -63,6 +66,9 @@ RESOURCES += \
 OTHER_FILES += \
     reports/uslugi_po_masteram.xml \
     reports/ostatki_o_skald.xml
+
+
+
 
 
 

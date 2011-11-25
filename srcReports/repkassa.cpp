@@ -57,6 +57,7 @@ void repkassa::on_start_report_clicked()
 //    report->addParameter("sql",sql);
     report->addParameter("date1",date1);
     report->addParameter("date2",date2);
+    report->addParameter("Date",QDate::currentDate());
 //    report->addParameter("OtdelSklada",otdel_sklada);
     NCReportOutput *output=0;
     output = new NCReportPreviewOutput();
