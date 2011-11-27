@@ -236,10 +236,12 @@ void frmSelect::Updater(){
             tempModel->insertColumn(1);
             tempModel->insertColumn(2);
             tempModel->insertColumn(3);
+            tempModel->insertColumn(4);
             tempModel->setHeaderData(0,Qt::Horizontal,tr("ID"));            //0
             tempModel->setHeaderData(1,Qt::Horizontal,tr("Наименование"));  //1
             tempModel->setHeaderData(2,Qt::Horizontal,tr("Кол-во"));        //2
             tempModel->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед. Изм"));
+            tempModel->setHeaderData(4,Qt::Horizontal,QObject::tr("Сумма"));
         }
         QSqlQuery sql;
 
@@ -248,7 +250,8 @@ void frmSelect::Updater(){
                         "   materials.ID, "
                         "   materials.NAME, "
                         "   SUM(SKLAD.COUNT) AS COUNT, "
-                        "   ed_izm.name "
+                        "   ed_izm.name, "
+                        "   SUM(0) AS SUMMA "
                         "FROM "
                         "   ed_izm, "
                         "   SKLAD INNER JOIN "
@@ -265,7 +268,8 @@ void frmSelect::Updater(){
                         "   materials.ID, "
                         "   materials.NAME, "
                         "   SUM(SKLAD.COUNT) AS COUNT, "
-                        "   ed_izm.name "
+                        "   ed_izm.name, "
+                        "   SUM(0) AS SUMMA "
                         "FROM "
                         "   ed_izm, "
                         "   SKLAD INNER JOIN "
@@ -288,6 +292,7 @@ void frmSelect::Updater(){
         tabl_->setHeaderData(1,Qt::Horizontal,QObject::tr("Наименование"));
         tabl_->setHeaderData(2,Qt::Horizontal,QObject::tr("Кол-во"));
         tabl_->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед.изм"));
+        tabl_->setHeaderData(5,Qt::Horizontal,QObject::tr("Сумма"));
         ui->tableView->setModel(tabl_);
         ui->tableView->setColumnWidth(1,250);
         ui->tableView->setColumnHidden(0,true);
@@ -486,6 +491,7 @@ void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
         tempModel->setData(tempModel->index(row,1),record.value(1).toString(),Qt::EditRole);
         tempModel->setData(tempModel->index(row,2),count,Qt::EditRole);
         tempModel->setData(tempModel->index(row,3),record.value(3).toString(),Qt::EditRole);
+        tempModel->setData(tempModel->index(row,5),record.value(5).toString(),Qt::EditRole);
 
     }
 }
