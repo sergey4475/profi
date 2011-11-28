@@ -27,7 +27,7 @@
   personal.fio AS master_name,
   vid_plateja.name AS vid_plateja,
   SUM(clients_history.summa) AS SUMMA,
-  clients_history.summa_skidki AS summa_skidki,
+  SUM(clients_history.summa_skidki) AS summa_skidki,
   SUM(CASE WHEN oplati_clients.type_oplati = 1 THEN
   oplati_clients.summa_opl
   ELSE
@@ -42,11 +42,11 @@ FROM
   INNER JOIN vid_plateja ON vid_plateja.ID = oplati_clients.type_oplati
 WHERE 
   clients_history.date_uslugi BETWEEN '$P{date1}' AND '$P{date2}'
+  AND oplati_clients.vid_doc = 1
 GROUP BY
   clients.fio,
   personal.fio, 
   vid_plateja.name,  
-  clients_history.summa_skidki,
   clients_history.date_uslugi,
   uslugi.name
 ORDER BY  
@@ -68,6 +68,7 @@ FROM
   INNER JOIN oplati_clients ON oplati_clients.Number = clients_history.NUMBER
 WHERE 
   clients_history.date_uslugi BETWEEN '$P{date1}' AND '$P{date2}'
+  AND oplati_clients.vid_doc = 1
 GROUP BY
   personal.fio,
   clients_history.summa_skidki
@@ -79,40 +80,68 @@ ORDER BY
   materials.name AS usluga,
   personal.fio AS master_name,
   vid_plateja.name AS vid_plateja,
-  SUM(clients_history.summa) AS SUMMA,
-  clients_history.summa_skidki AS summa_skidki,
+  SUM(clients_prodaji.count) AS count,
+  SUM(clients_prodaji.summa_skidki) AS summa_skidki,
   SUM(CASE WHEN oplati_clients.type_oplati = 1 THEN
-  oplati_clients.summa_opl
+oplati_clients.summa_opl
   ELSE
 0 
-  END)  AS summa_vsego
+  END)  AS summa_vsego,
+  ed_izm.name AS ed_izm
   
 FROM 
   clients_prodaji INNER JOIN personal ON personal.id = clients_prodaji.id_sotrudnik
   INNER JOIN clients ON clients.id = clients_prodaji.id_client
   INNER JOIN materials ON materials.id = clients_prodaji.id_material
-  INNER JOIN oplati_clients ON oplati_clients.Number = clients_history.NUMBER
+  INNER JOIN oplati_clients ON oplati_clients.Number = clients_prodaji.NUMBER
   INNER JOIN vid_plateja ON vid_plateja.ID = oplati_clients.type_oplati
+  INNER JOIN ed_izm ON ed_izm.ID = materials.id_ed_izm
+  
 WHERE 
   clients_prodaji.date BETWEEN '$P{date1}' AND '$P{date2}'
+  AND oplati_clients.vid_doc = 2 
 GROUP BY
   clients.fio,
   personal.fio, 
   vid_plateja.name,  
-  clients_prodaji.summa_skidki,
   clients_prodaji.date,
-  uslugi.name
+  materials.name,
+  ed_izm.name
 ORDER BY  
   clients.fio,
   personal.fio</datasource>
+        <datasource id="sql4" type="sql" openRole="begin" source="static" connection="internal" parentID="" connID="">SELECT 
+  ROW_NUMBER() over (order by materials.name) AS Number,
+  personal.fio AS master_name, 
+  materials.name AS material, 
+  SUM(sklad.count * -1) AS COUNT, 
+  ed_izm.name AS ed_izm
+FROM 
+  sklad
+  INNER JOIN materials ON materials.id = sklad.id_material
+  INNER JOIN ed_izm ON materials.id_ed_izm = ed_izm.id
+  INNER JOIN clients_history ON clients_history.number = sklad.number AND clients_history.date_uslugi = sklad.date
+  INNER JOIN personal ON clients_history.id_sotrudnik = personal.id
+  
+WHERE 
+  sklad.vid_doc = 1
+  AND sklad.type_operacii = 2
+  AND clients_history.date_uslugi BETWEEN '$P{date1}' AND '$P{date2}'
+  
+GROUP BY
+  personal.fio, 
+  materials.name, 
+  ed_izm.name
+</datasource>
     </datasources>
     <variables>
         <variable id="total_summa_skidka" type="num" funcType="sum" scope="group" initValue="0">sql.summa_skidki</variable>
         <variable id="total_summa2" type="num" funcType="sum" scope="group" initValue="0">sql2.summa</variable>
-        <variable id="total_summa" type="num" funcType="sum" scope="group" initValue="0">sql.summa</variable>
+        <variable id="total_summa" type="num" funcType="sum" scope="report" initValue="0">sql.summa</variable>
         <variable id="total_summa_vsego" type="num" funcType="sum" scope="group" initValue="0">sql.summa_vsego</variable>
         <variable id="total_summa_vsego2" type="num" funcType="sum" scope="group" initValue="0">sql2.summa_vsego</variable>
         <variable id="total_summa_skidka2" type="num" funcType="sum" scope="group" initValue="0">sql2.summa_skidki</variable>
+        <variable id="total_summa_vsego3" type="num" funcType="sum" scope="group" initValue="0">sql3.summa_vsego</variable>
     </variables>
     <details>
         <detail id="Detail1" height="6.615" autoHeight="true" datasource="sql" startsOnNewPage="false">
@@ -148,7 +177,7 @@ ORDER BY
                         <label id="5" zValue="5" resource="static" autoHeight="true" posX="158.750" posY="31.750" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма скидки</label>
                         <field id="6" zValue="6" resource="static" posX="109.537" posY="1.587" width="39.688" height="5.821" fontName="Arial" fontSize="11" fontWeight="bold" alignment="33" forecolor="#000000" type="date" ftype="par" dateFormat="dd.MM.yyyy" arg="">Date</field>
                         <label id="7" zValue="7" resource="static" autoHeight="true" posX="3.175" posY="31.750" width="7.938" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">№ п/п</label>
-                        <label id="8" zValue="8" resource="static" autoHeight="true" posX="173.037" posY="31.750" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма в кассу</label>
+                        <label id="8" zValue="8" resource="static" autoHeight="true" posX="173.037" posY="31.750" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма оплаты</label>
                         <line id="9" zValue="9" resource="static" fromX="82.550" fromY="41.275" toX="82.550" toY="31.750" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                         <line id="10" zValue="10" resource="static" fromX="3.175" fromY="41.275" toX="187.325" toY="41.275" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                         <line id="11" zValue="11" resource="static" fromX="47.625" fromY="25.400" toX="92.075" toY="25.400" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
@@ -176,7 +205,7 @@ ORDER BY
                         <line id="7" zValue="7" resource="static" fromX="144.463" fromY="4.762" toX="187.325" toY="4.762" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                         <label id="8" zValue="8" resource="static" autoHeight="true" posX="66.675" posY="15.875" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма скидки</label>
                         <label id="9" zValue="9" resource="static" autoHeight="true" posX="52.387" posY="15.875" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма услуги</label>
-                        <label id="10" zValue="10" resource="static" autoHeight="true" posX="80.962" posY="15.875" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма услуги</label>
+                        <label id="10" zValue="10" resource="static" autoHeight="true" posX="80.962" posY="15.875" width="14.287" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма оплаты</label>
                         <label id="11" zValue="11" resource="static" autoHeight="true" posX="3.175" posY="15.875" width="9.525" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">№ п/п</label>
                         <label id="12" zValue="12" resource="static" autoHeight="true" posX="12.700" posY="15.875" width="39.688" height="9.525" fontName="Arial" fontSize="10" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Ф.И.О. Специалиста</label>
                         <line id="13" zValue="13" resource="static" fromX="3.175" fromY="15.875" toX="95.250" toY="15.875" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
@@ -223,13 +252,13 @@ ORDER BY
                 </group>
             </groups>
         </detail>
-        <detail id="Detail3" height="41.800" autoHeight="true" datasource="sql" startsOnNewPage="true">
+        <detail id="Detail3" height="6.615" autoHeight="true" datasource="sql3" startsOnNewPage="false">
             <items>
-                <field id="0" zValue="0" resource="static" posX="1.587" posY="0.000" width="7.938" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql3.Number</field>
-                <field id="1" zValue="1" resource="static" posX="138.112" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql3.summa_skidki</field>
+                <field id="0" zValue="0" resource="static" posX="3.175" posY="0.000" width="6.350" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql3.Number</field>
+                <field id="1" zValue="1" resource="static" posX="152.400" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql3.summa_vsego</field>
                 <field id="2" zValue="2" resource="static" posX="11.112" posY="0.000" width="30.162" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql3.client_name</field>
                 <field id="3" zValue="3" resource="static" posX="93.662" posY="0.000" width="28.575" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql3.master_name</field>
-                <field id="4" zValue="4" resource="static" posX="123.825" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql3.summa</field>
+                <field id="4" zValue="4" resource="static" posX="123.825" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql3.count</field>
                 <field id="5" zValue="5" resource="static" posX="42.862" posY="0.000" width="49.212" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql3.usluga</field>
                 <line id="6" zValue="6" resource="static" fromX="1.587" fromY="0.000" toX="150.812" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                 <line id="7" zValue="7" resource="static" fromX="1.587" fromY="6.350" toX="150.812" toY="6.350" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
@@ -240,16 +269,20 @@ ORDER BY
                 <line id="12" zValue="12" resource="static" fromX="122.237" fromY="6.350" toX="122.237" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                 <line id="13" zValue="13" resource="static" fromX="136.525" fromY="6.350" toX="136.525" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                 <line id="14" zValue="14" resource="static" fromX="150.812" fromY="6.350" toX="150.812" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <field id="15" zValue="15" resource="static" posX="138.112" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql3.ed_izm</field>
+                <line id="16" zValue="16" resource="static" fromX="150.812" fromY="0.000" toX="165.100" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="17" zValue="17" resource="static" fromX="150.812" fromY="6.350" toX="165.100" toY="6.350" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="18" zValue="18" resource="static" fromX="165.100" fromY="6.350" toX="165.100" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
             </items>
             <groups>
-                <group id="Group0" groupExp="%CONST" resetVariables="" reprintHeader="false" startsOnNewPage="false">
-                    <groupheader height="21.170" breakRole="spd">
-                        <label id="0" zValue="0" resource="static" posX="1.587" posY="4.762" width="71.967" height="4.762" fontName="Arial" fontSize="10" alignment="33" forecolor="#000000">Объем продаж продукции мастерами Центра</label>
+                <group id="Group0" groupExp="%CONST" resetVariables="total_summa_vsego3" reprintHeader="false" startsOnNewPage="false">
+                    <groupheader height="20.900" autoHeight="true">
+                        <label id="0" zValue="0" resource="static" posX="1.587" posY="3.175" width="71.967" height="4.762" fontName="Arial" fontSize="10" alignment="33" forecolor="#000000">Объем продаж продукции мастерами Центра</label>
                         <label id="1" zValue="1" resource="static" autoHeight="true" posX="92.075" posY="11.112" width="30.162" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Ф.И.О. Мастера</label>
                         <label id="2" zValue="2" resource="static" autoHeight="true" posX="122.237" posY="11.112" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Кол-во</label>
                         <label id="3" zValue="3" resource="static" autoHeight="true" posX="1.587" posY="11.112" width="7.938" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">№ п/п</label>
                         <label id="4" zValue="4" resource="static" posX="9.525" posY="11.112" width="31.750" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" forecolor="#000000">Ф.И.О. Клиента</label>
-                        <label id="5" zValue="5" resource="static" autoHeight="true" posX="136.525" posY="11.112" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма</label>
+                        <label id="5" zValue="5" resource="static" autoHeight="true" posX="150.812" posY="11.112" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Сумма оплаты</label>
                         <label id="6" zValue="6" resource="static" posX="41.275" posY="11.112" width="50.800" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Наименование продукции</label>
                         <line id="7" zValue="7" resource="static" fromX="1.587" fromY="20.637" toX="150.812" toY="20.637" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                         <line id="8" zValue="8" resource="static" fromX="1.587" fromY="11.112" toX="150.812" toY="11.112" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
@@ -260,8 +293,59 @@ ORDER BY
                         <line id="13" zValue="13" resource="static" fromX="122.237" fromY="20.637" toX="122.237" toY="11.112" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                         <line id="14" zValue="14" resource="static" fromX="136.525" fromY="20.637" toX="136.525" toY="11.112" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                         <line id="15" zValue="15" resource="static" fromX="150.812" fromY="20.637" toX="150.812" toY="11.112" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <label id="16" zValue="16" resource="static" posX="55.562" posY="0.000" width="47.625" height="3.175" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000">
+</label>
+                        <label id="18" zValue="18" resource="static" autoHeight="true" posX="136.525" posY="11.112" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">ед. изм.</label>
+                        <line id="19" zValue="19" resource="static" fromX="150.812" fromY="11.112" toX="165.100" toY="11.112" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="20" zValue="20" resource="static" fromX="165.100" fromY="20.637" toX="150.812" toY="20.637" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="21" zValue="21" resource="static" fromX="165.100" fromY="11.112" toX="165.100" toY="20.637" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
                     </groupheader>
-                    <groupfooter height="7.144"/>
+                    <groupfooter height="7.670" autoHeight="true">
+                        <label id="0" zValue="0" resource="static" posX="131.762" posY="0.000" width="19.050" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000">Итого:</label>
+                        <field id="1" zValue="1" resource="static" posX="150.812" posY="0.000" width="14.287" height="4.762" fontName="Arial" fontSize="9" fontWeight="bold" alignment="36" forecolor="#000000" bgMode="fb" backcolor="#c0c0c0" bgDesign="true" type="txt" ftype="var" arg="">total_summa_vsego3</field>
+                        <line id="2" zValue="2" resource="static" fromX="150.812" fromY="0.000" toX="165.100" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                    </groupfooter>
+                </group>
+            </groups>
+        </detail>
+        <detail id="Detail4" height="10.000" autoHeight="true" datasource="sql4" startsOnNewPage="false">
+            <items>
+                <field id="0" zValue="0" resource="static" posX="44.450" posY="0.000" width="49.212" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql4.material</field>
+                <field id="1" zValue="1" resource="static" posX="109.537" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql4.ed_izm</field>
+                <field id="2" zValue="2" resource="static" posX="4.762" posY="0.000" width="6.350" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql4.Number</field>
+                <field id="3" zValue="3" resource="static" posX="12.700" posY="0.000" width="30.162" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="33" wordbreak="true" forecolor="#000000" type="txt" ftype="ds" arg="">sql4.master_name</field>
+                <field id="4" zValue="4" resource="static" posX="95.250" posY="0.000" width="12.700" height="6.350" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000" type="txt" ftype="ds" arg="">sql4.count</field>
+                <line id="5" zValue="5" resource="static" fromX="3.175" fromY="0.000" toX="122.237" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="6" zValue="6" resource="static" fromX="3.175" fromY="6.350" toX="122.237" toY="6.350" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="7" zValue="7" resource="static" fromX="3.175" fromY="6.350" toX="3.175" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="8" zValue="8" resource="static" fromX="11.112" fromY="6.350" toX="11.112" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="9" zValue="9" resource="static" fromX="42.862" fromY="6.350" toX="42.862" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="10" zValue="10" resource="static" fromX="93.662" fromY="6.350" toX="93.662" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="11" zValue="11" resource="static" fromX="107.950" fromY="6.350" toX="107.950" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                <line id="12" zValue="12" resource="static" fromX="122.237" fromY="6.350" toX="122.237" toY="0.000" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+            </items>
+            <groups>
+                <group id="Group0" groupExp="%CONST" resetVariables="" reprintHeader="false" startsOnNewPage="false">
+                    <groupheader height="22.490" autoHeight="true" breakRole="spd">
+                        <label id="0" zValue="0" resource="static" posX="57.150" posY="1.587" width="47.625" height="3.175" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000">
+</label>
+                        <label id="10" zValue="10" resource="static" posX="57.150" posY="1.587" width="47.625" height="3.175" fontName="Arial" fontSize="7" fontWeight="bold" alignment="36" forecolor="#000000">
+</label>
+                        <label id="23" zValue="23" resource="static" posX="3.175" posY="4.762" width="94.192" height="4.762" fontName="Arial" fontSize="10" alignment="33" forecolor="#000000">Использование одноразовой продукции мастерами Центра</label>
+                        <line id="24" zValue="24" resource="static" fromX="11.112" fromY="22.225" toX="11.112" toY="12.700" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <label id="25" zValue="25" resource="static" posX="11.112" posY="12.700" width="31.750" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" forecolor="#000000">Ф.И.О. Мастера</label>
+                        <label id="26" zValue="26" resource="static" posX="42.862" posY="12.700" width="50.800" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Наименование продукции</label>
+                        <line id="27" zValue="27" resource="static" fromX="42.862" fromY="22.225" toX="42.862" toY="12.700" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="28" zValue="28" resource="static" fromX="3.175" fromY="12.700" toX="122.237" toY="12.700" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <label id="29" zValue="29" resource="static" autoHeight="true" posX="3.175" posY="12.700" width="7.938" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">№ п/п</label>
+                        <line id="30" zValue="30" resource="static" fromX="3.175" fromY="22.225" toX="122.237" toY="22.225" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="31" zValue="31" resource="static" fromX="3.175" fromY="12.700" toX="3.175" toY="22.225" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <label id="32" zValue="32" resource="static" autoHeight="true" posX="93.662" posY="12.700" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">Кол-во</label>
+                        <line id="33" zValue="33" resource="static" fromX="93.662" fromY="12.700" toX="93.662" toY="22.225" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <line id="34" zValue="34" resource="static" fromX="107.950" fromY="22.225" toX="107.950" toY="12.700" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                        <label id="35" zValue="35" resource="static" autoHeight="true" posX="107.950" posY="12.700" width="14.287" height="9.525" fontName="Arial" fontSize="8" fontWeight="bold" alignment="36" wordbreak="true" forecolor="#000000">ед. изм.</label>
+                        <line id="36" zValue="36" resource="static" fromX="122.237" fromY="12.700" toX="122.237" toY="22.225" lineColor="#000000" lineStyle="solid" lineWidth="0.100"/>
+                    </groupheader>
                 </group>
             </groups>
         </detail>

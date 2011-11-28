@@ -388,16 +388,20 @@ double frm_okazanie_uslug::setProcent(double summa){
 void frm_okazanie_uslug::on_but_oplatit_clicked()
 {
     int countRow = 0;
+    int vid_doc = 0;
     QAbstractItemModel *model = 0x0;
     QDate date_usl = DateDoc;
     int VidPlateja = ui->sposobOplati->itemData(ui->sposobOplati->currentIndex()).toInt();
 
     double sum_uslugi = 0;
 
-    if (NumberUslugi != n_USL_MAG)
+    if (NumberUslugi != n_USL_MAG){
         model = ui->USLUGI->model();
-    else if (NumberUslugi == n_USL_MAG)
+        vid_doc = 1;
+    }else if (NumberUslugi == n_USL_MAG){
         model = ui->prodaja->model();
+        vid_doc = 2;
+    }
 
     // Оплата услуг
     if (model == 0x0)
@@ -431,8 +435,8 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
                 // Добавляем оплату
 
                 QSqlQuery sql;
-                sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL, type_oplati) "
-                            "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL,type_oplati) ");
+                sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL, type_oplati, vid_doc) "
+                            "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL,:type_oplati, :vid_doc) ");
                 sql.bindValue(":NUMBER",Number);
                 sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
                 sql.bindValue(":TYPE_OPERACII",n_PL_OSN);
@@ -440,6 +444,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
                 sql.bindValue(":SUMMA_K_OPL",sum_uslugi);
                 sql.bindValue(":SUMMA_OPL",sum_uslugi);
                 sql.bindValue(":type_oplati",VidPlateja);
+                sql.bindValue(":vid_doc",vid_doc);
                 sql.exec();
 
                 if (sql.lastError().isValid()){
@@ -471,8 +476,8 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
 
                 if (result){
                     QSqlQuery sql;
-                    sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL, type_oplati) "
-                                "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL,:type_oplati) ");
+                    sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL, type_oplati, vid_doc) "
+                                "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL,:type_oplati, :vid_doc) ");
                     sql.bindValue(":NUMBER",Number);
                     sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
                     sql.bindValue(":TYPE_OPERACII",n_PL_OSN);
@@ -480,6 +485,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
                     sql.bindValue(":SUMMA_K_OPL",summa_spisan);
                     sql.bindValue(":SUMMA_OPL",summa_spisan);
                     sql.bindValue(":type_oplati",5);
+                    sql.bindValue(":vid_doc",vid_doc);
                     sql.exec();
 
                     if (sql.lastError().isValid()){
@@ -494,8 +500,8 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
             }
             if(summa_Oplati > 0){
                 QSqlQuery sql;
-                sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL, type_oplati) "
-                            "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL,:type_oplati) ");
+                sql.prepare("INSERT INTO OPLATI_CLIENTS(NUMBER,DATE,TYPE_OPERACII,ID_CLIENT,SUMMA_K_OPL,SUMMA_OPL, type_oplati, vid_doc) "
+                            "VALUES(:NUMBER,:DATE,:TYPE_OPERACII,:ID_CLIENT,:SUMMA_K_OPL,:SUMMA_OPL,:type_oplati, :vid_doc) ");
                 sql.bindValue(":NUMBER",Number);
                 sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
                 sql.bindValue(":TYPE_OPERACII",n_PL_OSN);
@@ -503,6 +509,7 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
                 sql.bindValue(":SUMMA_K_OPL",sum_uslugi - ostatok);
                 sql.bindValue(":SUMMA_OPL",summa_Oplati);
                 sql.bindValue(":type_oplati",VidPlateja);
+                sql.bindValue(":vid_doc",vid_doc);
                 sql.exec();
 
                 qDebug() << sql.lastError();
@@ -561,6 +568,20 @@ void frm_okazanie_uslug::on_but_oplatit_clicked()
 
                 sql.prepare("INSERT INTO clients_prodaji(NUMBER,DATE,ID_CLIENT,ID_SOTRUDNIK,ID_MATERIAL,count,cena,SUMMA,oplacheno,vid_oplati,skidka_p,summa_skidki,summa_vsego) "
                             "VALUES(:NUMBER,:DATE_USLUGI,:ID_CLIENT,:ID_SOTRUDNIK,:ID_USLUGA,:count,:cena,:SUMMA,:oplacheno,:vid_oplati,:skidka_p,:summa_skidki,:summa_vsego) ");
+
+                QSqlQuery sql_;
+                sql_.prepare("INSERT INTO SKLAD(DATE,ID_MATERIAL,COUNT,type_operacii,id_VID_ZATRAT,NUMBER,vid_doc) "
+                            "VALUES(:DATE,:ID_MATERIAL,:COUNT,:type_operacii,:vid_zatrat,:NUMBER,:vid_doc) ");
+
+                sql_.bindValue(":DATE",date_usl.toString("dd.MM.yyyy"));
+                sql_.bindValue(":ID_MATERIAL",IDUsl);
+                sql_.bindValue(":COUNT",count * (-1));
+                sql_.bindValue(":type_operacii",n_RASHOD);
+                sql_.bindValue(":vid_zatrat",NumberUslugi);
+                sql_.bindValue(":NUMBER",Number);
+                sql_.bindValue(":vid_doc",vid_doc);
+                sql_.exec();
+
             }
 
 
