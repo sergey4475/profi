@@ -63,12 +63,14 @@ void frmSotr::InitForm(){
         ui->sotrDoljn->addItem(modelTable->record(i).value("NAME").toString(),modelTable->record(i).value("ID").toInt());
     }
 
-    ui->sotrFIO->setReadOnly(false);
-    ui->sotrDoljn->setDisabled(false);
-    ui->sotr_nom->setReadOnly(false);
-    ui->sotrPol->setDisabled(false);
-    ui->sotrAddres->setReadOnly(false);
-    ui->sotrInfo->setReadOnly(false);
+
+
+    ui->sotrFIO->setEnabled(false);
+    ui->sotrDoljn->setEnabled(false);
+    ui->sotr_nom->setEnabled(false);
+    ui->sotrPol->setEnabled(false);
+    ui->sotrAddres->setEnabled(false);
+    ui->sotrInfo->setEnabled(false);
 
     ui->sotrFIO->clear();
     ui->sotrDoljn->setCurrentIndex(0);
@@ -77,6 +79,8 @@ void frmSotr::InitForm(){
     ui->sotrAddres->setText("");
     ui->sotrInfo->setText("");
     ui->sotrFIO->setFocus();
+
+    ui->groupBox->setVisible(false);
 }
 
 void frmSotr::on_comboVidUslugi_activated(int index)
@@ -132,12 +136,12 @@ void frmSotr::on_comboVidUslugi_activated(int index)
         ui->sotrDoljn->addItem(modelTable->record(i).value("NAME").toString(),modelTable->record(i).value("ID").toInt());
     }
 
-    ui->sotrFIO->setReadOnly(false);
-    ui->sotrDoljn->setDisabled(false);
-    ui->sotr_nom->setReadOnly(false);
-    ui->sotrPol->setDisabled(false);
-    ui->sotrAddres->setReadOnly(false);
-    ui->sotrInfo->setReadOnly(false);
+//    ui->sotrFIO->setReadOnly(false);
+//    ui->sotrDoljn->setDisabled(false);
+//    ui->sotr_nom->setReadOnly(false);
+//    ui->sotrPol->setDisabled(false);
+//    ui->sotrAddres->setReadOnly(false);
+//    ui->sotrInfo->setReadOnly(false);
 
     ui->sotrFIO->clear();
     ui->sotrDoljn->setCurrentIndex(0);
@@ -152,12 +156,13 @@ void frmSotr::on_comboVidUslugi_activated(int index)
 
 void frmSotr::on_tableSotr_clicked(const QModelIndex &index)
 {
-    ui->sotrFIO->setReadOnly(true);
+    ui->sotrFIO->setDisabled(true);
     ui->sotrDoljn->setDisabled(true);
-    ui->sotr_nom->setReadOnly(true);
+    ui->sotr_nom->setDisabled(true);
     ui->sotrPol->setDisabled(true);
-    ui->sotrAddres->setReadOnly(true);
-    ui->sotrInfo->setReadOnly(true);
+    ui->sotrAddres->setDisabled(true);
+    ui->sotrInfo->setDisabled(true);
+
 
     QModelIndex ID = ui->tableSotr->model()->index(index.row(),5);
     IDSotr = ID.data().toInt();
@@ -185,17 +190,18 @@ void frmSotr::on_tableSotr_clicked(const QModelIndex &index)
         ui->sotrAddres->setText(query.value(4).toString());
         ui->sotrInfo->setText(query.value(5).toString());
     }
+    ui->groupBox->setVisible(true);
 
 }
 
 void frmSotr::on_add_sotr_clicked()
 {
-    ui->sotrFIO->setReadOnly(false);
+    ui->sotrFIO->setDisabled(false);
     ui->sotrDoljn->setDisabled(false);
-    ui->sotr_nom->setReadOnly(false);
+    ui->sotr_nom->setDisabled(false);
     ui->sotrPol->setDisabled(false);
-    ui->sotrAddres->setReadOnly(false);
-    ui->sotrInfo->setReadOnly(false);
+    ui->sotrAddres->setDisabled(false);
+    ui->sotrInfo->setDisabled(false);
 
     ui->sotrFIO->clear();
     ui->sotrDoljn->setCurrentIndex(0);
@@ -209,12 +215,12 @@ void frmSotr::on_add_sotr_clicked()
 
 void frmSotr::on_edit_sotr_clicked()
 {
-    ui->sotrFIO->setReadOnly(false);
+    ui->sotrFIO->setDisabled(false);
     ui->sotrDoljn->setDisabled(false);
-    ui->sotr_nom->setReadOnly(false);
+    ui->sotr_nom->setDisabled(false);
     ui->sotrPol->setDisabled(false);
-    ui->sotrAddres->setReadOnly(false);
-    ui->sotrInfo->setReadOnly(false);
+    ui->sotrAddres->setDisabled(false);
+    ui->sotrInfo->setDisabled(false);
     ui->sotrFIO->setFocus();
 
     flag_record = edit_rec;

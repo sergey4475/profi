@@ -137,6 +137,16 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
@@ -165,6 +175,13 @@
       <width>113</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="inputMask">
      <string>9-999-999-99-99; </string>
@@ -198,6 +215,13 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="inputMask">
      <string/>
     </property>
@@ -210,6 +234,13 @@
       <width>53</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <item>
      <property name="text">
@@ -272,6 +303,13 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="editable">
      <bool>true</bool>
     </property>
@@ -287,6 +325,16 @@
       <width>301</width>
       <height>64</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QLabel" name="label_7">
