@@ -19,6 +19,7 @@ void frmSelect::Updater(){
     QString mass ="0";
     ///// Выбор услуги ////////////////////
     if (type_select == n_USLUGI) {
+        setWindowTitle("Выберите услугу...");
         QSqlQuery query;
         query.prepare("SELECT CLIENTS_HISTORY.ID_USLUGA "
                       "FROM CLIENTS_HISTORY "
@@ -55,7 +56,7 @@ void frmSelect::Updater(){
         tabl->select();
         tabl->setHeaderData(0,Qt::Horizontal,tr("ID"));
         tabl->setHeaderData(1,Qt::Horizontal,tr("Наименование"));
-        tabl->setHeaderData(3,Qt::Horizontal,tr("Цена"));
+        tabl->setHeaderData(2,Qt::Horizontal,tr("Цена"));
 
         ui->tableView->setModel(tabl);
         ui->tableView->setColumnWidth(1,300);
@@ -66,6 +67,7 @@ void frmSelect::Updater(){
     }
     ////////////////// Выбор материалов /////////////////
     else if (type_select == n_MATERIAL) {
+        setWindowTitle("Выберите материал...");
         tabl = new PSqlTableModel;
         tabl->setTable("MATERIALS");
         tabl->setRelation(3,QSqlRelation("ed_izm","id","name"));
@@ -87,108 +89,109 @@ void frmSelect::Updater(){
     }
     //**************************** Добавление материала со склада //***********************
     else if (type_select == n_OSTATKI_SKALD || type_select == n_SKALD) {
-
-    if (tempModel->columnCount() == 0) {
-        tempModel->insertColumn(0);
-        tempModel->insertColumn(1);
-        tempModel->insertColumn(2);
-        tempModel->insertColumn(3);
-        tempModel->setHeaderData(0,Qt::Horizontal,tr("ID"));            //0
-        tempModel->setHeaderData(1,Qt::Horizontal,tr("Наименование"));  //1
-        tempModel->setHeaderData(2,Qt::Horizontal,tr("Кол-во"));        //2
-        tempModel->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед. Изм"));
-    }
-    QSqlQuery sql;
-    if (type_select == n_OSTATKI_SKALD){
-        if (ui->all_ostatki->isChecked()){
-            sql.prepare("SELECT "
-                        "   materials.ID, "
-                        "   materials.NAME, "
-                        "   SUM(SKLAD.COUNT) AS COUNT, "
-                        "   ed_izm.name "
-                        "FROM "
-                        "   ed_izm, "
-                        "   SKLAD INNER JOIN "
-                        "       materials ON materials.ID = SKLAD.ID_MATERIAL "
-                        "WHERE "
-                        "   SKLAD.DATE <= :DATE "
-                        "   AND materials.id_ed_izm = ed_izm.id "
-                        "GROUP BY "
-                        "   materials.NAME, "
-                        "   materials.ID, "
-                        "   ed_izm.name ");
-        }else{
-            sql.prepare("SELECT "
-                        "   materials.ID, "
-                        "   materials.NAME, "
-                        "   SUM(SKLAD.COUNT) AS COUNT, "
-                        "   ed_izm.name "
-                        "FROM "
-                        "   ed_izm, "
-                        "   SKLAD INNER JOIN "
-                        "       materials ON materials.ID = SKLAD.ID_MATERIAL "
-                        "       INNER JOIN vidi_zatrat ON vidi_zatrat.id = SKLAD.id_vid_zatrat "
-                        "WHERE SKLAD.DATE <= :DATE "
-                        "   AND materials.id_ed_izm = ed_izm.id "
-                        "   AND vidi_zatrat.id_vid_uslug = :type_uslugi "
-                        "GROUP BY "
-                        "   materials.NAME, "
-                        "   materials.ID, "
-                        "   ed_izm.name ");
-            sql.bindValue(":type_uslugi",type_uslugi_);
+        setWindowTitle("Выберите материал...");
+        if (tempModel->columnCount() == 0) {
+            tempModel->insertColumn(0);
+            tempModel->insertColumn(1);
+            tempModel->insertColumn(2);
+            tempModel->insertColumn(3);
+            tempModel->setHeaderData(0,Qt::Horizontal,tr("ID"));            //0
+            tempModel->setHeaderData(1,Qt::Horizontal,tr("Наименование"));  //1
+            tempModel->setHeaderData(2,Qt::Horizontal,tr("Кол-во"));        //2
+            tempModel->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед. Изм"));
         }
-    }else
-        if (! ui->all_ostatki->isChecked()){
-            sql.prepare("SELECT "
-                        "   materials.ID, "
-                        "   materials.NAME, "
-                        "   SUM(O_SKLAD.COUNT) AS COUNT, "
-                        "   ed_izm.name "
-                        "FROM O_SKLAD INNER JOIN "
-                        "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
-                        "   INNER JOIN "
-                        "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad, "
-                        "   ed_izm "
-                        "WHERE O_SKLAD.DATE <= :DATE "
-                        "   AND vidi_zatrat.id_group_o_sklad = :VidZatrat "
-                        "   AND materials.id_ed_izm = ed_izm.id "
-                        "GROUP BY "
-                        "   materials.NAME, "
-                        "   materials.ID,"
-                        "   ed_izm.name ");
-            sql.bindValue(":VidZatrat",type_uslugi_);
-        }else{
-            sql.prepare("SELECT "
-                        "   materials.ID, "
-                        "   materials.NAME, "
-                        "   SUM(O_SKLAD.COUNT) AS COUNT, "
-                        "   ed_izm.name "
-                        "FROM O_SKLAD INNER JOIN "
-                        "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
-                        "   INNER JOIN "
-                        "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad, "
-                        "   ed_izm "
-                        "WHERE O_SKLAD.DATE <= :DATE "
-                        "   AND materials.id_ed_izm = ed_izm.id "
-                        "GROUP BY "
-                        "   materials.NAME, "
-                        "   materials.ID,"
-                        "   ed_izm.name ");
-        }
+        QSqlQuery sql;
+        if (type_select == n_OSTATKI_SKALD){
+            if (ui->all_ostatki->isChecked()){
+                sql.prepare("SELECT "
+                            "   materials.ID, "
+                            "   materials.NAME, "
+                            "   SUM(SKLAD.COUNT) AS COUNT, "
+                            "   ed_izm.name "
+                            "FROM "
+                            "   ed_izm, "
+                            "   SKLAD INNER JOIN "
+                            "       materials ON materials.ID = SKLAD.ID_MATERIAL "
+                            "WHERE "
+                            "   SKLAD.DATE <= :DATE "
+                            "   AND materials.id_ed_izm = ed_izm.id "
+                            "GROUP BY "
+                            "   materials.NAME, "
+                            "   materials.ID, "
+                            "   ed_izm.name ");
+            }else{
+                sql.prepare("SELECT "
+                            "   materials.ID, "
+                            "   materials.NAME, "
+                            "   SUM(SKLAD.COUNT) AS COUNT, "
+                            "   ed_izm.name "
+                            "FROM "
+                            "   ed_izm, "
+                            "   SKLAD INNER JOIN "
+                            "       materials ON materials.ID = SKLAD.ID_MATERIAL "
+                            "       INNER JOIN vidi_zatrat ON vidi_zatrat.id = SKLAD.id_vid_zatrat "
+                            "WHERE SKLAD.DATE <= :DATE "
+                            "   AND materials.id_ed_izm = ed_izm.id "
+                            "   AND vidi_zatrat.id_vid_uslug = :type_uslugi "
+                            "GROUP BY "
+                            "   materials.NAME, "
+                            "   materials.ID, "
+                            "   ed_izm.name ");
+                sql.bindValue(":type_uslugi",type_uslugi_);
+            }
+        }else
+            if (! ui->all_ostatki->isChecked()){
+                sql.prepare("SELECT "
+                            "   materials.ID, "
+                            "   materials.NAME, "
+                            "   SUM(O_SKLAD.COUNT) AS COUNT, "
+                            "   ed_izm.name "
+                            "FROM O_SKLAD INNER JOIN "
+                            "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
+                            "   INNER JOIN "
+                            "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad, "
+                            "   ed_izm "
+                            "WHERE O_SKLAD.DATE <= :DATE "
+                            "   AND vidi_zatrat.id_group_o_sklad = :VidZatrat "
+                            "   AND materials.id_ed_izm = ed_izm.id "
+                            "GROUP BY "
+                            "   materials.NAME, "
+                            "   materials.ID,"
+                            "   ed_izm.name ");
+                sql.bindValue(":VidZatrat",type_uslugi_);
+            }else{
+                sql.prepare("SELECT "
+                            "   materials.ID, "
+                            "   materials.NAME, "
+                            "   SUM(O_SKLAD.COUNT) AS COUNT, "
+                            "   ed_izm.name "
+                            "FROM O_SKLAD INNER JOIN "
+                            "   materials ON materials.ID = O_SKLAD.ID_MATERIAL "
+                            "   INNER JOIN "
+                            "       vidi_zatrat ON vidi_zatrat.id_group_o_sklad = O_SKLAD.id_group_o_sklad, "
+                            "   ed_izm "
+                            "WHERE O_SKLAD.DATE <= :DATE "
+                            "   AND materials.id_ed_izm = ed_izm.id "
+                            "GROUP BY "
+                            "   materials.NAME, "
+                            "   materials.ID,"
+                            "   ed_izm.name ");
+            }
 
-    sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
-    sql.exec();
-    tabl_ = new Ost_model;
-    tabl_->setQuery(sql);
-    tabl_->setHeaderData(1,Qt::Horizontal,QObject::tr("Наименование"));
-    tabl_->setHeaderData(2,Qt::Horizontal,QObject::tr("Кол-во"));
-    tabl_->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед.изм"));
-    ui->tableView->setModel(tabl_);
-    ui->tableView->setColumnWidth(1,250);
-    ui->tableView->setColumnHidden(0,true);
+        sql.bindValue(":DATE",DateDoc.toString("dd.MM.yyyy"));
+        sql.exec();
+        tabl_ = new Ost_model;
+        tabl_->setQuery(sql);
+        tabl_->setHeaderData(1,Qt::Horizontal,QObject::tr("Наименование"));
+        tabl_->setHeaderData(2,Qt::Horizontal,QObject::tr("Кол-во"));
+        tabl_->setHeaderData(3,Qt::Horizontal,QObject::tr("Ед.изм"));
+        ui->tableView->setModel(tabl_);
+        ui->tableView->setColumnWidth(1,250);
+        ui->tableView->setColumnHidden(0,true);
     }
     /////////////// Выбор клиента //////////////////
     if (type_select == n_CLIENTS){
+        setWindowTitle("Выберите клиента...");
         tempModel->insertColumn(0);
         tempModel->setHeaderData(0,Qt::Horizontal,tr("ФИО"));  //1
 
@@ -205,6 +208,7 @@ void frmSelect::Updater(){
     }
     ////////////////// Выбор мастера ////////////////
     if (type_select == n_MASTER){
+        setWindowTitle("Выберите мастера...");
         tempModel->insertColumn(0);
         tempModel->setHeaderData(0,Qt::Horizontal,tr("ФИО"));  //1
 
@@ -230,7 +234,9 @@ void frmSelect::Updater(){
         ui->tableView->hideColumn(1);
     }
 
+    ////////////////// Выбор товара ////////////////
     if (type_select == n_MAGAZIN){
+        setWindowTitle("Выберите товар...");
         if (tempModel->columnCount() == 0) {
             tempModel->insertColumn(0);
             tempModel->insertColumn(1);
@@ -311,8 +317,8 @@ void frmSelect::init(QDate date){
 void frmSelect::multeSelect(const QModelIndexList &indexList){
     QModelIndex index;
 
-     foreach(index, indexList)
-         on_tableView_doubleClicked(index);
+    foreach(index, indexList)
+        on_tableView_doubleClicked(index);
 }
 
 void frmSelect::on_tableView_doubleClicked(const QModelIndex &index)
@@ -503,8 +509,8 @@ void frmSelect::on_all_ostatki_clicked()
 
 void frmSelect::on_sel_button_clicked()
 {
-//    ui->tableView->selectedIndexes();
+    //    ui->tableView->selectedIndexes();
     multeSelect(ui->tableView->selectionModel()->selectedRows());
-//    on_tableView_doubleClicked(ui->tableView->currentIndex());
+    //    on_tableView_doubleClicked(ui->tableView->currentIndex());
     this->close();
 }

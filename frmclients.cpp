@@ -196,3 +196,9 @@ void frmClients::on_closeFrame_clicked()
     frm->EnableButton(0);
     this->~frmClients();
 }
+
+void frmClients::on_tClient_history_doubleClicked(const QModelIndex &index)
+{
+    int numDoc = ui->tClient_history->model()->data( ui->tClient_history->model()->index(index.row(),3)).toInt();
+    QString dateDoc = ui->tClient_history->model()->data( ui->tClient_history->model()->index(index.row(),0)).toString();
+}

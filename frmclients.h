@@ -40,6 +40,8 @@ private slots:
 
     void on_closeFrame_clicked();
 
+    void on_tClient_history_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::frmClients *ui;
     bool selClients;
