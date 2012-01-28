@@ -181,7 +181,7 @@ void frmUslugi::updater(QModelIndex item, int count_row, QObject *obj){
             ui->tableUslugi->setFocus();
             ui->tableUslugi->setCurrentIndex(item);
             tabl->submit();
-            bEdit == false;
+            //bEdit == false;
         }
     }
     if (obj->objectName() == "tableUslugi")

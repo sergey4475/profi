@@ -21,10 +21,12 @@ void frmClients::initForm(WId w_ID,int fl){
 
     if (fl==1){
         ui->closeFrame->setHidden(true);
+        ui->ClientTabs->setVisible(true);
         selClients = true;
     }
     else{
         ui->closeFrame->setVisible(true);
+        ui->ClientTabs->setHidden(true);
         selClients = false;
     }
 
@@ -50,11 +52,13 @@ void frmClients::initForm(WId w_ID,int fl){
 
 void frmClients::on_tableView_clicked(const QModelIndex &index)
 {
-    ui->FIOEdit->setReadOnly(true);
-    ui->Nom_Edit->setReadOnly(true);
+    ui->FIOEdit->setDisabled(true);
+    ui->Nom_Edit->setDisabled(true);
     ui->dateEdit->setDisabled(true);
-    ui->InfoEdit->setReadOnly(true);
+    ui->InfoEdit->setDisabled(true);
     ui->Pol->setDisabled(true);
+    ui->OtkudaEdit->setDisabled(true);
+    ui->ClientTabs->setVisible(true);
 
     QModelIndex ID = ui->tableView->model()->index(index.row(),3);
     IDClients = ID.data().toInt();
@@ -100,11 +104,11 @@ void frmClients::on_tableView_clicked(const QModelIndex &index)
 //============== Кнопка редактирования записи ===========================
 void frmClients::on_edit_button_clicked()
 {
-    ui->FIOEdit->setReadOnly(false);
-    ui->Nom_Edit->setReadOnly(false);
-    ui->dateEdit->setDisabled(false);
-    ui->InfoEdit->setReadOnly(false);
-    ui->Pol->setDisabled(false);
+    ui->FIOEdit->setEnabled(true);
+    ui->Nom_Edit->setEnabled(true);
+    ui->dateEdit->setEnabled(true);
+    ui->InfoEdit->setEnabled(true);
+    ui->Pol->setEnabled(true);
     ui->FIOEdit->setFocus();
     flag_record = edit_rec;
 }
@@ -114,15 +118,16 @@ void frmClients::on_toolButton_4_clicked()
 {
     ui->FIOEdit->clear();
     ui->Nom_Edit->clear();
-    ui->dateEdit->setDateCalendar(QDate::fromString("01.01.0001","yyyy.MM.dd"));
+    ui->dateEdit->setDateCalendar(QDate::fromString("01.01.0001","dd.MM.yyyy"));
+    //ui->dateEdit->setDateCalendar(QDate::fromString("01.01.1986"));
     ui->InfoEdit->clear();
     ui->Pol->setCurrentIndex(0);
 
-    ui->FIOEdit->setReadOnly(false);
-    ui->Nom_Edit->setReadOnly(false);
-    ui->dateEdit->setDisabled(false);
-    ui->InfoEdit->setReadOnly(false);
-    ui->Pol->setDisabled(false);
+    ui->FIOEdit->setEnabled(true);
+    ui->Nom_Edit->setEnabled(true);
+    ui->dateEdit->setEnabled(true);
+    ui->InfoEdit->setEnabled(true);
+    ui->Pol->setEnabled(true);
     ui->FIOEdit->setFocus();
     flag_record = add_rec;
 }
