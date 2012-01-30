@@ -52,13 +52,14 @@ void frmClients::initForm(WId w_ID,int fl){
 
 void frmClients::on_tableView_clicked(const QModelIndex &index)
 {
+    ui->ClientTabs->setVisible(true);
+
     ui->FIOEdit->setDisabled(true);
     ui->Nom_Edit->setDisabled(true);
     ui->dateEdit->setDisabled(true);
     ui->InfoEdit->setDisabled(true);
     ui->Pol->setDisabled(true);
     ui->OtkudaEdit->setDisabled(true);
-    ui->ClientTabs->setVisible(true);
 
     QModelIndex ID = ui->tableView->model()->index(index.row(),3);
     IDClients = ID.data().toInt();
@@ -104,18 +105,24 @@ void frmClients::on_tableView_clicked(const QModelIndex &index)
 //============== Кнопка редактирования записи ===========================
 void frmClients::on_edit_button_clicked()
 {
-    ui->FIOEdit->setEnabled(true);
-    ui->Nom_Edit->setEnabled(true);
-    ui->dateEdit->setEnabled(true);
-    ui->InfoEdit->setEnabled(true);
-    ui->Pol->setEnabled(true);
-    ui->FIOEdit->setFocus();
-    flag_record = edit_rec;
+    if (IDClients != 0) {
+        ui->ClientTabs->setVisible(true);
+        ui->FIOEdit->setEnabled(true);
+        ui->Nom_Edit->setEnabled(true);
+        ui->dateEdit->setEnabled(true);
+        ui->InfoEdit->setEnabled(true);
+        ui->Pol->setEnabled(true);
+        ui->FIOEdit->setFocus();
+        flag_record = edit_rec;
+    }else{
+        QMessageBox::warning(0,"Внимание","Клиент для редактирования не выбран",QMessageBox::Ok);
+    }
 }
 
 //============== Кнопка добавление нового клиента =======================
 void frmClients::on_toolButton_4_clicked()
 {
+    ui->ClientTabs->setVisible(true);
     ui->FIOEdit->clear();
     ui->Nom_Edit->clear();
     ui->dateEdit->setDateCalendar(QDate::fromString("01.01.0001","dd.MM.yyyy"));
@@ -172,6 +179,7 @@ void frmClients::on_ApplyBut_clicked()
         }
     }
     flag_record = 0;
+    ui->ClientTabs->setVisible(false);
 }
 
 void frmClients::on_tableView_activated(const QModelIndex &index)
@@ -181,14 +189,19 @@ void frmClients::on_tableView_activated(const QModelIndex &index)
 
 void frmClients::on_del_button_clicked()
 {
-    if (QMessageBox::question(0,"Вопрос","Вы уверены что желаете удалить?",QMessageBox::Yes,QMessageBox::No)==QMessageBox::Yes){
-        QSqlQuery query;
-        query.prepare("UPDATE Clients SET Del=1 WHERE Clients.id = :ID");
-        query.bindValue("ID",IDClients);
-        query.exec();
-        frmClients::on_toolButton_4_clicked();
-        frmClients::initForm(0x0,0);
-    };
+    if (IDClients != 0) {
+        if (QMessageBox::question(0,"Вопрос","Вы уверены что желаете удалить?",QMessageBox::Yes,QMessageBox::No)==QMessageBox::Yes){
+            QSqlQuery query;
+            query.prepare("UPDATE Clients SET Del=1 WHERE Clients.id = :ID");
+            query.bindValue("ID",IDClients);
+            query.exec();
+            frmClients::on_toolButton_4_clicked();
+            frmClients::initForm(0x0,0);
+        };
+    }else{
+        QMessageBox::warning(0,"Внимание","Клиент для удаления не выбран",QMessageBox::Ok);
+    }
+
 }
 
 void frmClients::on_closeFrame_clicked()
